@@ -1,0 +1,13 @@
+{
+  "name": "bdmgmt",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "nodemailer": "^6.9.16"
+  }
+}

@@ -1,0 +1,2031 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>PIRAMID BD Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#0b0e15;--surface:#141925;--panel:#1a2030;--panel-2:#222a3d;--line:#2b3447;--line-2:#3e4860;
+  --text:#eef2f8;--muted:#9aa6b8;--soft:#697587;--accent:#6088ff;--accent-2:#16c6b2;
+  --green:#2dd36f;--amber:#f6b44b;--red:#ff5a67;--purple:#b678ff;--blue:#5bc0ff;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+  --shadow-hover:0 2px 4px rgba(0,0,0,.35),0 14px 36px rgba(0,0,0,.42);
+  --card-grad:linear-gradient(180deg,rgba(255,255,255,.022),rgba(255,255,255,0));
+  --grid-bg:radial-gradient(circle at 1px 1px,rgba(255,255,255,.018) 1px,transparent 0);
+  --r:8px;--side:238px
+}
+[data-theme="light"]{
+  --bg:#eef2f7;--surface:#ffffff;--panel:#ffffff;--panel-2:#f4f7fb;
+  --line:#e2e8f0;--line-2:#cbd5e1;
+  --text:#0f172a;--muted:#475569;--soft:#64748b;--accent:#2563eb;--accent-2:#0891b2;
+  --green:#16a34a;--amber:#d97706;--red:#dc2626;--purple:#7c3aed;--blue:#0284c7;
+  --shadow:0 1px 2px rgba(15,23,42,.04),0 6px 18px rgba(15,23,42,.06);
+  --shadow-hover:0 2px 6px rgba(15,23,42,.06),0 14px 32px rgba(15,23,42,.12);
+  --card-grad:linear-gradient(180deg,rgba(15,23,42,.012),transparent);
+  --grid-bg:radial-gradient(circle at 1px 1px,rgba(15,23,42,.04) 1px,transparent 0)
+}
+[data-theme="light"] .nav button.on{background-image:linear-gradient(135deg,rgba(37,99,235,.14),rgba(8,145,178,.1));color:var(--accent);box-shadow:inset 0 0 0 1px rgba(37,99,235,.3)}
+[data-theme="light"] .topbar[data-dash]{background-image:linear-gradient(180deg,rgba(37,99,235,.04),transparent)}
+[data-theme="light"] .topbar[data-dash="ana"]{background-image:linear-gradient(180deg,rgba(124,58,237,.05),transparent)}
+[data-theme="light"] .track{background:rgba(15,23,42,.06)}
+[data-theme="light"] .tbl tr:hover td{background:rgba(37,99,235,.05)}
+[data-theme="light"] .login-screen{background:radial-gradient(900px 600px at 50% -10%,rgba(37,99,235,.1),transparent 60%),radial-gradient(700px 500px at 100% 110%,rgba(8,145,178,.08),transparent 55%)}
+[data-theme="light"] .vbar .vfill,[data-theme="light"] .fill{background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0))}
+body{margin:0;min-height:100vh;background:var(--bg);background-image:var(--grid-bg);background-size:24px 24px;color:var(--text);font-family:Prompt,'DM Sans',sans-serif;font-size:13px;line-height:1.45}
+button,input,select,textarea{font:inherit}
+button{border:0}
+.app{display:flex;min-height:100vh}
+.app.locked{display:none}.login-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(900px 600px at 50% -10%,rgba(96,136,255,.16),transparent 60%),radial-gradient(700px 500px at 100% 110%,rgba(22,198,178,.12),transparent 55%)}.login-panel{position:relative;width:min(420px,100%);background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-2);border-radius:18px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6),0 0 0 1px rgba(96,136,255,.08);padding:30px 28px;overflow:hidden}.login-panel::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}.login-panel .brand{padding:0 0 20px;border-bottom:0}.login-panel .mark{width:40px;height:40px;border-radius:10px;font-size:18px;box-shadow:0 6px 18px -4px var(--accent)}.login-panel h1{margin:4px 0 8px;font-size:25px;letter-spacing:-.4px}.login-panel p{margin:0 0 20px;color:var(--muted)}.login-panel form{display:grid;gap:13px}.login-panel .btn.primary{height:42px;font-size:14px;font-weight:600}.login-panel[hidden]{display:none!important}.login-screen[hidden]{display:none!important}.login-error{min-height:18px;color:var(--red);font-size:12px}.login-meta{margin-top:16px;color:var(--soft);font-size:11px;text-align:center}
+.sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:20;box-shadow:var(--shadow)}
+.brand{padding:18px;display:flex;gap:11px;align-items:center;border-bottom:1px solid var(--line)}
+.mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800}
+.brand strong{display:block;font-size:15px}.brand span{display:block;color:var(--soft);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px}
+.nav{padding:10px 10px;overflow:auto}.nav-label{padding:12px 10px 5px;color:var(--soft);font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase}
+.nav button{width:100%;display:flex;align-items:center;gap:11px;padding:9px 12px;margin:2px 0;border-radius:9px;background:transparent;color:var(--muted);cursor:pointer;text-align:left;font-weight:500;transition:background .15s,color .15s}
+.nav button .ico{font-size:15px;width:18px;text-align:center;flex:0 0 auto;filter:grayscale(.3);opacity:.85}
+.nav button:hover{background:var(--panel-2);color:var(--text)}
+.nav button.on{background-image:linear-gradient(135deg,rgba(96,136,255,.22),rgba(22,198,178,.14));color:#fff;box-shadow:inset 0 0 0 1px rgba(96,136,255,.35)}
+.nav button.on .ico{filter:none;opacity:1}
+.badge{margin-left:auto;min-width:20px;padding:1px 7px;border-radius:20px;background:rgba(255,90,103,.14);color:var(--red);font-size:10px;font-weight:700;text-align:center}
+.navdot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:transparent;flex:0 0 auto}
+.navdot.on{background:var(--green);box-shadow:0 0 8px rgba(45,211,111,.7)}
+.act-row{display:flex;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.act-time{color:var(--soft);font-size:11px;min-width:120px}
+.act-body{flex:1}.act-body b{color:var(--text)} .act-body .act-view{color:var(--soft);font-size:11px;margin-left:6px}
+.user{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:white;font-size:11px;font-weight:700;flex:0 0 auto}
+.main{margin-left:var(--side);min-width:0;flex:1}.topbar{position:sticky;top:0;z-index:10;height:62px;background:var(--surface);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 22px;box-shadow:var(--shadow)}
+.title{flex:1;min-width:0}.title h1{font-size:17px;line-height:1.1;margin:0 0 5px}.title p{margin:0;color:var(--soft);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);color:var(--text);cursor:pointer;white-space:nowrap;font-weight:500;transition:background .15s,border-color .15s,box-shadow .15s,transform .1s}
+.btn:hover{background:var(--panel-2);border-color:var(--line-2)}.btn:active{transform:translateY(1px)}.btn.on{background:var(--accent);border-color:var(--accent);color:#fff}.btn.primary{background-image:linear-gradient(135deg,var(--accent),var(--accent-2));border-color:transparent;color:#fff;box-shadow:0 4px 14px -4px var(--accent)}.btn.primary:hover{background-image:linear-gradient(135deg,var(--accent),var(--accent-2));filter:brightness(1.08)}.btn.danger{color:var(--red);border-color:rgba(255,90,103,.4)}.btn.danger:hover{background:rgba(255,90,103,.12)}.btn.icon{width:34px;padding:0}.btn.small{height:28px;padding:0 9px;font-size:12px}
+.content{padding:20px;display:flex;flex-direction:column;gap:16px}.view{display:none}.view.on{display:block}
+.filters{display:grid;grid-template-columns:1.2fr repeat(4,minmax(130px,.7fr));gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field span{color:var(--soft);font-size:11px}.field input,.field select,.field textarea{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:var(--r);padding:8px 10px;outline:none}.field textarea{min-height:74px;resize:vertical}
+.masked-entry{-webkit-text-security:disc;text-security:disc}
+.grid{display:grid;gap:14px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.wide{grid-column:span 2}
+.card,.metric{background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s,border-color .2s}
+.metric{padding:15px 16px;min-height:100px}.metric label{display:block;color:var(--muted);font-size:11.5px;font-weight:500;margin-bottom:9px;letter-spacing:.2px}.metric strong{display:block;font-size:32px;font-weight:700;letter-spacing:-1px;line-height:1}.metric small{display:block;margin-top:8px;color:var(--soft)}
+.dash-grid.editing .widget:hover{box-shadow:var(--shadow-hover)}
+.dash-grid .widget:hover{box-shadow:var(--shadow-hover);border-color:var(--line-2)}
+.ch{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line)}.ch h2{font-size:13.5px;margin:0;font-weight:600;letter-spacing:.2px;display:flex;align-items:center;gap:8px}.ch h2::before{content:"";width:3px;height:14px;border-radius:3px;background:var(--accent);flex:0 0 auto}.ch small{color:var(--soft)}.cb{padding:15px 16px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.metric-trend{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:600;margin-top:8px}.metric-trend.up{color:var(--green)}.metric-trend.down{color:var(--red)}.metric-trend.flat{color:var(--soft)}
+.metric-spark{display:block;width:100%;height:30px;margin-top:9px;opacity:.9}
+.grad-num{background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.edit-tools{display:none;gap:8px;align-items:center}
+.edit-hint{display:none}
+body.exec-editing .edit-tools[data-edit-tools="exec"],body.ana-editing .edit-tools[data-edit-tools="ana"]{display:inline-flex}
+body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint[data-edit-tools="ana"]{display:block;color:var(--accent)}
+.kicker{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:700;letter-spacing:1.3px;color:var(--soft);margin-bottom:3px}
+.kicker .kdot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.topbar[data-dash]{border-bottom:1px solid var(--line);background-image:linear-gradient(180deg,rgba(96,136,255,.05),transparent)}
+.topbar[data-dash="ana"]{background-image:linear-gradient(180deg,rgba(182,120,255,.06),transparent)}
+.topbar[data-dash="ana"] .kicker{color:#b89bff}.topbar[data-dash="ana"] .kdot{background:var(--purple);box-shadow:0 0 8px var(--purple)}
+.topbar[data-dash] h1{font-size:19px;letter-spacing:-.3px}
+.widget[hidden]{display:none!important}.customizer{display:none}.customizer.on{display:flex}.switches{gap:8px;flex-wrap:wrap}.switch{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);border-radius:20px;padding:5px 10px;color:var(--muted);cursor:pointer}.switch input{accent-color:var(--accent)}
+.bars{display:flex;flex-direction:column;gap:11px}.bar-row{display:grid;grid-template-columns:112px 1fr 78px;gap:10px;align-items:center}.bar-row span{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.track{height:10px;background:rgba(255,255,255,.05);border-radius:20px;overflow:hidden}.fill{height:100%;border-radius:20px;background-color:var(--accent);background-image:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));transition:width .45s cubic-bezier(.22,.61,.36,1)}
+.split{display:grid;grid-template-columns:minmax(96px,30%) 1fr;gap:14px;align-items:center}.donut{width:100%;max-width:150px;aspect-ratio:1/1;border-radius:50%;background:conic-gradient(var(--line) 0 100%);position:relative;margin:0 auto}.donut:after{content:"";position:absolute;inset:26%;background:var(--panel);border-radius:50%}.donut-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;z-index:1;text-align:center;line-height:1}.donut-label strong{font-size:clamp(18px,4.5vw,24px);line-height:1}.donut-label small{line-height:1.1}
+.suggest{position:absolute;top:100%;left:0;right:0;z-index:40;margin-top:4px;max-height:240px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);display:none}
+.suggest.on{display:block}
+.suggest div{padding:8px 10px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.suggest div:hover,.suggest div.active{background:var(--panel-2)}
+.search-row{display:flex;gap:8px;align-items:center}.search-row input{flex:1;min-width:0}.search-row .btn{flex:0 0 auto;white-space:nowrap}
+.donut-flex{display:grid;grid-template-columns:minmax(90px,40%) 1fr;gap:14px;align-items:center}
+.donut-svgbox{position:relative;width:100%;max-width:120px;aspect-ratio:1/1;margin:0 auto}
+.donut-svg{width:100%;height:100%;display:block}
+.donut-svg .ds{cursor:pointer;transition:opacity .15s}
+.donut-svgbox:hover .ds{opacity:.45}.donut-svgbox .ds:hover{opacity:1}
+.legend-row .ell{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-grid{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+.dash-grid>.widget{flex:1 1 320px;min-width:260px}
+.dash-grid>.widget.metric{flex:1 1 180px;min-width:150px;min-height:96px}
+.dash-grid .widget[draggable=true]{cursor:grab}
+.dash-grid .widget.dragging{opacity:.4;outline:2px dashed var(--accent);outline-offset:-2px}
+.dash-grid.locked .widget{cursor:default}
+.dash-grid.locked .resize-handle{display:none}
+.vbars{display:flex;align-items:flex-end;gap:12px;height:170px;padding-top:8px}
+.vbar{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:100%}
+.vbar .vfill{width:100%;max-width:50px;border-radius:7px 7px 0 0;background-color:var(--accent);background-image:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0));min-height:3px;transition:height .45s cubic-bezier(.22,.61,.36,1)}
+.vbar .vval{font-weight:700;font-size:13px}
+.vbar .vlbl{color:var(--muted);font-size:11px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.dash-grid .widget{position:relative}
+.dash-grid .widget .cb{overflow:auto}
+.resize-handle{display:none;position:absolute;right:3px;bottom:3px;width:16px;height:16px;cursor:nwse-resize;opacity:.55;z-index:6;border-right:3px solid var(--accent);border-bottom:3px solid var(--accent);border-radius:0 0 8px 0;touch-action:none}
+.resize-handle:hover{opacity:1}
+.drag-handle{display:none;position:absolute;left:6px;top:10px;width:18px;height:22px;align-items:center;justify-content:center;cursor:grab;color:var(--soft);opacity:.5;z-index:6;touch-action:none;font-size:15px;line-height:1}
+.drag-handle:hover{opacity:1;color:var(--accent)}
+.drag-handle:active{cursor:grabbing}
+.dash-grid.editing .drag-handle{display:flex}
+.dash-grid.editing .resize-handle{display:block}
+.dash-grid.editing .widget{outline:1px dashed rgba(96,136,255,.25);outline-offset:-1px}
+.dash-grid.editing .widget .ch{padding-left:26px}
+.dash-grid.editing>.widget.metric{padding-left:30px}
+.align-btn{display:none;position:absolute;right:6px;top:8px;width:20px;height:20px;border:1px solid var(--line);background:var(--surface);color:var(--soft);border-radius:5px;cursor:pointer;z-index:7;opacity:.7;font-size:11px;line-height:1;padding:0}
+.dash-grid.editing .align-btn{display:block}
+.align-btn:hover{opacity:1;color:var(--accent);border-color:var(--accent)}
+.align-pop{position:absolute;right:6px;top:32px;z-index:9;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:5px;display:none;grid-template-columns:repeat(3,1fr);gap:4px;box-shadow:var(--shadow)}
+.align-pop.on{display:grid}
+.align-pop button{width:22px;height:18px;border:1px solid var(--line-2);background:var(--surface);border-radius:4px;cursor:pointer;padding:0}
+.align-pop button.on,.align-pop button:hover{background:var(--accent);border-color:var(--accent)}
+.dash-grid.locked .align-btn{display:none}
+.dash-grid .widget[data-widget="execWorkload"]{display:flex;flex-direction:column}
+.dash-grid .widget[data-widget="execWorkload"] .cb{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+#teamWorkloadChart{flex:1;min-height:130px;display:flex;flex-direction:column}
+#teamWorkloadChart .wl-svg{flex:1;min-height:0;width:100%;display:block}
+#teamWorkloadChart .wl-legend{flex:0 0 auto;margin-top:4px}
+.bi-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.bi-modal.on{display:flex}
+.bi-modal>.card{width:min(560px,100%)}
+.dash-grid .widget[data-fit]{display:flex;flex-direction:column}
+.dash-grid .widget[data-fit] .cb{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.fit-chart{flex:1;min-height:150px;display:flex;flex-direction:column}
+.fit-chart .wl-svg{flex:1;min-height:0;width:100%}
+.fit-chart .wl-legend{flex:0 0 auto;margin-top:4px}
+.fit-chart .funnel{flex:1;min-height:0}
+.funnel{display:flex;gap:6px;align-items:stretch}
+.fn-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.fn-head b{display:block;font-size:15px;line-height:1.1}.fn-head span{color:var(--muted);font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.fn-bararea{flex:1;display:flex;align-items:center;min-height:50px}
+.fn-bar{width:100%;border-radius:4px;min-height:6px;transition:height .3s}
+.fn-pct{text-align:center;color:var(--soft);font-size:11px}
+.dash-grid .widget .cc-actions{position:absolute;right:8px;top:8px;display:none;gap:4px;z-index:7}
+.dash-grid.editing .widget:hover .cc-actions{display:flex}.legend{display:flex;flex-direction:column;gap:7px}.legend-row{display:flex;align-items:center;gap:8px;color:var(--muted)}.dot{width:9px;height:9px;border-radius:50%}.legend-row b{margin-left:auto;color:var(--text)}
+.table-wrap{overflow:auto}.tbl{width:100%;border-collapse:collapse;min-width:880px}.tbl th{position:sticky;top:0;background:var(--panel-2);color:var(--soft);text-align:left;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:10px 11px;border-bottom:1px solid var(--line);white-space:nowrap}.tbl td{padding:10px 11px;border-bottom:1px solid rgba(255,255,255,.045);vertical-align:middle}.tbl tbody tr{transition:background .12s}.tbl tr:hover td{background:rgba(96,136,255,.06)}.ellipsis{max-width:230px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-flex;align-items:center;border-radius:20px;padding:2px 8px;font-size:10.5px;font-weight:700;white-space:nowrap}.tag.win,.tag.done{background:rgba(45,211,111,.14);color:var(--green)}.tag.quot{background:rgba(91,124,250,.14);color:#8fa4ff}.tag.budg,.tag.doing{background:rgba(246,180,75,.14);color:var(--amber)}.tag.lost,.tag.overdue{background:rgba(255,90,103,.14);color:var(--red)}.tag.wapo,.tag.review{background:rgba(19,184,166,.14);color:var(--accent-2)}.tag.pend{background:rgba(182,120,255,.14);color:var(--purple)}.tag.high{background:rgba(255,90,103,.14);color:var(--red)}.tag.medium{background:rgba(246,180,75,.14);color:var(--amber)}.tag.low{background:rgba(45,211,111,.14);color:var(--green)}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.lane{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:280px;box-shadow:var(--shadow)}.lane h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:8px}.lane h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 auto}.task{margin:10px;padding:12px;background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:9px;transition:transform .15s,box-shadow .15s,border-color .15s}.task:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--line-2)}.task strong{display:block;margin-bottom:5px}.task p{margin:0;color:var(--muted);font-size:11.5px}.task footer{margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--soft);font-size:11px}
+.calendar{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px}.cal-day{min-height:132px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px;display:flex;flex-direction:column;gap:6px}.cal-day.today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(37,99,235,.18)}.cal-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px}.cal-head b{color:var(--text);font-size:15px}.cal-items{display:flex;flex-direction:column;gap:5px}.cal-item{border-left:3px solid var(--accent);background:var(--surface);border-radius:6px;padding:6px;color:var(--text);font-size:11px}.cal-item small{display:block;color:var(--soft);margin-top:2px}.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--soft)}
+.email-preview{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.email-box{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px;white-space:pre-wrap;min-height:280px}.snapshot-frame{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--surface));border-radius:8px;padding:14px;min-height:280px}.snapshot-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px}.status-list{display:flex;flex-direction:column;gap:8px}.status-line{display:flex;align-items:center;gap:8px;color:var(--muted)}.status-ico{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;color:white;font-size:11px;font-weight:800;flex:0 0 auto}.status-ico.done{background:var(--green)}.status-ico.doing{background:var(--accent);animation:spin 1.3s linear infinite}.status-ico.review{background:var(--amber)}.status-ico.overdue{background:var(--red)}.status-ico.schedule{background:var(--purple)}@keyframes spin{to{transform:rotate(360deg)}}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.notice{border:1px solid rgba(91,124,250,.35);background:rgba(91,124,250,.1);border-radius:10px;padding:12px;color:#c8d3ff}
+.chips{display:flex;gap:5px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:20px;padding:2px 7px;color:var(--muted);background:var(--surface);font-size:10.5px;white-space:nowrap}.mini{display:block;color:var(--soft);font-size:10.5px;margin-top:3px}.detail-stack{display:flex;flex-direction:column;gap:4px;min-width:190px}.login-box{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.lock{filter:saturate(.75);opacity:.72}.login-state{color:var(--soft);font-size:11.5px}.login-state.ok{color:var(--green)}.login-state.bad{color:var(--red)}.group-title{margin:6px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.7px}.group-block{display:flex;flex-direction:column;gap:10px}.settings-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.checklist{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:8px;display:grid;gap:6px}.checklist label{display:flex;gap:7px;align-items:flex-start;color:var(--muted);font-size:12px}.checklist input{width:auto;accent-color:var(--accent);margin-top:2px}.brow{display:flex;align-items:center;gap:8px}.brow .bchk{flex:1;display:flex;gap:7px;align-items:center;color:var(--muted);font-size:12px;cursor:pointer}.brow .bval{width:104px;flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;margin-top:0}.bscope{width:7px;height:7px;border-radius:50%;flex:0 0 auto}.bscope.bs{background:#8fa4ff}.bscope.ps{background:var(--accent-2)}.battery{width:98px;height:18px;border:1px solid var(--line-2);border-radius:4px;padding:2px;position:relative;background:var(--surface)}.battery:after{content:"";position:absolute;right:-5px;top:5px;width:4px;height:6px;background:var(--line-2);border-radius:0 2px 2px 0}.battery-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));min-width:3px}.battery-text{font-size:10px;color:var(--text);margin-top:3px}.subrow{display:none}.subrow.on{display:table-row}.subpanel{background:var(--surface);border-radius:8px;padding:10px}.toggle-link{color:#8fa4ff;cursor:pointer;font-weight:700}
+@media(max-width:1180px){.g5,.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2,.filters,.settings-grid{grid-template-columns:1fr}.wide{grid-column:auto}.kanban{grid-template-columns:repeat(2,1fr)}.calendar{grid-template-columns:repeat(3,1fr)}.email-preview{grid-template-columns:1fr}}
+@media(max-width:760px){:root{--side:0}.sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin-left:0}.nav{display:grid;grid-template-columns:repeat(2,1fr);padding:8px}.nav-label{display:none}.nav button{border-left:0;border-radius:8px}.topbar{height:auto;min-height:62px;align-items:stretch;flex-direction:column;padding:14px}.title{width:100%;min-width:0}.title p{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.content{padding:14px}.g5,.g4,.g3,.g2,.kanban,.form-grid,.calendar,.email-preview{grid-template-columns:1fr}.form-grid .span2,.form-grid .span3{grid-column:auto}}
+</style>
+</head>
+<body>
+<section class="login-screen" id="loginScreen">
+  <div class="login-panel">
+    <div class="brand"><div class="mark">P</div><div><strong>PIRAMID BD</strong><span>Management Platform</span></div></div>
+    <h1>Team Access</h1>
+    <p>Enter your PIRAMID team ID and access code to continue.</p>
+    <form id="appLoginForm">
+      <label class="field"><span>User ID</span><input id="appLoginUser" autocomplete="off" required placeholder="user id"></label>
+      <label class="field"><span>Access Code</span><input id="appLoginPass" class="masked-entry" type="text" autocomplete="off" required placeholder="access code"></label>
+      <button class="btn primary" type="submit">Continue</button>
+      <button class="btn" type="button" id="forgotPasscodeBtn">Reset access / request approval</button>
+      <div class="login-error" id="appLoginError"></div>
+    </form>
+    <div class="panel-form" id="forgotPasscodePanel" style="margin-top:12px">
+      <div class="card"><div class="cb"><label class="field"><span>Username</span><input id="resetUsername" placeholder="username"></label><label class="field"><span>Note to Admin</span><textarea id="resetNote" placeholder="Please approve my login reset"></textarea></label><button class="btn primary" id="submitResetRequestBtn">Send request to Admin</button><div class="hint" id="resetRequestState"></div></div></div>
+    </div>
+    <div class="login-meta">PIRAMID Solutions Co., Ltd. · Business Development Platform · v1.0.0</div>
+  </div>
+</section>
+<div class="app locked" id="appShell">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark">P</div><div><strong>PIRAMID BD</strong><span>Management Platform</span></div></div>
+    <nav class="nav">
+      <div class="nav-label">Overview</div>
+      <button class="on" data-view="exec"><span class="ico">📊</span>Executive <span class="navdot"></span></button>
+      <button data-view="analytics"><span class="ico">📈</span>Insights Analytics <span class="navdot"></span></button>
+      <div class="nav-label">Operation</div>
+      <button data-view="projects"><span class="ico">📁</span>Projects <span class="navdot"></span></button>
+      <button data-view="tasks"><span class="ico">✅</span>TaskTracker <span class="navdot"></span></button>
+      <button data-view="team"><span class="ico">👥</span>Team <span class="navdot"></span></button>
+      <button data-view="notify"><span class="ico">🔔</span>Notifications <span class="navdot"></span></button>
+      <button data-view="settings"><span class="ico">⚙️</span>Settings <span class="navdot"></span></button>
+    </nav>
+    <div class="user"><div class="avatar" id="currentAvatar">BD</div><div><b id="currentUserName">BD Command Center</b><div class="hint" id="currentUserRole">Executive workspace</div></div></div>
+    <div style="padding:0 18px 8px"><button class="btn" id="themeToggle" style="width:100%">Light Theme</button></div>
+    <div style="padding:0 18px 14px"><button class="btn danger" id="logoutBtn" style="width:100%">Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <section id="v-exec" class="view on">
+      <div class="topbar" data-dash="exec"><div class="title"><div class="kicker"><span class="kdot"></span>EXECUTIVE OVERVIEW</div><h1>PIRAMID BD Management</h1><p>ภาพรวมปัจจุบัน: จำนวน, มูลค่า, การขาย, ประสิทธิภาพทีม และ KPI</p></div><div class="actions"><button class="btn" id="execLockBtn">✏️ Edit Layout</button><span class="edit-tools" data-edit-tools="exec"><button class="btn" id="addCardBtn">+ Add Card</button><button class="btn" data-toggle-custom="exec">Customize</button><button class="btn" id="execCheckpointBtn" title="บันทึก Layout ปัจจุบันเป็น Checkpoint">💾 Checkpoint</button><button class="btn" id="execResetLayout" title="คืนค่าไป Checkpoint หรือค่าเริ่มต้น">↺ Reset</button></span><button class="btn primary" data-export="executive">Export</button></div></div>
+      <div class="content">
+        <div class="filters" id="globalFilters"></div>
+        <div class="customizer switches" id="execCustomizer"></div>
+        <div class="hint edit-hint" data-edit-tools="exec" style="margin:0 0 2px">✏️ โหมดแก้ไข: ลากที่จับ ⠿ ย้ายการ์ด · ลากมุมขวาล่างปรับขนาด · ▦ จัดตำแหน่ง · เปิด/ปิดที่ Customize · บันทึกอัตโนมัติ</div>
+        <div class="dash-grid" id="execGrid">
+          <div class="card widget metric" data-widget="mTotal"><label>Total Projects</label><strong id="mv-total">0</strong><div id="trend-total"></div><small id="ms-total"></small><svg class="metric-spark" id="spark-total"></svg></div>
+          <div class="card widget metric" data-widget="mValue"><label>Pipeline Value</label><strong id="mv-value" class="grad-num">0</strong><div id="trend-value"></div><small id="ms-value"></small><svg class="metric-spark" id="spark-value"></svg></div>
+          <div class="card widget metric" data-widget="mWin"><label>Win Projects</label><strong id="mv-win">0</strong><small id="ms-win"></small></div>
+          <div class="card widget metric" data-widget="mWinValue"><label>Win Value</label><strong id="mv-winval" class="grad-num">0</strong><small id="ms-winval"></small></div>
+          <div class="card widget metric" data-widget="mWinPct"><label>Win Value %</label><strong id="mv-winpct">0</strong><small id="ms-winpct"></small></div>
+          <div class="card widget metric" data-widget="mHigh"><label>High Priority</label><strong id="mv-high">0</strong><small id="ms-high"></small></div>
+          <div class="card widget metric" data-widget="mOverdue"><label>Overdue Tasks</label><strong id="mv-overdue">0</strong><div id="trend-overdue"></div><small id="ms-overdue"></small><svg class="metric-spark" id="spark-overdue"></svg></div>
+          <div class="card widget" data-widget="execStatus"><div class="ch"><h2>Project Status</h2><small id="statusTotal"></small></div><div class="cb"><div class="bars" id="statusBars"></div></div></div>
+          <div class="card widget" data-widget="execBrand"><div class="ch"><h2>Solutions Sales</h2><small>มูลค่าตามกลุ่มโซลูชัน/แบรนด์ · hover ดูมูลค่าและ %</small></div><div class="cb" id="brandDonut"></div></div>
+          <div class="card widget" data-widget="execTeam"><div class="ch"><h2>KPI Team</h2><small>เป้าหมาย vs ทำได้</small></div><div class="cb"><div class="bars" id="teamKpiBars"></div></div></div>
+          <div class="card widget" data-widget="execSolutions"><div class="ch"><h2>Solutions Mix</h2><small>4 กลุ่มโซลูชันหลัก · จำนวนโครงการ</small></div><div class="cb"><div class="vbars" id="solutionGroupBars"></div></div></div>
+          <div class="card widget" data-widget="execTopSystems"><div class="ch"><h2>Top 5 Systems</h2><small>ระบบที่ทำบ่อยที่สุด</small></div><div class="cb"><div class="bars" id="topSystemBars"></div></div></div>
+          <div class="card widget" data-widget="execSegments"><div class="ch"><h2>Value by Segment</h2><small>มูลค่าตาม Segment · hover ดูมูลค่าและ %</small></div><div class="cb" id="segmentDonut"></div></div>
+          <div class="card widget" data-widget="execTasks"><div class="ch"><h2>Task Health</h2><small>สัดส่วนสถานะงาน · hover ดูจำนวนและ %</small></div><div class="cb" id="taskHealthDonut"></div></div>
+          <div class="card widget" data-widget="execWorkload"><div class="ch"><h2>Team Workload</h2><div style="display:flex;align-items:center;gap:6px"><small>เทียบปี</small><select id="wlCompare" class="btn small" style="height:24px;padding:0 6px"><option value="prev">ปีก่อน</option><option value="next">ปีถัดไป</option></select></div></div><div class="cb"><div id="teamWorkloadChart"></div></div></div>
+          <div class="card widget" data-widget="execHighPriority"><div class="ch"><h2>High Priority Projects</h2><small>โครงการสำคัญ Top 10</small></div><div class="cb"><div id="highPriorityTable"></div></div></div>
+          <div class="card widget" data-widget="execTaskAlert"><div class="ch"><h2>Tasks: Doing / Overdue</h2><small>งานที่ต้องเร่ง Top 10</small></div><div class="cb"><div id="taskAlertTable"></div></div></div>
+        </div>
+        <div class="grid g2" id="executiveInsights"></div>
+      </div>
+    </section>
+
+
+    <section id="v-projects" class="view">
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>PROJECTS</div><h1>Project Management</h1><p>บริหารโครงการ มอบหมายทีม และมูลค่าตาม Brand / PIRAMID Scope</p></div><div class="actions"><button class="btn primary" id="projectFormToggle">+ New Project</button><button class="btn" data-export="projects">Export</button></div></div>
+      <div class="content">
+        <div class="panel-form card" id="projectFormPanel"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project">x</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div>
+        <div class="card"><div class="ch"><h2>Projects</h2><small id="projectCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>ID</th><th>Project</th><th>Segment</th><th>System Groups</th><th>Brand Scope</th><th>Sub Tasks</th><th>Progress</th><th>Status</th><th>Priority</th><th>Size</th><th>Value</th><th>BD Lead</th><th>Sales</th><th>Actions</th></tr></thead><tbody id="projectRows"></tbody></table></div></div>
+      </div>
+    </section>
+
+    <section id="v-tasks" class="view">
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TASKS</div><h1>Task Tracker</h1><p>ติดตามสถานะงานรายบุคคล กำหนดส่ง และความคืบหน้า</p></div><div class="actions"><button class="btn" data-export="tasks">Export</button></div></div>
+      <div class="content">
+        <div class="title" style="padding:2px 0 8px"><h1 style="font-size:28px">My Tasks Workspace</h1><p>A personal command center for daily priorities, deadlines, and progress updates.</p></div>
+        <div class="toolbar" style="justify-content:flex-end">
+          <button class="btn small task-scope" data-task-scope="today">Today</button>
+          <button class="btn small task-scope on" data-task-scope="week">This Week</button>
+          <button class="btn small task-scope" data-task-scope="overdue">Overdue</button>
+          <button class="btn small task-scope" data-task-scope="waiting">Waiting Update</button>
+          <button class="btn small task-scope" data-task-scope="completed">Completed</button>
+          <button class="btn small task-period on" data-task-period="week">Weekly</button>
+          <button class="btn small task-period" data-task-period="month">Monthly</button>
+          <label class="field" style="min-width:210px"><span>BD Lead</span><select id="taskLeadFilter"></select></label>
+        </div>
+        <div class="grid g4" id="taskMetrics"></div>
+        <div class="card"><div class="ch"><h2>Due Date Calendar</h2><small id="taskCalendarLabel"></small></div><div class="cb"><div class="calendar" id="taskCalendar"></div></div></div>
+        <div class="kanban" id="taskBoard"></div>
+      </div>
+    </section>
+
+    <section id="v-team" class="view">
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีม เป้าหมายการขาย และสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
+      <div class="content">
+        <div class="grid g4" id="teamTaskMetrics"></div>
+        <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
+        <div class="panel-form card" id="teamFormPanel"><div class="ch"><h2 id="teamFormTitle">New Member</h2><button class="btn icon" data-close-form="team">x</button></div><div class="cb"><form class="form-grid" id="teamForm"></form></div></div>
+        <div class="grid g3" id="teamCards"></div>
+      </div>
+    </section>
+
+    <section id="v-notify" class="view">
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>NOTIFICATIONS</div><h1>Notification Center</h1><p>การแจ้งเตือนทางอีเมลตามระดับ Member / Manager / Executive และ Activity Log</p></div><div class="actions"><button class="btn primary" id="ruleFormToggle">+ New Rule</button></div></div>
+      <div class="content">
+        <div class="card"><div class="ch"><h2>Activity Log</h2><small>ใคร · ทำอะไร · ส่วนไหน · เมื่อไหร่ (50 รายการล่าสุด)</small></div><div class="cb"><div id="activityLog" style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto"></div></div></div>
+        <div class="panel-form card" id="ruleFormPanel"><div class="ch"><h2 id="ruleFormTitle">New Notification Rule</h2><button class="btn icon" data-close-form="rule">x</button></div><div class="cb"><form class="form-grid" id="ruleForm"></form></div></div>
+        <div class="card"><div class="ch"><h2>Rules</h2><small id="ruleCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Level</th><th>Rule</th><th>Period</th><th>Snapshot</th><th>Channel</th><th>Time</th><th>Recipients</th><th>Status</th><th>Actions</th></tr></thead><tbody id="ruleRows"></tbody></table></div></div>
+        <div class="card"><div class="ch"><h2>Manual Trigger + Preview Snapshot</h2><small id="previewRuleLabel">Select Preview on a rule</small></div><div class="cb"><div class="email-preview" id="notificationPreview"><div class="email-box hint">Choose a rule to preview email content.</div><div class="snapshot-frame hint">Snapshot preview will appear here.</div></div></div></div>
+        <div class="grid g2">
+          <div class="card"><div class="ch"><h2>Email Settings</h2><small>SMTP secret is stored only in environment variables</small></div><div class="cb"><div id="emailSettings"></div><div class="toolbar" style="margin-top:10px"><input id="testEmailTo" placeholder="test@email.com" style="flex:1"><button class="btn primary" id="sendTestEmailBtn">Send Test Email</button></div></div></div>
+          <div class="card"><div class="ch"><h2>Notification Preferences</h2><small>Per user opt-in/out</small></div><div class="cb"><div id="emailPreferences"></div></div></div>
+        </div>
+        <div class="card"><div class="ch"><h2>Email Templates</h2><small>CRUD + preview variables</small></div><div class="cb"><form class="form-grid" id="emailTemplateForm"></form><div class="table-wrap" style="margin-top:12px"><table class="tbl"><thead><tr><th>Key</th><th>Name</th><th>Subject</th><th>Variables</th><th>Actions</th></tr></thead><tbody id="emailTemplateRows"></tbody></table></div></div></div>
+        <div class="grid g2">
+          <div class="card"><div class="ch"><h2>Email Queue</h2><small>pending, sending, sent, failed, retry, cancelled</small></div><div class="cb"><div class="toolbar" style="margin-bottom:10px"><button class="btn" id="refreshEmailQueueBtn">Refresh</button><button class="btn primary" id="processEmailQueueBtn">Process Due</button></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Status</th><th>To</th><th>Subject</th><th>Scheduled</th><th>Retry</th><th>Actions</th></tr></thead><tbody id="emailQueueRows"></tbody></table></div></div></div>
+          <div class="card"><div class="ch"><h2>Email Logs</h2><small>provider response and errors</small></div><div class="cb"><div class="toolbar" style="margin-bottom:10px"><button class="btn" id="refreshEmailLogsBtn">Refresh</button></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Status</th><th>Recipient</th><th>Subject</th><th>Template</th><th>Sent At</th><th>Error</th></tr></thead><tbody id="emailLogRows"></tbody></table></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="v-settings" class="view">
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>SETTINGS</div><h1>Settings</h1><p>Data List สำหรับฟอร์มโครงการ: Status, Solutions, Brand Scope, Task Template และ Size Range</p></div><div class="actions"><button class="btn" id="projectStatusFormToggle">Project Status</button><button class="btn" id="taskStatusFormToggle">Task Status</button><button class="btn" id="solutionFormToggle">System</button><button class="btn" id="brandFormToggle">Brand</button><button class="btn" id="taskFormToggle">Task Template</button><button class="btn" id="sizeFormToggle">Size Range</button></div></div>
+      <div class="content">
+        <div class="settings-grid">
+          <div class="card">
+            <div class="ch"><h2>Solutions Propose</h2><small>4 กลุ่มหลักและ System ใต้แต่ละกลุ่ม</small></div>
+            <div class="cb"><div class="panel-form" id="solutionFormPanel" style="margin-bottom:12px"><form class="form-grid" id="solutionForm"></form></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Group</th><th>System</th><th>Actions</th></tr></thead><tbody id="solutionRows"></tbody></table></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><h2>Brand Scope</h2><small>Data list สำหรับเลือกหลายแบรนด์ใน Project</small></div>
+            <div class="cb"><div class="panel-form" id="brandFormPanel" style="margin-bottom:12px"><form class="form-grid" id="brandForm"></form></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Scope</th><th>Category</th><th>Brand / Item</th><th>Actions</th></tr></thead><tbody id="brandRows"></tbody></table></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><h2>Task / Sub Task Templates</h2><small>Data list ไว้เลือกใน Project เท่านั้น</small></div>
+            <div class="cb"><div class="panel-form" id="taskFormPanel" style="margin-bottom:12px"><form class="form-grid" id="taskForm"></form></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task Template</th><th>Default Sub Tasks</th><th>Actions</th></tr></thead><tbody id="taskRows"></tbody></table></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><h2>Value Size Range</h2><small>กำหนดช่วงราคาให้ Size XS/S/M/L/XL/XXL</small></div>
+            <div class="cb"><div class="panel-form" id="sizeFormPanel" style="margin-bottom:12px"><form class="form-grid" id="sizeForm"></form></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Size</th><th>Min</th><th>Max</th><th>Actions</th></tr></thead><tbody id="sizeRows"></tbody></table></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><h2>Project Status</h2><small>สถานะหลักของโครงการ เพิ่ม/ลบ/แก้ไขชื่อได้</small></div>
+            <div class="cb"><div class="panel-form" id="projectStatusFormPanel" style="margin-bottom:12px"><form class="form-grid" id="projectStatusForm"></form></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Status</th><th>Actions</th></tr></thead><tbody id="projectStatusRows"></tbody></table></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><h2>Task / Kanban Status</h2><small>Status สำหรับ Project list และ TaskTracker</small></div>
+            <div class="cb"><div class="panel-form" id="taskStatusFormPanel" style="margin-bottom:12px"><form class="form-grid" id="taskStatusForm"></form></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Status</th><th>Description</th><th>Actions</th></tr></thead><tbody id="taskStatusRows"></tbody></table></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="v-analytics" class="view">
+      <div class="topbar" data-dash="ana"><div class="title"><div class="kicker"><span class="kdot"></span>INSIGHTS & ANALYSIS</div><h1>Insights Analytics</h1><p>เรียนรู้จากโครงการที่ผ่านมา: เทรนด์, Win/Loss, Conversion และ Pipeline</p></div><div class="actions"><button class="btn" id="anaLockBtn">✏️ Edit Layout</button><span class="edit-tools" data-edit-tools="ana"><button class="btn" id="anaAddCard">+ Add Card</button><button class="btn" data-toggle-custom="analytics">Customize</button><button class="btn" id="anaCheckpointBtn">💾 Checkpoint</button><button class="btn" id="anaResetLayout">↺ Reset</button></span><button class="btn primary" data-export="analytics">Export</button></div></div>
+      <div class="content">
+        <div class="customizer switches" id="analyticsCustomizer"></div>
+        <div class="hint edit-hint" data-edit-tools="ana" style="margin:0 0 2px">✏️ โหมดแก้ไข: ลากที่จับ ⠿ ย้ายการ์ด · ลากมุมขวาล่างปรับขนาด · ▦ จัดตำแหน่ง · + Add Card เพิ่มการ์ดวิเคราะห์ · บันทึกอัตโนมัติ</div>
+        <div class="dash-grid" id="anaGrid">
+          <div class="card widget metric" data-widget="anaTotalValue"><label>Total Pipeline</label><strong id="av-total">0</strong><small id="as-total"></small></div>
+          <div class="card widget metric" data-widget="anaAvgValue"><label>Avg Project Value</label><strong id="av-avg">0</strong><small id="as-avg"></small></div>
+          <div class="card widget metric" data-widget="anaLargest"><label>Largest Project</label><strong id="av-largest">0</strong><small id="as-largest"></small></div>
+          <div class="card widget metric" data-widget="anaBrandCount"><label>Brand Count</label><strong id="av-brand">0</strong><small id="as-brand"></small></div>
+          <div class="card widget" data-widget="anaTrend" data-fit><div class="ch"><h2>Monthly Trends</h2><small>งานต่อเดือน · Total / Done / Overdue</small></div><div class="cb"><div class="fit-chart" id="anaTrendChart"></div></div></div>
+          <div class="card widget" data-widget="anaConvFunnel" data-fit><div class="ch"><h2>Conversion Funnel</h2><small>โครงการตามขั้น pipeline + อัตราแปลง</small></div><div class="cb"><div class="fit-chart" id="anaFunnelChart"></div></div></div>
+          <div class="card widget" data-widget="anaFunnel"><div class="ch"><h2>Pipeline Funnel</h2><small>มูลค่าตามสถานะ</small></div><div class="cb"><div class="bars" id="pipelineBars2"></div></div></div>
+          <div class="card widget" data-widget="anaWinLoss"><div class="ch"><h2>Win / Loss</h2><small>สัดส่วนมูลค่า · hover ดู % </small></div><div class="cb" id="winLossDonut"></div></div>
+          <div class="card widget" data-widget="anaScopeSplit"><div class="ch"><h2>Brand vs PIRAMID Scope</h2><small>มูลค่าโครงการตามขอบเขต · hover ดู %</small></div><div class="cb" id="scopeSplitDonut"></div></div>
+          <div class="card widget" data-widget="anaPiramidScope"><div class="ch"><h2>PIRAMID Scope Breakdown</h2><small>มูลค่าบริการ PIRAMID แต่ละประเภท</small></div><div class="cb"><div class="bars" id="piramidScopeBars"></div></div></div>
+          <div class="card widget" data-widget="anaSize"><div class="ch"><h2>Value Distribution by Size</h2><small>เชิงวิเคราะห์</small></div><div class="cb"><div class="bars" id="sizeBars"></div></div></div>
+          <div class="card widget" data-widget="anaSystems"><div class="ch"><h2>Top System Types</h2><small>ความถี่ของระบบ</small></div><div class="cb"><div class="bars" id="systemBars"></div></div></div>
+          <div class="card widget" data-widget="anaSales"><div class="ch"><h2>Sales Performance</h2><small>มูลค่าและจำนวนโครงการ</small></div><div class="cb"><div class="bars" id="salesBars"></div></div></div>
+          <div class="card widget" data-widget="anaTable"><div class="ch"><h2>High Priority Watchlist</h2><small>งานที่ควรติดตาม</small></div><div class="cb"><div class="table-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Status</th><th>Value</th><th>Owner</th><th>Tasks</th></tr></thead><tbody id="watchRows"></tbody></table></div></div></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="bi-modal" id="cardEditorPanel"><div class="card"><div class="ch"><h2>Add / Edit Card (BI)</h2><small>เลือกข้อมูลและชนิดกราฟ ระบบจะแนะนำให้</small></div><div class="cb"><form class="form-grid" id="cardEditorForm"></form></div></div></div>
+</div>
+
+<script>
+const today = new Date();
+const STATE_API = '/api/state';
+const EMAIL_API = '/api/email';
+const DEFAULT_SOLUTION_GROUPS = [
+  {id:'SG-001',group:'IT and Communication',system:'Network'},
+  {id:'SG-002',group:'IT and Communication',system:'Wi-Fi'},
+  {id:'SG-003',group:'IT and Communication',system:'Server Room'},
+  {id:'SG-004',group:'IT and Communication',system:'IP PBX'},
+  {id:'SG-005',group:'Security Solutions',system:'CCTV'},
+  {id:'SG-006',group:'Security Solutions',system:'Access Control'},
+  {id:'SG-007',group:'Security Solutions',system:'Gate Barrier'},
+  {id:'SG-008',group:'IOT and Platform',system:'AI CCTV'},
+  {id:'SG-009',group:'IOT and Platform',system:'IOC Platform'},
+  {id:'SG-010',group:'BMS and Energy',system:'BMS'},
+  {id:'SG-011',group:'BMS and Energy',system:'RCU'},
+  {id:'SG-012',group:'BMS and Energy',system:'Energy Monitoring'}
+];
+const DEFAULT_BRAND_CATALOG = [
+  {id:'BR-001',category:'Hardware',name:'Hikvision'},
+  {id:'BR-002',category:'Hardware',name:'Aruba'},
+  {id:'BR-003',category:'Hardware',name:'Ruckus'},
+  {id:'BR-004',category:'Hardware',name:'TP-Link'},
+  {id:'BR-005',category:'Hardware',name:'Grandstream'},
+  {id:'BR-006',category:'Software',name:'Milestone'},
+  {id:'BR-007',category:'License',name:'Microsoft 365'},
+  {id:'BR-008',category:'Installation',name:'PIRAMID Installation'},
+  {id:'BR-011',category:'Cabling',name:'PIRAMID Cabling'},
+  {id:'BR-009',category:'Maintenance',name:'PIRAMID Care'},
+  {id:'BR-010',category:'Project management fee',name:'PIRAMID PMO'}
+];
+const DEFAULT_TASK_TEMPLATES = [
+  {id:'TT-001',title:'Site survey',subtasks:['Collect requirement','Photo survey','Confirm drawing']},
+  {id:'TT-002',title:'Solution design',subtasks:['System sizing','Brand selection','Architecture review']},
+  {id:'TT-003',title:'BOQ / Costing',subtasks:['Prepare BOQ','Revise BOQ round 1','Revise BOQ round 2']},
+  {id:'TT-004',title:'Proposal submission',subtasks:['Prepare proposal','Internal approval','Send to sales/customer']},
+  {id:'TT-005',title:'Follow up / Closing',subtasks:['Follow up vendor','Follow up customer','Confirm PO timeline']}
+];
+const DEFAULT_SIZE_RANGES = [
+  {id:'SZ-001',size:'XS',min:0,max:200000},
+  {id:'SZ-002',size:'S',min:200001,max:800000},
+  {id:'SZ-003',size:'M',min:800001,max:3000000},
+  {id:'SZ-004',size:'L',min:3000001,max:15000000},
+  {id:'SZ-005',size:'XL',min:15000001,max:50000000},
+  {id:'SZ-006',size:'XXL',min:50000001,max:9999999999}
+];
+const DEFAULT_PROJECT_STATUSES = [
+  {id:'PS-001',name:'Quotation'},
+  {id:'PS-002',name:'Budgetary'},
+  {id:'PS-003',name:'Waiting PO'},
+  {id:'PS-004',name:'Pending'},
+  {id:'PS-005',name:'Win'},
+  {id:'PS-006',name:'Lost'}
+];
+const DEFAULT_TASK_STATUSES = [
+  {id:'TS-001',name:'Schedule',description:'เข้าตารางแผนงานไว้แล้ว'},
+  {id:'TS-002',name:'Doing',description:'กำลังทำ'},
+  {id:'TS-003',name:'Review',description:'กำลังตรวจสอบ รีเช็ค'},
+  {id:'TS-004',name:'Overdue',description:'เกินกำหนด Due date มาแล้ว'},
+  {id:'TS-005',name:'Done',description:'เสร็จแล้ว'}
+];
+const DEFAULT_NOTIFICATION_RULES = [
+  {id:'R-001',level:'Member',reportPeriod:'Daily',name:'Member Daily Summary',channel:'Email',time:'08:30, 17:30',recipients:'BD Assignee',recipientScope:'Individual',attachSnapshot:true,snapshotView:'TaskTracker',format:'PNG',enabled:true},
+  {id:'R-002',level:'Member',reportPeriod:'Weekly',name:'Member Weekly Summary',channel:'Email',time:'Friday 17:30',recipients:'BD Assignee',recipientScope:'Individual',attachSnapshot:true,snapshotView:'TaskTracker',format:'PNG',enabled:true},
+  {id:'R-003',level:'Member',reportPeriod:'Monthly',name:'Member Monthly Summary',channel:'Email',time:'Last day 17:30',recipients:'BD Assignee',recipientScope:'Individual',attachSnapshot:true,snapshotView:'TaskTracker',format:'PDF',enabled:true},
+  {id:'R-004',level:'Manager',reportPeriod:'Daily',name:'Manager Daily Summary',channel:'Email',time:'09:00, 18:00',recipients:'BD Manager + BD Lead',recipientScope:'Group',attachSnapshot:true,snapshotView:'Team',format:'PNG',enabled:true},
+  {id:'R-005',level:'Manager',reportPeriod:'Weekly',name:'Manager Weekly Summary',channel:'Email',time:'Friday 18:00',recipients:'BD Manager + BD Lead',recipientScope:'Group',attachSnapshot:true,snapshotView:'Team',format:'PNG',enabled:true},
+  {id:'R-006',level:'Manager',reportPeriod:'Monthly',name:'Manager Monthly Summary',channel:'Email',time:'Last day 18:00',recipients:'BD Manager + BD Lead',recipientScope:'Group',attachSnapshot:true,snapshotView:'Team',format:'PDF',enabled:true},
+  {id:'R-007',level:'Executive',reportPeriod:'Daily',name:'Executive Daily Summary',channel:'Email',time:'08:45',recipients:'Executive',recipientScope:'Group',attachSnapshot:true,snapshotView:'Executive',format:'PNG',enabled:true},
+  {id:'R-008',level:'Executive',reportPeriod:'Weekly',name:'Executive Weekly Summary',channel:'Email',time:'Friday 08:45',recipients:'Executive',recipientScope:'Group',attachSnapshot:true,snapshotView:'Executive',format:'PNG',enabled:true},
+  {id:'R-009',level:'Executive',reportPeriod:'Monthly',name:'Executive Monthly Summary',channel:'Email',time:'Last day 08:45',recipients:'Executive',recipientScope:'Group',attachSnapshot:true,snapshotView:'Executive',format:'PDF',enabled:true}
+];
+const seed = {
+  teams:[
+    {id:'tm1',name:'Mr. Wongwaris',role:'BD Lead',level:'Manager',email:'wongwaris@piramid.local',target:360000000,color:'#5b7cfa'},
+    {id:'tm2',name:'Mr. Teerawat',role:'BD Lead',level:'Member',email:'teerawat@piramid.local',target:22000000,color:'#13b8a6'},
+    {id:'tm3',name:'Mr. Ball',role:'BD Lead',level:'Member',email:'ball@piramid.local',target:18000000,color:'#b678ff'},
+    {id:'tm4',name:'Ms. Supaporn',role:'Sales',level:'Manager',email:'supaporn@piramid.local',target:300000000,color:'#f6b44b'},
+    {id:'tm5',name:'Ms. Tannasiyaporn',role:'Sales',level:'Member',email:'tannasiyaporn@piramid.local',target:60000000,color:'#ff5a67'},
+    {id:'tm6',name:'Ms. Prapaphan',role:'Sales',level:'Member',email:'prapaphan@piramid.local',target:30000000,color:'#5bc0ff'}
+  ],
+  projects:[
+    {id:'P-001',name:'The Parliament - 4D Cinema',seg:'Government',sys:'AV System, Digital Signage',brand:'Panasonic',status:'Quotation',pri:'High',size:'XXL',val:180000000,bd:'tm1',sales:'tm4'},
+    {id:'P-002',name:'The Parliament - AV',seg:'Government',sys:'AV System',brand:'Crestron',status:'Budgetary',pri:'High',size:'XXL',val:10000000,bd:'tm1',sales:'tm4'},
+    {id:'P-003',name:'Omega Warehouse',seg:'Enterprise',sys:'Network, Wi-Fi, Server Room',brand:'Aruba',status:'Quotation',pri:'Medium',size:'XL',val:30000000,bd:'tm1',sales:'tm5'},
+    {id:'P-004',name:'COJ - CCTV 14M',seg:'Government',sys:'CCTV',brand:'Hikvision',status:'Quotation',pri:'Low',size:'XL',val:14000000,bd:'tm1',sales:'tm6'},
+    {id:'P-005',name:'WMA Wastewater Management',seg:'Enterprise',sys:'IOC Platform, CCTV',brand:'Hikvision',status:'Waiting PO',pri:'Medium',size:'L',val:12500000,bd:'tm3',sales:'tm4'},
+    {id:'P-006',name:'AIS All Season - Server Room',seg:'Enterprise',sys:'Server Room, Network',brand:'Dell',status:'Budgetary',pri:'High',size:'L',val:3000000,bd:'tm1',sales:'tm4'},
+    {id:'P-007',name:'Layana Resort Lanta - Wi-Fi',seg:'Hospitality',sys:'Wi-Fi, Network',brand:'Ruckus',status:'Quotation',pri:'Medium',size:'M',val:3000000,bd:'tm2',sales:'tm6'},
+    {id:'P-008',name:'Amari Burirum - IT Communication',seg:'Hospitality',sys:'Network, Wi-Fi, CCTV, IP PBX',brand:'Grandstream',status:'Win',pri:'High',size:'M',val:2000000,bd:'tm1',sales:'tm6'},
+    {id:'P-009',name:'SAMA Garden - AI CCTV',seg:'Enterprise',sys:'CCTV, AI CCTV',brand:'Hikvision',status:'Win',pri:'Medium',size:'M',val:1000000,bd:'tm1',sales:'tm4'},
+    {id:'P-010',name:'Stay Hotel - Renovation',seg:'Hospitality',sys:'Network, Wi-Fi, IPTV',brand:'TP-Link',status:'Win',pri:'Medium',size:'M',val:1000000,bd:'tm1',sales:'tm5'},
+    {id:'P-011',name:'Grand Hyatt Erawan',seg:'Hospitality',sys:'CCTV, Wi-Fi, Network',brand:'Hikvision',status:'Budgetary',pri:'Medium',size:'S',val:500000,bd:'tm1',sales:'tm6'},
+    {id:'P-012',name:'Six Senses Yao Noi',seg:'Hospitality',sys:'Network, Wi-Fi, CCTV',brand:'Ruckus',status:'Quotation',pri:'Medium',size:'S',val:500000,bd:'tm2',sales:'tm6'},
+    {id:'P-013',name:'FEC Office - Gate Barrier',seg:'Enterprise',sys:'Access Control',brand:'ZKTeco',status:'Waiting PO',pri:'Medium',size:'S',val:200000,bd:'tm1',sales:'tm4'},
+    {id:'P-014',name:'Reignwood - Main House CCTV B1',seg:'Enterprise',sys:'CCTV',brand:'Hikvision',status:'Win',pri:'High',size:'XS',val:160000,bd:'tm1',sales:'tm5'}
+  ],
+  tasks:[
+    {id:'T-001',project:'P-001',title:'สรุป BOQ และ option สำหรับผู้บริหาร',owner:'tm1',status:'Doing',due:'2026-05-29',level:'Manager',progress:65},
+    {id:'T-002',project:'P-001',title:'ติดตามราคา vendor รอบสุดท้าย',owner:'tm4',status:'Overdue',due:'2026-05-25',level:'Member',progress:40},
+    {id:'T-003',project:'P-003',title:'ส่ง proposal network design',owner:'tm5',status:'Review',due:'2026-05-28',level:'Member',progress:80},
+    {id:'T-004',project:'P-005',title:'ยืนยัน timeline รอ PO',owner:'tm3',status:'Doing',due:'2026-06-03',level:'Member',progress:55},
+    {id:'T-005',project:'P-008',title:'ปิดเอกสาร handover',owner:'tm6',status:'Done',due:'2026-05-22',level:'Member',progress:100},
+    {id:'T-006',project:'P-006',title:'ทำ risk note งานเร่งด่วน',owner:'tm1',status:'Overdue',due:'2026-05-24',level:'Manager',progress:30}
+  ],
+  rules: DEFAULT_NOTIFICATION_RULES,
+  solutionGroups: DEFAULT_SOLUTION_GROUPS,
+  brandCatalog: DEFAULT_BRAND_CATALOG,
+  taskTemplates: DEFAULT_TASK_TEMPLATES,
+  sizeRanges: DEFAULT_SIZE_RANGES,
+  projectStatuses: DEFAULT_PROJECT_STATUSES,
+  taskStatuses: DEFAULT_TASK_STATUSES,
+  layout:{mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+};
+const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
+const DEFAULT_EXEC_ORDER = ['mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert'];
+const DEFAULT_ANA_ORDER = ['anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable'];
+const PIRAMID_SCOPE = ['Installation','Cabling','Maintenance','Project management fee'];
+const BRAND_SCOPE_CATS = ['Hardware','Software','License'];
+const BRAND_CATEGORIES = [...BRAND_SCOPE_CATS,...PIRAMID_SCOPE];
+function scopeOfCategory(cat){return PIRAMID_SCOPE.includes(cat)?'PIRAMID Scope':'Brand Scope';}
+let state = loadState();
+let filters = {q:'',seg:'All',status:'All',team:'All',brand:'All'};
+let editing = {project:null,task:null,team:null,rule:null,solution:null,brand:null,size:null,emailTemplate:null};
+let emailAdmin = {settings:null,templates:[],queue:[],logs:[],preferences:[]};
+let activeUser = null;
+let dbReady = false;
+let currentTheme = localStorage.getItem('piramid-theme') || 'dark';
+let taskScope = 'week';
+let taskPeriod = 'week';
+let taskLeadFilter = 'All';
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
+let idleTimer = null;
+
+function applyTheme(){
+  document.documentElement.dataset.theme = currentTheme;
+  const btn=document.getElementById('themeToggle');
+  if(btn) btn.textContent = currentTheme==='light' ? 'Dark Theme' : 'Light Theme';
+}
+function findUser(username,password){return state.teams.find(t=>String(t.username||'')===username && String(t.password||'')===password)}
+function setActiveUser(user){
+  activeUser=user||null;
+  if(user){localStorage.setItem('piramid-active-user',user.id);localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer()}
+  else {localStorage.removeItem('piramid-active-user');localStorage.removeItem('piramid-session-at');clearTimeout(idleTimer)}
+  updateAuthUI();
+}
+function restoreSession(){
+  const id=localStorage.getItem('piramid-active-user');
+  const at=Number(localStorage.getItem('piramid-session-at')||0);
+  if(id && (!at || Date.now()-at>SESSION_TIMEOUT_MS)){expireSession('Session expired after 30 minutes idle. Please login again.');return}
+  const user=state.teams.find(t=>t.id===id);
+  activeUser=user||null;
+  if(activeUser) startIdleTimer();
+  updateAuthUI();
+}
+function touchSession(){if(activeUser){localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer()}}
+function startIdleTimer(){clearTimeout(idleTimer);idleTimer=setTimeout(()=>expireSession('Session expired after 30 minutes idle. Please login again.'),SESSION_TIMEOUT_MS)}
+function expireSession(message){activeUser=null;localStorage.removeItem('piramid-active-user');localStorage.removeItem('piramid-session-at');clearTimeout(idleTimer);updateAuthUI();const err=document.getElementById('appLoginError');if(err)err.textContent=message||''}
+function updateAuthUI(){
+  const logged=!!activeUser;
+  const loginScreen=document.getElementById('loginScreen');
+  const appShell=document.getElementById('appShell');
+  if(!loginScreen || !appShell){
+    console.warn('Auth shell not found; skipping auth UI update');
+    return;
+  }
+  loginScreen.hidden=logged;
+  appShell.classList.toggle('locked',!logged);
+  const name=document.getElementById('currentUserName'), role=document.getElementById('currentUserRole'), avatar=document.getElementById('currentAvatar');
+  if(name&&role&&avatar&&activeUser){name.textContent=activeUser.name;role.textContent=`${activeUser.role} · ${activeUser.level}`;avatar.textContent=initials(activeUser.name)}
+  updateLoginState();
+}
+function loginApp(e){
+  e.preventDefault();
+  const user=document.getElementById('appLoginUser')?.value.trim()||'';
+  const pass=document.getElementById('appLoginPass')?.value||'';
+  const found=findUser(user,pass);
+  if(!found){const err=document.getElementById('appLoginError'); if(err) err.textContent='Username or passcode is incorrect.';return}
+  const err=document.getElementById('appLoginError'); if(err) err.textContent='';
+  setActiveUser(found);
+  renderAll(false);
+}
+function logoutApp(){
+  setActiveUser(null);
+  const pass=document.getElementById('appLoginPass'); if(pass) pass.value='';
+}
+function isAdmin(){return activeUser?.username==='wongwaris'}
+function toggleForgotPasscode(){document.getElementById('forgotPasscodePanel').classList.toggle('on')}
+function submitResetRequest(){
+  const username=document.getElementById('resetUsername').value.trim();
+  const note=document.getElementById('resetNote').value.trim();
+  const user=state.teams.find(t=>t.username===username);
+  const box=document.getElementById('resetRequestState');
+  if(!user){box.textContent='Username not found.';box.style.color='var(--red)';return}
+  state.passwordResetRequests ||= [];
+  const existing=state.passwordResetRequests.find(r=>r.username===username&&r.status==='Pending');
+  if(existing){box.textContent='A pending request already exists for this user.';return}
+  state.passwordResetRequests.push({id:nextId('RR',state.passwordResetRequests),userId:user.id,username:user.username,name:user.name,note,status:'Pending',requestedAt:new Date().toISOString(),admin:'wongwaris'});
+  saveState(); box.textContent='Request sent to Admin Wongwaris for approval.';box.style.color='var(--green)';
+}
+
+function loadState(){
+  const saved = localStorage.getItem('piramid-bd-state');
+  const base = structuredClone(seed);
+  let loaded = base;
+  if(saved){
+    try{loaded = {...base,...JSON.parse(saved)}}catch{loaded = base}
+  }
+  return normalizeState(loaded);
+}
+function saveState(){
+  localStorage.setItem('piramid-bd-state',JSON.stringify(state));
+  saveRemoteState();
+}
+function initDatabase(){
+  loadRemoteState();
+}
+async function loadRemoteState(){
+  let remoteData=null;
+  try{
+    const res=await fetch(STATE_API,{headers:{Accept:'application/json'},cache:'no-store'});
+    if(!res.ok) throw new Error('State API load failed: '+res.status);
+    const row=await res.json();
+    remoteData=row?.data||null;
+  }catch(err){console.warn('Neon load failed, using localStorage',err)}
+  if(remoteData){
+    state=normalizeState(remoteData);
+    dbReady=true;
+    localStorage.setItem('piramid-bd-state',JSON.stringify(state));
+    restoreSession();
+    renderAll(true);
+    return;
+  }
+  if(!dbReady) await saveRemoteState();
+  dbReady=true;
+  restoreSession();
+  renderAll(false);
+}
+async function saveRemoteState(){
+  try{
+    const res=await fetch(STATE_API,{method:'POST',headers:{'Content-Type':'application/json','x-bd-write-key':localStorage.getItem('bd-write-key')||''},body:JSON.stringify({data:state})});
+    if(!res.ok) throw new Error('State API save failed: '+res.status);
+    dbReady=true;
+  }catch(err){console.warn('Neon save failed',err)}
+}
+function normalizeState(data){
+  data.teams = (data.teams||[]).map((t,i)=>({
+    username:t.username || firstName(t.name||`user${i+1}`),
+    password:t.password || lastName(t.name||`user${i+1}`),
+    ...t,
+    role:t.role==='Group'?'Manager':t.role,
+    level:t.level==='Staff'?'Member':t.level
+  }));
+  data.projects = (data.projects||[]).map(p=>({...p,systems:projectSystems(p),brands:projectBrands(p)}));
+  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level}));
+  data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
+    reportPeriod:r.reportPeriod||periodFromRule(r),
+    attachSnapshot:r.attachSnapshot ?? true,
+    snapshotView:r.snapshotView || (r.level==='Executive'?'Executive':r.level==='Manager'?'Team':'TaskTracker'),
+    format:r.format || 'PNG',
+    recipientScope:r.recipientScope || (r.level==='Member'?'Individual':'Group'),
+    ...r,
+    level:r.level==='Staff'?'Member':r.level
+  }));
+  data.solutionGroups = data.solutionGroups?.length ? data.solutionGroups : structuredClone(DEFAULT_SOLUTION_GROUPS);
+  data.brandCatalog = data.brandCatalog?.length ? data.brandCatalog : mergeBrandCatalog(data.projects);
+  data.taskTemplates = data.taskTemplates?.length ? data.taskTemplates : structuredClone(DEFAULT_TASK_TEMPLATES);
+  data.sizeRanges = data.sizeRanges?.length ? data.sizeRanges : structuredClone(DEFAULT_SIZE_RANGES);
+  data.projectStatuses = data.projectStatuses?.length ? data.projectStatuses : structuredClone(DEFAULT_PROJECT_STATUSES);
+  data.taskStatuses = data.taskStatuses?.length ? data.taskStatuses : structuredClone(DEFAULT_TASK_STATUSES);
+  const nowIso=new Date().toISOString();
+  data.projects = data.projects.map(p=>({...p,due:p.due||'',createdAt:p.createdAt||nowIso,taskStatus:p.taskStatus||inferProjectTaskStatus(p.id,data.tasks),progress:Number(p.progress ?? averageProjectProgress(p.id,data.tasks))||0,size:sizeForValue(p.val,data.sizeRanges)}));
+  data.passwordResetRequests = data.passwordResetRequests || [];
+  data.layout ||= structuredClone(seed.layout);
+  return data;
+}
+const money = n => n ? '฿'+Number(n).toLocaleString('th-TH') : '-';
+const shortMoney = n => n>=1000000 ? '฿'+(n/1000000).toFixed(n>=10000000?0:1)+'M' : money(n);
+const byId = id => state.teams.find(t=>t.id===id) || {name:'Unassigned',role:'-',color:'#657187',target:0,email:'-'};
+const uniq = arr => [...new Set(arr.filter(Boolean))];
+const esc = v => String(v ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function grouped(items,keyFn,valFn=()=>1){return items.reduce((a,x)=>{const k=keyFn(x);a[k]=(a[k]||0)+valFn(x);return a},{})}
+function parseCsv(text){return String(text||'').split(/[,;\n]/).map(x=>x.trim()).filter(Boolean)}
+function periodFromRule(r){const n=String(r?.name||'').toLowerCase(); if(n.includes('month')) return 'Monthly'; if(n.includes('week')) return 'Weekly'; return 'Daily'}
+function mergeNotificationRules(rules){
+  const keyed={};
+  rules.forEach(r=>{keyed[`${r.level}|${r.reportPeriod||periodFromRule(r)}`]=r});
+  DEFAULT_NOTIFICATION_RULES.forEach(r=>{keyed[`${r.level}|${r.reportPeriod}`]={...(keyed[`${r.level}|${r.reportPeriod}`]||{}),...r}});
+  return Object.values(keyed).sort((a,b)=>['Member','Manager','Executive'].indexOf(a.level)-['Member','Manager','Executive'].indexOf(b.level)||['Daily','Weekly','Monthly'].indexOf(a.reportPeriod)-['Daily','Weekly','Monthly'].indexOf(b.reportPeriod));
+}
+function isBdTeamMember(id){return /bd/i.test(byId(id).role||'')}
+function bdTasks(tasks=state.tasks){return tasks.filter(t=>isBdTeamMember(t.owner))}
+function bdProjects(projects=state.projects){return projects.filter(p=>isBdTeamMember(p.bd))}
+function mergeBrandCatalog(projects){
+  const map={};
+  DEFAULT_BRAND_CATALOG.forEach(b=>map[`${b.category}|${b.name}`]={...b});
+  (projects||[]).forEach(p=>projectBrands(p).forEach(b=>{
+    const key=`${b.category||'Hardware'}|${b.name}`;
+    if(b.name && !map[key]) map[key]={id:nextId('BR',Object.values(map)),category:b.category||'Hardware',name:b.name};
+  }));
+  return Object.values(map);
+}
+function selectedValues(select){return [...select.selectedOptions].map(o=>o.value)}
+function checkedValues(name){return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(x=>x.value)}
+function averageProjectProgress(projectId,tasks=state.tasks){const rows=(tasks||[]).filter(t=>t.project===projectId);return rows.length?Math.round(rows.reduce((s,t)=>s+Number(t.progress||0),0)/rows.length):0}
+function inferProjectTaskStatus(projectId,tasks=state.tasks){const rows=(tasks||[]).filter(t=>t.project===projectId); if(!rows.length) return 'Schedule'; if(rows.some(isOverdue)) return 'Overdue'; if(rows.every(t=>t.status==='Done')) return 'Done'; return rows[0].status||'Schedule'}
+function sizeForValue(value,ranges=state.sizeRanges){const val=Number(value||0);const row=[...(ranges||[])].sort((a,b)=>Number(a.min)-Number(b.min)).find(r=>val>=Number(r.min||0)&&val<=Number(r.max||Infinity));return row?.size||'M'}
+function progressBattery(value){const v=Math.max(0,Math.min(100,Number(value||0)));return `<div class="battery"><div class="battery-fill" style="width:${v}%"></div></div><div class="battery-text">${v}%</div>`}
+function firstName(name){return String(name||'user').replace(/^(Mr\.?|Ms\.?|Mrs\.?|Dr\.?)\s+/i,'').trim().split(/\s+/)[0]?.toLowerCase().replace(/[^a-z0-9.]/g,'')||'user'}
+function lastName(name){const parts=String(name||'Passcode').replace(/^(Mr\.?|Ms\.?|Mrs\.?|Dr\.?)\s+/i,'').trim().split(/\s+/);return (parts[1]||parts[0]||'piramid123').toLowerCase().replace(/[^a-z0-9.]/g,'')||'piramid123'}
+function inferSystemGroup(name){
+  const s=String(name||'').toLowerCase();
+  if(/cctv|access|security|barrier|visitor/.test(s)) return 'Security Solutions';
+  if(/iot|platform|ioc|ai|dashboard/.test(s)) return 'IOT and Platform';
+  if(/bms|energy|rcu|hvac|lighting/.test(s)) return 'BMS and Energy';
+  return 'IT and Communication';
+}
+function projectSystems(p){
+  if(Array.isArray(p.systems) && p.systems.length) return p.systems.map(x=>typeof x==='string'?{group:inferSystemGroup(x),name:x}:x);
+  return parseCsv(p.sys).map(name=>({group:inferSystemGroup(name),name}));
+}
+function projectBrands(p){
+  if(Array.isArray(p.brands) && p.brands.length) return p.brands.map(x=>typeof x==='string'?{category:'Hardware',name:x,value:0}:x);
+  const names=parseCsv(p.brand);
+  const base=names.map((name,i)=>({category:'Hardware',name,value:i===0?Math.round((p.val||0)*0.55):0}));
+  if(p.val){
+    base.push({category:'License',name:names[0]||'Project License',value:Math.round(p.val*0.15)});
+    base.push({category:'Installation',name:'PIRAMID Service',value:Math.round(p.val*0.18)});
+    base.push({category:'Project management fee',name:'PIRAMID PMO',value:Math.round(p.val*0.12)});
+  }
+  return base;
+}
+function projectSystemLabels(p){return projectSystems(p).map(s=>`${s.group}: ${s.name}`)}
+// Real per-brand value if entered (sum>0); otherwise distribute project value evenly across brands.
+function brandValueMap(p){
+  const brands=projectBrands(p); if(!brands.length) return [];
+  const entered=brands.reduce((s,b)=>s+(Number(b.value)||0),0);
+  if(entered>0) return brands.map(b=>({...b,v:Number(b.value)||0}));
+  const per=(p.val||0)/brands.length;
+  return brands.map(b=>({...b,v:per}));
+}
+function projectBrandNames(p){return uniq(projectBrands(p).map(b=>b.name))}
+function projectBrandLabels(p){return projectBrands(p).map(b=>`${b.category}: ${b.name}${b.value?` (${shortMoney(b.value)})`:''}`)}
+function brandStats(projects){
+  const map={};
+  projects.forEach(p=>{
+    const counted = new Set();
+    projectBrands(p).forEach(b=>{
+      if(!map[b.name]) map[b.name]={label:b.name,value:0,revenue:0};
+      if(!counted.has(b.name)){map[b.name].value += 1; counted.add(b.name)}
+      map[b.name].revenue += Number(b.value||0) || Math.round((p.val||0)/Math.max(1,projectBrandNames(p).length));
+    });
+  });
+  return Object.values(map).sort((a,b)=>b.value-a.value);
+}
+function systemGroupStats(projects){
+  const stats={};
+  projects.forEach(p=>projectSystems(p).forEach(s=>{const key=s.group||inferSystemGroup(s.name);stats[key]=(stats[key]||0)+1}));
+  return stats;
+}
+function filteredProjects(){
+  return state.projects.filter(p=>{
+    const projectName = String(p.name||'').toLowerCase();
+    return (!filters.q || projectName.includes(filters.q.toLowerCase())) &&
+      (filters.seg==='All'||p.seg===filters.seg) &&
+      (filters.status==='All'||p.status===filters.status) &&
+      (filters.team==='All'||p.bd===filters.team||p.sales===filters.team) &&
+      (filters.brand==='All'||projectBrandNames(p).includes(filters.brand));
+  });
+}
+function filteredTasks(){
+  const ids = new Set(filteredProjects().map(p=>p.id));
+  return state.tasks.filter(t=>ids.has(t.project) && (filters.team==='All'||t.owner===filters.team) && (taskLeadFilter==='All'||t.owner===taskLeadFilter));
+}
+function pct(v,max){return max?Math.max(3,Math.round(v/max*100)):0}
+function statusTag(s){const m={Win:'win',Quotation:'quot',Budgetary:'budg','Waiting PO':'wapo',Pending:'pend',Lost:'lost',Schedule:'pend',Doing:'doing',Review:'review',Done:'done',Overdue:'overdue'};return `<span class="tag ${m[s]||'pend'}">${esc(s)}</span>`}
+function priTag(s){return `<span class="tag ${String(s).toLowerCase()}">${esc(s)}</span>`}
+function renderBars(elId,obj,opts={}){
+  const el=document.getElementById(elId); if(!el) return;
+  const entries=Array.isArray(obj)?obj:Object.entries(obj).map(([label,value])=>({label,value}));
+  const max=Math.max(1,...entries.map(x=>x.value));
+  el.innerHTML=entries.length?entries.map((x,i)=>`<div class="bar-row"><span title="${esc(x.label)}">${esc(x.label)}</span><div class="track"><div class="fill" style="width:${pct(x.value,max)}%;background-color:${x.color||opts.colors?.[i%opts.colors.length]||'var(--accent)'}"></div></div><b>${opts.money?shortMoney(x.value):esc(x.value)}</b></div>`).join(''):'<div class="hint">No data</div>';
+}
+function metric(label,value,sub,color){return `<div class="metric"><label>${label}</label><strong style="${color?`color:${color}`:''}">${value}</strong><small>${sub}</small></div>`}
+
+function initFilters(){
+  const host=document.getElementById('globalFilters');
+  if(!host) return false;
+  host.innerHTML = `
+    <label class="field"><span>Search Project</span><div class="search-row"><input id="f-q" placeholder="Search project name only"><button class="btn" id="f-reset" type="button" title="Clear all filters and view the overall dashboard">↺ Reset</button></div></label>
+    <label class="field"><span>Segment</span><select id="f-seg"></select></label>
+    <label class="field"><span>Status</span><select id="f-status"></select></label>
+    <label class="field"><span>Team</span><select id="f-team"></select></label>
+    <label class="field"><span>Brand</span><select id="f-brand"></select></label>`;
+  const fill=(id,vals)=>document.getElementById(id).innerHTML=['All',...vals].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  fill('f-seg',uniq(state.projects.map(p=>p.seg)));
+  fill('f-status',uniq(state.projects.map(p=>p.status)));
+  document.getElementById('f-team').innerHTML='<option value="All">All</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  fill('f-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
+  const qInput=document.getElementById('f-q');
+  qInput.setAttribute('autocomplete','off');
+  const DEFAULT_FILTERS={q:'',seg:'All',status:'All',team:'All',brand:'All'};
+  const syncInputs=()=>['q','seg','status','team','brand'].forEach(k=>{const el=document.getElementById('f-'+k); if(el) el.value=filters[k]});
+  // When the typed value exactly matches a project, auto-fill the other filters from that project.
+  const autoFillFromProject=(name)=>{
+    const proj=state.projects.find(p=>String(p.name||'').toLowerCase()===String(name||'').trim().toLowerCase());
+    if(!proj) return false;
+    filters.q=proj.name;
+    filters.seg=proj.seg||'All';
+    filters.status=proj.status||'All';
+    filters.team=proj.bd||proj.sales||'All';
+    filters.brand=projectBrandNames(proj)[0]||'All';
+    return true;
+  };
+  // Custom autocomplete dropdown: recommend project names that match the typed text.
+  const qField=qInput.closest('.field'); qField.style.position='relative';
+  const sug=document.createElement('div'); sug.className='suggest'; qField.appendChild(sug);
+  let sugItems=[], sugIdx=-1;
+  const closeSuggest=()=>{sug.classList.remove('on'); sugIdx=-1;};
+  const highlight=()=>[...sug.children].forEach((c,i)=>c.classList.toggle('active',i===sugIdx));
+  const renderSuggest=()=>{
+    const term=qInput.value.trim().toLowerCase();
+    sugItems = term ? state.projects.filter(p=>String(p.name||'').toLowerCase().includes(term)).slice(0,8) : [];
+    if(!sugItems.length){ sug.innerHTML=''; closeSuggest(); return; }
+    sugIdx=-1;
+    sug.innerHTML=sugItems.map((p,i)=>`<div data-i="${i}">${esc(p.name)}</div>`).join('');
+    sug.classList.add('on');
+  };
+  const chooseSuggest=(p)=>{ if(!p) return; qInput.value=p.name; filters.q=p.name; autoFillFromProject(p.name); syncInputs(); closeSuggest(); renderAll(false); };
+  sug.addEventListener('mousedown',e=>{const d=e.target.closest('[data-i]'); if(!d) return; e.preventDefault(); chooseSuggest(sugItems[+d.dataset.i]);});
+  qInput.addEventListener('focus',renderSuggest);
+  qInput.addEventListener('blur',()=>setTimeout(closeSuggest,150));
+  qInput.addEventListener('keydown',e=>{
+    if(!sug.classList.contains('on')) return;
+    if(e.key==='ArrowDown'){e.preventDefault(); sugIdx=Math.min(sugIdx+1,sugItems.length-1); highlight();}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sugIdx=Math.max(sugIdx-1,0); highlight();}
+    else if(e.key==='Enter'&&sugIdx>=0){e.preventDefault(); chooseSuggest(sugItems[sugIdx]);}
+    else if(e.key==='Escape'){closeSuggest();}
+  });
+  ['q','seg','status','team','brand'].forEach(k=>{
+    const el=document.getElementById('f-'+k); el.value=filters[k];
+    el.oninput=el.onchange=()=>{
+      filters[k]=el.value;
+      if(k==='q'){ renderSuggest(); if(autoFillFromProject(el.value)) syncInputs(); }
+      renderAll(false);
+    };
+  });
+  const resetBtn=document.getElementById('f-reset');
+  if(resetBtn) resetBtn.onclick=()=>{ filters={...DEFAULT_FILTERS}; closeSuggest(); syncInputs(); renderAll(false); };
+  return true;
+}
+function renderCustomizers(){
+  const labels={mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
+  build('execCustomizer',['mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert']);
+  (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
+  build('analyticsCustomizer',['anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
+  (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
+  document.querySelectorAll('[data-layout]').forEach(x=>x.onchange=()=>{state.layout[x.dataset.layout]=x.checked;saveState();applyLayout()});
+}
+function applyLayout(){document.querySelectorAll('.widget').forEach(w=>{w.hidden = state.layout[w.dataset.widget]===false})}
+// Activity log + sidebar dot indicators (in-memory seen state; resets on refresh)
+let sessionViewSeen={};
+const VIEWS=['exec','analytics','projects','tasks','team','notify','settings'];
+function initSessionViewSeen(){const now=Date.now(); VIEWS.forEach(v=>sessionViewSeen[v]=now);}
+function logActivity(action, view, target){
+  state.activityLog=state.activityLog||[];
+  state.activityLog.push({ts:new Date().toISOString(),user:(activeUser&&activeUser.name)||'unknown',view:view||'',action:action||'',target:target||''});
+  if(state.activityLog.length>200) state.activityLog=state.activityLog.slice(-200);
+  saveState(); updateNavDots();
+  if(document.getElementById('v-notify')&&document.getElementById('v-notify').classList.contains('on')) renderActivityLog();
+}
+function updateNavDots(){
+  const log=state.activityLog||[];
+  document.querySelectorAll('.nav button[data-view]').forEach(b=>{
+    const v=b.dataset.view; const seen=sessionViewSeen[v]||0;
+    let newest=0; for(const e of log){if(e.view===v){const t=+new Date(e.ts); if(t>newest)newest=t;}}
+    const dot=b.querySelector('.navdot'); if(dot) dot.classList.toggle('on',newest>seen);
+  });
+}
+function renderActivityLog(){
+  const host=document.getElementById('activityLog'); if(!host) return;
+  const log=(state.activityLog||[]).slice().reverse().slice(0,50);
+  if(!log.length){host.innerHTML='<div class="hint">ยังไม่มี activity</div>';return;}
+  host.innerHTML=log.map(e=>{const d=new Date(e.ts); const tStr=d.toLocaleString('th-TH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); return '<div class="act-row"><div class="act-time">'+esc(tStr)+'</div><div class="act-body"><b>'+esc(e.user||'')+'</b><span class="act-view">'+esc(e.view||'')+'</span><div>'+esc(e.action||'')+(e.target?' · '+esc(e.target):'')+'</div></div></div>';}).join('');
+}
+// Vertical (column) bar chart. items=[{label,value,color}]
+function renderVBars(elId, items, opts={}){
+  const el=document.getElementById(elId); if(!el) return;
+  const max=Math.max(1,...items.map(x=>Number(x.value)||0));
+  el.innerHTML=items.length?items.map(x=>{const val=opts.money?shortMoney(x.value):esc(x.value); return `<div class="vbar" title="${esc(x.label)}: ${esc(val)}"><b class="vval">${val}</b><div class="vfill" style="height:${pct(x.value,max)}%;background-color:${x.color||'var(--accent)'}"></div><span class="vlbl">${esc(x.label)}</span></div>`;}).join(''):'<div class="hint">No data</div>';
+}
+// Team Workload: dot plot of open tasks per month (12 months) + year-over-year comparison line.
+function renderWorkloadChart(){
+  const host=document.getElementById('teamWorkloadChart'); if(!host) return;
+  const curYear=today.getFullYear();
+  const mode=(state.workloadCompare==='next')?'next':'prev';
+  const sel=document.getElementById('wlCompare');
+  if(sel){ sel.value=mode; if(!sel.dataset.bound){sel.dataset.bound='1'; sel.addEventListener('change',()=>{state.workloadCompare=sel.value; saveState(); renderWorkloadChart();});} }
+  const cmpYear=curYear+(mode==='next'?1:-1);
+  const count=year=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due)return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===year) a[d.getMonth()]++;}); return a;};
+  const cur=count(curYear), cmp=count(cmpYear), max=Math.max(1,...cur,...cmp);
+  const W=380,H=150,pl=26,pr=10,pt=10,pb=20,pw=W-pl-pr,ph=H-pt-pb;
+  const X=i=>pl+pw*i/11, Y=v=>pt+ph*(1-v/max);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let grid='';[0,.5,1].forEach(f=>{const yy=pt+ph*(1-f);grid+='<line x1="'+pl+'" y1="'+yy+'" x2="'+(W-pr)+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-4)+'" y="'+(yy+3)+'" text-anchor="end" font-size="9" fill="var(--soft)">'+Math.round(max*f)+'</text>';});
+  const xl=months.map((m,i)=>'<text x="'+X(i)+'" y="'+(H-9)+'" text-anchor="middle" font-size="8.5" fill="var(--soft)">'+m+'</text>').join('');
+  const cmpLine='<polyline fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3" points="'+cmp.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>'+cmp.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="2.5" fill="var(--amber)"><title>'+months[i]+' '+cmpYear+': '+v+' งาน</title></circle>').join('');
+  const area='<defs><linearGradient id="wlg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".28"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>'+
+    '<polygon fill="url(#wlg)" points="'+pl+','+(pt+ph)+' '+cur.map((v,i)=>X(i)+','+Y(v)).join(' ')+' '+(W-pr)+','+(pt+ph)+'"/>'+
+    '<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="'+cur.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>';
+  const curDots=cur.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="var(--accent)" stroke="var(--panel)" stroke-width="1.5"><title>'+months[i]+' '+curYear+': '+v+' งาน</title></circle>').join('');
+  host.innerHTML='<svg class="wl-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+area+grid+xl+cmpLine+curDots+'</svg>'+
+    '<div class="wl-legend" style="display:flex;gap:16px;justify-content:center;font-size:11px;color:var(--muted)"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:5px"></i>'+curYear+' · งานเปิดต่อเดือน</span><span><i style="display:inline-block;width:14px;height:3px;background:var(--amber);margin-right:5px;vertical-align:middle"></i>'+cmpYear+'</span></div>';
+}
+// Multi-series line chart. labels=[...], series=[{label,color,data:[]}]
+function renderMultiLine(elId, labels, series){
+  const host=document.getElementById(elId); if(!host) return;
+  const max=Math.max(1,...series.flatMap(s=>s.data));
+  const n=labels.length, W=380,H=170,pl=26,pr=8,pt=10,pb=20,pw=W-pl-pr,ph=H-pt-pb;
+  const X=i=>pl+(n>1?pw*i/(n-1):pw/2), Y=v=>pt+ph*(1-v/max);
+  let grid='';[0,.5,1].forEach(f=>{const yy=pt+ph*(1-f);grid+='<line x1="'+pl+'" y1="'+yy+'" x2="'+(W-pr)+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-4)+'" y="'+(yy+3)+'" text-anchor="end" font-size="9" fill="var(--soft)">'+Math.round(max*f)+'</text>';});
+  const xl=labels.map((m,i)=>'<text x="'+X(i)+'" y="'+(H-7)+'" text-anchor="middle" font-size="8" fill="var(--soft)">'+esc(m)+'</text>').join('');
+  const s0=series[0];
+  const area=s0?('<defs><linearGradient id="'+elId+'-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+s0.color+'" stop-opacity=".25"/><stop offset="100%" stop-color="'+s0.color+'" stop-opacity="0"/></linearGradient></defs><polygon fill="url(#'+elId+'-g)" points="'+pl+','+(pt+ph)+' '+s0.data.map((v,i)=>X(i)+','+Y(v)).join(' ')+' '+(W-pr)+','+(pt+ph)+'"/>'):'';
+  const lines=series.map(s=>'<polyline fill="none" stroke="'+s.color+'" stroke-width="2" stroke-linejoin="round" points="'+s.data.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>'+s.data.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="2.3" fill="'+s.color+'"><title>'+esc(s.label)+' '+esc(labels[i])+': '+v+'</title></circle>').join('')).join('');
+  const legend=series.filter(s=>s.label).map(s=>'<span><i style="display:inline-block;width:12px;height:3px;background:'+s.color+';margin-right:5px;vertical-align:middle"></i>'+esc(s.label)+'</span>').join('');
+  host.innerHTML='<svg class="wl-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+area+grid+xl+lines+'</svg>'+(legend?'<div class="wl-legend" style="display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--muted)">'+legend+'</div>':'');
+}
+// Horizontal funnel. stages=[{label,value,color}]
+function renderFunnel(elId, stages){
+  const host=document.getElementById(elId); if(!host) return;
+  const max=Math.max(1,...stages.map(s=>s.value)); const top=stages[0]?(stages[0].value||0):0;
+  host.innerHTML='<div class="funnel">'+stages.map(s=>{const hp=Math.max(6,Math.round(s.value/max*100)); const pct=top?Math.round(s.value/top*100):0;
+    return '<div class="fn-col"><div class="fn-head"><b>'+esc(s.value)+'</b><span title="'+esc(s.label)+'">'+esc(s.label)+'</span></div><div class="fn-bararea"><div class="fn-bar" title="'+esc(s.label)+': '+s.value+' ('+pct+'%)" style="height:'+hp+'%;background:'+(s.color||'var(--accent)')+'"></div></div><div class="fn-pct">'+pct+'%</div></div>';}).join('')+'</div>';
+}
+// Dashboard grid: persisted custom order + drag-and-drop reordering of widget cards.
+const DASH={
+  exec:{grid:'execGrid',order:'layoutOrder',size:'widgetSize',align:'widgetAlign',edit:'execEdit',cp:'layoutCheckpoint',custom:'customCards',lockBtn:'execLockBtn',cpBtn:'execCheckpointBtn',tools:'exec',def:()=>DEFAULT_EXEC_ORDER},
+  ana:{grid:'anaGrid',order:'anaOrder',size:'anaWidgetSize',align:'anaWidgetAlign',edit:'anaEdit',cp:'anaCheckpoint',custom:'anaCustomCards',lockBtn:'anaLockBtn',cpBtn:'anaCheckpointBtn',tools:'ana',def:()=>DEFAULT_ANA_ORDER}
+};
+function applyExecOrder(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  (Array.isArray(state[D.order])?state[D.order]:[]).forEach(k=>{const c=grid.querySelector('.widget[data-widget="'+k+'"]'); if(c) grid.appendChild(c);});
+}
+function saveExecOrder(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  state[D.order]=[...grid.querySelectorAll('.widget')].map(c=>c.dataset.widget); saveState();
+}
+function execDragAfter(grid,x,y){
+  let best={offset:-Infinity,el:null};
+  grid.querySelectorAll('.widget:not(.dragging)').forEach(el=>{const b=el.getBoundingClientRect(); const off=(y-(b.top+b.height/2))*1000+(x-(b.left+b.width/2)); if(off<0 && off>best.offset) best={offset:off,el};});
+  return best.el;
+}
+let execGripCard=null;
+function initExecDrag(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  if(!grid.dataset.clickBound){grid.dataset.clickBound='1'; grid.addEventListener('click',e=>{const ex=e.target.closest('[data-export-card]'); if(ex){exportCardCsv(dk,ex.dataset.exportCard); return;} const ed=e.target.closest('[data-edit-card]'); if(ed){openCardEditor(dk,ed.dataset.editCard); return;} const dl=e.target.closest('[data-del-card]'); if(dl) delCustomCard(dk,dl.dataset.delCard);});}
+  grid.querySelectorAll('.widget').forEach(card=>{
+    if(card.dataset.gripBound) return; card.dataset.gripBound='1';
+    const grip=document.createElement('div'); grip.className='drag-handle'; grip.title='ลากเพื่อย้ายตำแหน่ง'; grip.textContent='⠿'; card.appendChild(grip);
+    grip.addEventListener('pointerdown',e=>{
+      if(!state[D.edit]) return;
+      e.preventDefault(); e.stopPropagation();
+      execGripCard=card; card.classList.add('dragging');
+      const move=ev=>{ev.preventDefault(); if(!execGripCard) return; const after=execDragAfter(grid,ev.clientX,ev.clientY); if(after==null) grid.appendChild(execGripCard); else if(after!==execGripCard) grid.insertBefore(execGripCard,after);};
+      const up=()=>{document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up); if(execGripCard)execGripCard.classList.remove('dragging'); execGripCard=null; saveExecOrder(dk);};
+      document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+    });
+  });
+}
+function saveExecSizes(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  state[D.size]=state[D.size]||{};
+  grid.querySelectorAll('.widget').forEach(c=>{state[D.size][c.dataset.widget]={w:c.style.width?parseInt(c.style.width):null,h:c.style.height?parseInt(c.style.height):null};});
+  saveState();
+}
+function applyExecSizes(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  const sizes=state[D.size]||{};
+  grid.querySelectorAll('.widget').forEach(c=>{const s=sizes[c.dataset.widget]; if(s&&s.w){c.style.width=s.w+'px';c.style.flex='0 0 '+s.w+'px';} else {c.style.width='';c.style.flex='';} c.style.height=(s&&s.h)?(s.h+'px'):'';});
+}
+function initExecResize(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  grid.querySelectorAll('.widget').forEach(card=>{
+    if(card.querySelector('.resize-handle')) return;
+    const handle=document.createElement('div'); handle.className='resize-handle'; handle.title='ลากปรับขนาด · ดับเบิลคลิกเพื่อคืนขนาดอัตโนมัติ'; card.appendChild(handle);
+    handle.addEventListener('dblclick',e=>{e.preventDefault(); e.stopPropagation(); card.style.width=''; card.style.height=''; card.style.flex=''; saveExecSizes(dk);});
+    handle.addEventListener('pointerdown',e=>{
+      if(!state[D.edit]) return;
+      e.preventDefault(); e.stopPropagation();
+      const isMetric=card.classList.contains('metric'); const minW=isMetric?120:240, minH=isMetric?70:150;
+      const rect=card.getBoundingClientRect();
+      const move=ev=>{ev.preventDefault(); const w=Math.max(minW,Math.round(ev.clientX-rect.left)); const h=Math.max(minH,Math.round(ev.clientY-rect.top)); card.style.width=w+'px'; card.style.flex='0 0 '+w+'px'; card.style.height=h+'px';};
+      const up=()=>{document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); document.removeEventListener('pointercancel',up); saveExecSizes(dk);};
+      document.addEventListener('pointermove',move); document.addEventListener('pointerup',up); document.addEventListener('pointercancel',up);
+    });
+  });
+}
+function applyExecAlign(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  const al=state[D.align]||{};
+  grid.querySelectorAll('.widget.metric').forEach(c=>{const a=al[c.dataset.widget];
+    if(a){c.style.display='flex'; c.style.flexDirection='column'; c.style.justifyContent=a.v==='center'?'center':a.v==='bottom'?'flex-end':'flex-start'; c.style.alignItems=a.h==='center'?'center':a.h==='right'?'flex-end':'flex-start'; c.style.textAlign=a.h||'left';}
+    else {c.style.display='';c.style.flexDirection='';c.style.justifyContent='';c.style.alignItems='';c.style.textAlign='';}
+  });
+}
+function markAlign(card,pop,dk){const a=(state[DASH[dk].align]||{})[card.dataset.widget]||{h:'left',v:'top'}; pop.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.h===a.h&&b.dataset.v===a.v));}
+function initExecAlign(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  if(!document.body.dataset.alignClose){document.body.dataset.alignClose='1'; document.addEventListener('click',()=>document.querySelectorAll('.align-pop.on').forEach(p=>p.classList.remove('on')));}
+  grid.querySelectorAll('.widget.metric').forEach(card=>{
+    if(card.dataset.alignBound) return; card.dataset.alignBound='1';
+    const btn=document.createElement('button'); btn.className='align-btn'; btn.title='จัดตำแหน่งข้อมูล'; btn.textContent='▦'; card.appendChild(btn);
+    const pop=document.createElement('div'); pop.className='align-pop';
+    pop.innerHTML=['top','center','bottom'].map(v=>['left','center','right'].map(h=>'<button data-h="'+h+'" data-v="'+v+'" title="'+v+'-'+h+'"></button>').join('')).join('');
+    card.appendChild(pop);
+    btn.addEventListener('click',e=>{e.stopPropagation(); const open=!pop.classList.contains('on'); document.querySelectorAll('.align-pop.on').forEach(p=>p.classList.remove('on')); if(open){pop.classList.add('on'); markAlign(card,pop,dk);}});
+    pop.addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return; e.stopPropagation(); state[D.align]=state[D.align]||{}; state[D.align][card.dataset.widget]={h:b.dataset.h,v:b.dataset.v}; saveState(); applyExecAlign(dk); markAlign(card,pop,dk); pop.classList.remove('on');});
+  });
+}
+function applyExecEdit(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid); if(!grid) return;
+  const edit=!!state[D.edit]; grid.classList.toggle('editing',edit);
+  const btn=document.getElementById(D.lockBtn); if(btn){btn.textContent=edit?'✓ Done':'✏️ Edit Layout'; btn.classList.toggle('primary',edit);}
+  document.body.classList.toggle(D.tools+'-editing',edit);
+}
+function toggleExecLock(dk='exec'){const D=DASH[dk]; state[D.edit]=!state[D.edit]; saveState(); applyExecEdit(dk); }
+function clearExecInlineStyles(dk='exec'){const grid=document.getElementById(DASH[dk].grid); if(grid) grid.querySelectorAll('.widget').forEach(c=>{c.style.width='';c.style.height='';c.style.flex='';c.style.gridColumn='';});}
+function saveLayoutCheckpoint(dk='exec'){const D=DASH[dk];const grid=document.getElementById(D.grid);
+  const order=grid?[...grid.querySelectorAll('.widget')].map(c=>c.dataset.widget):(state[D.order]||[]);
+  state[D.cp]={layout:{...state.layout},order:order,size:JSON.parse(JSON.stringify(state[D.size]||{})),align:JSON.parse(JSON.stringify(state[D.align]||{})),at:new Date().toISOString()};
+  saveState();
+  const b=document.getElementById(D.cpBtn); if(b){const o=b.textContent; b.textContent='✓ Saved'; setTimeout(()=>b.textContent=o,1500);}
+}
+function restoreCheckpoint(dk='exec'){const D=DASH[dk];const cp=state[D.cp]; if(!cp) return;
+  state.layout={...state.layout,...cp.layout};
+  state[D.order]=[...(cp.order||[])];
+  state[D.size]=JSON.parse(JSON.stringify(cp.size||{}));
+  state[D.align]=JSON.parse(JSON.stringify(cp.align||{}));
+  clearExecInlineStyles(dk);
+  saveState(); renderAll(true);
+}
+function factoryResetLayout(dk='exec'){const D=DASH[dk];
+  state[D.order]=[...D.def()]; state[D.size]={}; state[D.align]={};
+  D.def().forEach(k=>state.layout[k]=true);
+  (state[D.custom]||[]).forEach(c=>state.layout['cc-'+c.id]=true);
+  clearExecInlineStyles(dk);
+  saveState(); renderAll(true);
+}
+function resetExecLayout(dk='exec'){const D=DASH[dk];
+  if(state[D.cp]){
+    if(confirm('คืนค่า Layout กลับไปยัง Checkpoint ที่บันทึกไว้?\n\n(กด Cancel เพื่อเลือกรีเซ็ตเป็นค่าเริ่มต้นโรงงานแทน)')){ restoreCheckpoint(dk); return; }
+    if(confirm('รีเซ็ตเป็นค่าเริ่มต้นทั้งหมด (factory default)?')) factoryResetLayout(dk);
+    return;
+  }
+  if(confirm('รีเซ็ตขนาด/ตำแหน่งทั้งหมดกลับค่าเริ่มต้น?')) factoryResetLayout(dk);
+}
+// ===== Mini BI: custom card builder =====
+const BI_SOURCES={
+  projects:{label:'Projects',dims:[
+    {key:'status',label:'Status',get:p=>[p.status]},
+    {key:'seg',label:'Segment',get:p=>[p.seg]},
+    {key:'pri',label:'Priority',get:p=>[p.pri]},
+    {key:'size',label:'Size',get:p=>[p.size]},
+    {key:'bd',label:'BD Lead',get:p=>[byId(p.bd).name]},
+    {key:'sales',label:'Sales',get:p=>[byId(p.sales).name]},
+    {key:'brand',label:'Brand',get:p=>projectBrandNames(p)},
+    {key:'scope',label:'Scope (Brand/PIRAMID)',get:p=>[...new Set(projectBrands(p).map(b=>scopeOfCategory(b.category)))]},
+    {key:'piramidsvc',label:'PIRAMID Service',get:p=>[...new Set(projectBrands(p).map(b=>b.category).filter(c=>PIRAMID_SCOPE.includes(c)))]},
+    {key:'brandcat',label:'Brand Category',get:p=>[...new Set(projectBrands(p).map(b=>b.category).filter(c=>BRAND_SCOPE_CATS.includes(c)))]},
+    {key:'solgroup',label:'Solution Group',get:p=>[...new Set(projectSystems(p).map(s=>s.group||inferSystemGroup(s.name)))]},
+    {key:'system',label:'System',get:p=>projectSystems(p).map(s=>s.name)}
+  ],measures:[{key:'count',label:'จำนวนโครงการ',agg:'count'},{key:'value',label:'มูลค่ารวม (฿)',agg:'sum',money:true,val:p=>p.val||0},{key:'avgvalue',label:'มูลค่าเฉลี่ย (฿)',agg:'avg',money:true,val:p=>p.val||0},{key:'pctvalue',label:'% ของมูลค่ารวม',agg:'pct',val:p=>p.val||0}]},
+  tasks:{label:'Tasks',dims:[
+    {key:'status',label:'Status',get:t=>[isOverdue(t)?'Overdue':t.status]},
+    {key:'owner',label:'Owner',get:t=>[byId(t.owner).name]},
+    {key:'level',label:'Level',get:t=>[t.level]},
+    {key:'month',label:'Month (Due)',get:t=>t.due?[new Date(t.due).toLocaleDateString('en-US',{month:'short',year:'2-digit'})]:[]}
+  ],measures:[{key:'count',label:'จำนวนงาน',agg:'count'},{key:'avgprogress',label:'Progress เฉลี่ย (%)',agg:'avg',val:t=>Number(t.progress||0)}]},
+  team:{label:'Team',dims:[
+    {key:'name',label:'Member',get:m=>[m.name]},
+    {key:'role',label:'Role',get:m=>[m.role]},
+    {key:'level',label:'Level',get:m=>[m.level]}
+  ],measures:[
+    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).length},
+    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).reduce((s,p)=>s+(p.val||0),0)},
+    {key:'target',label:'เป้าหมาย (฿)',agg:'sum',money:true,val:m=>m.target||0}
+  ]}
+};
+function biCompute(card){
+  const src=BI_SOURCES[card.source]||BI_SOURCES.projects;
+  const rows=card.source==='tasks'?filteredTasks():card.source==='team'?state.teams:filteredProjects();
+  const dim=src.dims.find(d=>d.key===card.dim)||src.dims[0];
+  const meas=src.measures.find(m=>m.key===card.measure)||src.measures[0];
+  const agg=meas.agg||'sum';
+  const map={};
+  rows.forEach(r=>{(dim.get(r)||[]).forEach(k=>{const key=(k==null?'':String(k)).trim(); if(!key)return; const m=map[key]=map[key]||{label:key,count:0,sum:0}; m.count++; m.sum+=meas.val?(Number(meas.val(r))||0):0;});});
+  let items=Object.values(map).map(m=>({label:m.label,count:m.count,sum:m.sum,value: agg==='count'?m.count : agg==='avg'?(m.count?Math.round(m.sum/m.count):0) : m.sum}));
+  if(agg==='pct'){const tot=items.reduce((s,x)=>s+x.sum,0)||1; items.forEach(x=>x.value=Math.round(x.sum/tot*100));}
+  items.sort((a,b)=>b.value-a.value);
+  const lim=parseInt(card.limit); if(lim>0) items=items.slice(0,lim);
+  return {items, money: !!meas.money && agg!=='count' && agg!=='pct'};
+}
+function biRecommend(card){ if(card.dim==='month') return 'vbar'; if(['status','seg','pri','size','level','role'].includes(card.dim)) return 'donut'; return 'bar'; }
+function biRecoLabel(card){const m={bar:'Bar',vbar:'Vertical Bar',donut:'Donut'}; return m[biRecommend(card)]||'Bar';}
+const BI_PAL=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
+function renderCustomCardBody(c, elId){
+  const host=document.getElementById(elId); if(!host) return;
+  const {items,money}=biCompute(c);
+  if(!items.length){host.innerHTML='<div class="hint">No data</div>'; return;}
+  const chart=c.chart||biRecommend(c);
+  let colored=items.map((x,i)=>({...x,color:BI_PAL[i%BI_PAL.length]}));
+  if(c.source==='team'&&c.dim==='name') colored=items.map((x,i)=>{const tm=state.teams.find(t=>t.name===x.label); return {...x,color:(tm&&tm.color)||BI_PAL[i%BI_PAL.length]};});
+  const sum=items.reduce((s,x)=>s+x.value,0);
+  if(chart==='donut') renderDonut(elId,colored,{money,centerValue:money?shortMoney(sum):sum});
+  else if(chart==='vbar') renderVBars(elId,colored.slice(0,12),{money});
+  else if(chart==='table') host.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>รายการ</th><th>ค่า</th></tr></thead><tbody>'+items.map(x=>'<tr><td>'+esc(x.label)+'</td><td>'+(money?shortMoney(x.value):esc(x.value))+'</td></tr>').join('')+'</tbody></table></div>';
+  else if(chart==='metric') host.innerHTML='<div class="metric" style="border:0;box-shadow:none;padding:0;min-height:0"><strong>'+(money?shortMoney(sum):sum)+'</strong><small>'+items.length+' รายการ</small></div>';
+  else if(chart==='line') renderMultiLine(elId, colored.map(x=>x.label), [{label:'',color:'#5b7cfa',data:colored.map(x=>x.value)}]);
+  else if(chart==='funnel') renderFunnel(elId, colored);
+  else renderBars(elId,colored.slice(0,12),{money});
+}
+function renderCustomCards(dk='exec'){const D=DASH[dk];
+  const grid=document.getElementById(D.grid); if(!grid) return;
+  const cards=state[D.custom]||[];
+  grid.querySelectorAll('.widget[data-custom]').forEach(el=>{ if(!cards.find(c=>'cc-'+c.id===el.dataset.widget)) el.remove(); });
+  cards.forEach(c=>{
+    const key='cc-'+c.id;
+    let el=grid.querySelector('.widget[data-widget="'+key+'"]');
+    if(!el){
+      el=document.createElement('div'); el.className='card widget'; el.dataset.widget=key; el.dataset.custom='1';
+      el.innerHTML='<div class="ch"><h2 class="cc-title"></h2><small class="cc-sub"></small></div><div class="cc-actions"><button class="btn small" data-export-card="'+c.id+'" title="Export CSV">⭳</button><button class="btn small" data-edit-card="'+c.id+'" title="แก้ไข">✎</button><button class="btn small danger" data-del-card="'+c.id+'" title="ลบ">✕</button></div><div class="cb" id="'+key+'-body"></div>';
+      grid.appendChild(el);
+    }
+    const src=BI_SOURCES[c.source]||BI_SOURCES.projects;
+    const dl=(src.dims.find(d=>d.key===c.dim)||{}).label||'', ml=(src.measures.find(m=>m.key===c.measure)||{}).label||'';
+    el.querySelector('.cc-title').textContent=c.title||'Custom';
+    el.querySelector('.cc-sub').textContent=src.label+' · '+dl+' · '+ml;
+    if(state.layout[key]===undefined) state.layout[key]=true;
+    renderCustomCardBody(c, key+'-body');
+  });
+}
+function cardEditorHtml(c){
+  const src=BI_SOURCES[c.source]||BI_SOURCES.projects;
+  const opt=(arr,sel)=>arr.map(o=>'<option value="'+o.key+'"'+(sel===o.key?' selected':'')+'>'+esc(o.label)+'</option>').join('');
+  const srcOpts=Object.entries(BI_SOURCES).map(([k,v])=>'<option value="'+k+'"'+(c.source===k?' selected':'')+'>'+esc(v.label)+'</option>').join('');
+  const chartOpts=[['','Auto (แนะนำ)'],['bar','Bar'],['vbar','Vertical Bar'],['donut','Donut'],['line','Line'],['funnel','Funnel'],['table','Table'],['metric','Metric (รวม)']].map(a=>'<option value="'+a[0]+'"'+(c.chart===a[0]?' selected':'')+'>'+a[1]+'</option>').join('');
+  return '<label class="field span2"><span>ชื่อการ์ด</span><input id="ce-title" value="'+esc(c.title||'')+'" placeholder="เช่น สัดส่วนสถานะโครงการ"></label>'+
+    '<label class="field"><span>แหล่งข้อมูล</span><select id="ce-source">'+srcOpts+'</select></label>'+
+    '<label class="field"><span>มิติ (Dimension)</span><select id="ce-dim">'+opt(src.dims,c.dim)+'</select></label>'+
+    '<label class="field"><span>ค่าที่วัด (Measure)</span><select id="ce-measure">'+opt(src.measures,c.measure)+'</select></label>'+
+    '<label class="field"><span>ชนิดกราฟ</span><select id="ce-chart">'+chartOpts+'</select></label>'+
+    '<label class="field"><span>แสดงสูงสุด (Top N · 0=ทั้งหมด)</span><input id="ce-limit" type="number" min="0" value="'+(c.limit!=null&&c.limit!==''?c.limit:'')+'" placeholder="0"></label>'+
+    '<div class="span3 notice" id="ce-reco"></div>'+
+    '<div class="span3 toolbar"><button class="btn primary" id="ce-save" type="button">บันทึกการ์ด</button><button class="btn" id="ce-cancel" type="button">ยกเลิก</button></div>';
+}
+function drawCardEditor(){
+  const c=editing.card; const host=document.getElementById('cardEditorForm'); if(!host||!c) return;
+  host.innerHTML=cardEditorHtml(c);
+  const reco=()=>{const r=document.getElementById('ce-reco'); if(r) r.textContent='💡 แนะนำชนิดกราฟสำหรับมิตินี้: '+biRecoLabel(c)+(c.chart?'':' (กำลังใช้ Auto)');};
+  on('ce-title','oninput',e=>c.title=e.target.value);
+  on('ce-source','onchange',e=>{c.source=e.target.value; const s=BI_SOURCES[c.source]; c.dim=s.dims[0].key; c.measure=s.measures[0].key; drawCardEditor();});
+  on('ce-dim','onchange',e=>{c.dim=e.target.value; reco();});
+  on('ce-measure','onchange',e=>c.measure=e.target.value);
+  on('ce-chart','onchange',e=>{c.chart=e.target.value; reco();});
+  on('ce-limit','oninput',e=>c.limit=e.target.value);
+  on('ce-save','onclick',saveCustomCard);
+  on('ce-cancel','onclick',()=>{editing.card=null; document.getElementById('cardEditorPanel').classList.remove('on');});
+  reco();
+}
+function openCardEditor(dk,id){
+  editing.cardDash=dk||'exec';
+  const ex=id&&(state[DASH[editing.cardDash].custom]||[]).find(c=>c.id===id);
+  editing.card = ex?{...ex}:{id:'CC-'+Date.now(),title:'',source:'projects',dim:'status',measure:'count',chart:''};
+  const panel=document.getElementById('cardEditorPanel'); if(panel) panel.classList.add('on');
+  drawCardEditor();
+}
+function saveCustomCard(){
+  const c=editing.card; if(!c) return;
+  const ck=DASH[editing.cardDash||'exec'].custom;
+  if(!c.title) c.title=(BI_SOURCES[c.source].dims.find(d=>d.key===c.dim)||{}).label||'Custom';
+  state[ck]=state[ck]||[];
+  const idx=state[ck].findIndex(x=>x.id===c.id);
+  if(idx>=0) state[ck][idx]=c; else state[ck].push(c);
+  state.layout['cc-'+c.id]=true;
+  editing.card=null;
+  document.getElementById('cardEditorPanel').classList.remove('on');
+  saveState(); renderAll(true);
+}
+function delCustomCard(dk,id){
+  if(!confirm('ลบการ์ดนี้?')) return;
+  const ck=DASH[dk].custom;
+  state[ck]=(state[ck]||[]).filter(c=>c.id!==id);
+  delete state.layout['cc-'+id];
+  saveState(); renderAll(true);
+}
+function exportCardCsv(dk,id){
+  const c=(state[DASH[dk].custom]||[]).find(x=>x.id===id); if(!c) return;
+  const src=BI_SOURCES[c.source]||BI_SOURCES.projects;
+  const {items}=biCompute(c);
+  const dimL=(src.dims.find(d=>d.key===c.dim)||{}).label||'Label';
+  const measL=(src.measures.find(m=>m.key===c.measure)||{}).label||'Value';
+  const cell=v=>{if(typeof v==='number')return String(v); const s=String(v==null?'':v); return /[",\n\r]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;};
+  const csv='﻿'+[[dimL,measL].map(cell).join(','),...items.map(x=>[x.label,x.value].map(cell).join(','))].join('\r\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download='piramid-card-'+String(c.title||'custom').replace(/[^\w฀-๿]+/g,'_')+'.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+// Tiny sparkline for metric cards. data=[numbers]
+function renderSpark(elId, data, color){
+  const el=document.getElementById(elId); if(!el) return;
+  data=(data||[]).map(Number); if(data.length<2){el.innerHTML='';return;}
+  const max=Math.max(...data), min=Math.min(...data), rng=(max-min)||1;
+  const W=120,H=30,n=data.length, X=i=>i/(n-1)*W, Y=v=>H-2-((v-min)/rng)*(H-6);
+  const pts=data.map((v,i)=>X(i)+','+Y(v)).join(' ');
+  const gid=elId+'-sg';
+  el.setAttribute('viewBox','0 0 '+W+' '+H); el.setAttribute('preserveAspectRatio','none');
+  el.innerHTML='<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+color+'" stop-opacity=".35"/><stop offset="100%" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+
+    '<polygon fill="url(#'+gid+')" points="0,'+H+' '+pts+' '+W+','+H+'"/>'+
+    '<polyline fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="'+pts+'"/>'+
+    '<circle cx="'+X(n-1)+'" cy="'+Y(data[n-1])+'" r="2.5" fill="'+color+'"/>';
+}
+// Reusable SVG donut: items=[{label,value,color}]. Each slice is hoverable (native tooltip shows value + %).
+function renderDonut(host, items, opts={}){
+  host = typeof host==='string'?document.getElementById(host):host; if(!host) return;
+  items=(items||[]).filter(x=>Number(x.value)>0);
+  const total=items.reduce((s,x)=>s+Number(x.value||0),0);
+  const fmt=opts.money?(v=>shortMoney(v)):(v=>String(v));
+  const R=50,C=60,CIRC=2*Math.PI*R; let acc=0;
+  const slices = total>0 ? items.map(x=>{
+    const frac=Number(x.value)/total, dash=frac*CIRC, pct=Math.round(frac*100);
+    const seg=`<circle class="ds" cx="${C}" cy="${C}" r="${R}" fill="none" stroke="${x.color}" stroke-width="16" stroke-dasharray="${dash.toFixed(2)} ${(CIRC-dash).toFixed(2)}" stroke-dashoffset="${(-acc*CIRC).toFixed(2)}" transform="rotate(-90 ${C} ${C})"><title>${esc(x.label)}: ${esc(fmt(x.value))} (${pct}%)</title></circle>`;
+    acc+=frac; return seg;
+  }).join('') : `<circle cx="${C}" cy="${C}" r="${R}" fill="none" stroke="var(--line)" stroke-width="16"/>`;
+  const center=opts.centerValue!=null?opts.centerValue:total;
+  const legend=items.map(x=>{const pct=total>0?Math.round(x.value/total*100):0; return `<div class="legend-row" title="${esc(x.label)}: ${esc(fmt(x.value))} (${pct}%)"><i class="dot" style="background:${x.color}"></i><span class="ell">${esc(x.label)}</span><b>${esc(fmt(x.value))} · ${pct}%</b></div>`;}).join('')||'<div class="hint">No data</div>';
+  host.innerHTML=`<div class="donut-flex"><div class="donut-svgbox"><svg viewBox="0 0 120 120" class="donut-svg">${slices}</svg><div class="donut-label"><strong>${esc(String(center))}</strong>${opts.centerLabel?`<small>${esc(opts.centerLabel)}</small>`:''}</div></div><div class="legend">${legend}</div></div>`;
+}
+
+function renderDashboard(){
+  const p=filteredProjects(), t=filteredTasks();
+  const total=p.length, value=p.reduce((s,x)=>s+x.val,0), wins=p.filter(x=>x.status==='Win'), high=p.filter(x=>x.pri==='High');
+  const overdue=t.filter(x=>isOverdue(x));
+  const setM=(id,val,sub,color)=>{const v=document.getElementById('mv-'+id),s=document.getElementById('ms-'+id); if(v){v.textContent=val; if(!v.classList.contains('grad-num')) v.style.color=color||'';} if(s) s.textContent=sub;};
+  setM('total',total,'จำนวนโครงการตาม filter');
+  setM('value',shortMoney(value),'มูลค่ารวมทั้งหมด','var(--accent)');
+  const winValue=wins.reduce((s,x)=>s+x.val,0); const winPct=value?Math.round(winValue/value*100):0;
+  setM('win',wins.length,shortMoney(winValue)+' confirmed','var(--green)');
+  setM('winval',shortMoney(winValue),'มูลค่ารวมงานที่ปิดได้','var(--green)');
+  setM('winpct',winPct+'%','ของมูลค่างานทั้งหมด ('+shortMoney(value)+')','var(--green)');
+  setM('high',high.length,'โครงการที่ต้องติดตาม','var(--red)');
+  setM('overdue',overdue.length,'งานเกินกำหนด','var(--amber)');
+  // sparklines + trend (real 6-month series from task due dates)
+  const months6=[]; for(let k=5;k>=0;k--) months6.push(new Date(today.getFullYear(),today.getMonth()-k,1));
+  const inMonth=(iso,d)=>{if(!iso)return false;const x=new Date(iso);return !isNaN(x)&&x.getMonth()===d.getMonth()&&x.getFullYear()===d.getFullYear();};
+  // monthly NEW projects + new pipeline value by createdAt (real, accrues over time)
+  const newProjSeries=months6.map(d=>p.filter(x=>inMonth(x.createdAt,d)).length);
+  const newValSeries=months6.map(d=>p.filter(x=>inMonth(x.createdAt,d)).reduce((s,x)=>s+(x.val||0),0));
+  renderSpark('spark-total', newProjSeries, 'var(--accent)');
+  renderSpark('spark-value', newValSeries, 'var(--accent-2)');
+  const setTrend=(elId,series,goodUp,fmt)=>{const el=document.getElementById(elId); if(!el)return; const a=series.at(-1)||0,b=series.at(-2)||0,diff=a-b; const ar=diff>0?'▲':diff<0?'▼':'—'; const good=(diff>0)===goodUp; el.className='metric-trend '+(diff===0?'flat':good?'up':'down'); el.textContent=ar+' '+(fmt?fmt(Math.abs(diff)):Math.abs(diff))+' เดือนนี้';};
+  setTrend('trend-total',newProjSeries,true);
+  setTrend('trend-value',newValSeries,true,shortMoney);
+  const odSeries=months6.map(d=>state.tasks.filter(x=>x.due&&inMonth(x.due,d)&&isOverdue(x)).length);
+  renderSpark('spark-overdue', odSeries, 'var(--amber)');
+  setTrend('trend-overdue',odSeries,false);
+  document.getElementById('statusTotal').textContent=total+' projects';
+  const palette=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
+  const stat=grouped(p,x=>x.status);
+  renderBars('statusBars',Object.entries(stat).map(([label,value],i)=>({label,value,color:palette[i%palette.length]})));
+  const brands=brandStats(p).map(b=>({label:b.label,value:b.revenue})).filter(b=>b.value>0).sort((a,b)=>b.value-a.value).slice(0,7).map((b,i)=>({...b,color:palette[i%palette.length]}));
+  renderDonut('brandDonut',brands,{money:true,centerValue:shortMoney(brands.reduce((s,x)=>s+x.value,0)),centerLabel:'sales'});
+  const segItems=Object.entries(grouped(p,x=>x.seg,x=>x.val)).sort((a,b)=>b[1]-a[1]).map(([label,value],i)=>({label,value,color:palette[i%palette.length]}));
+  renderDonut('segmentDonut',segItems,{money:true,centerValue:shortMoney(segItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
+  const teamKpi=state.teams.filter(tm=>/bd/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:Math.round((p.filter(x=>x.bd===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)/(tm.target||1))*100)})).sort((a,b)=>b.value-a.value).slice(0,6);
+  renderBars('teamKpiBars',teamKpi);
+  renderWorkloadChart();
+  const thColors={Done:'#2dd36f',Doing:'#5b7cfa',Review:'#f6b44b',Schedule:'#b678ff',Overdue:'#ff5a67'};
+  renderDonut('taskHealthDonut',Object.entries(grouped(t,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||'#5bc0ff'})),{centerValue:t.length,centerLabel:'tasks'});
+  const groupColors={'IT and Communication':'#5b7cfa','Security Solutions':'#ff5a67','IOT and Platform':'#13b8a6','BMS and Energy':'#f6b44b'};
+  const groupShort={'IT and Communication':'IT/Comm','Security Solutions':'Security','IOT and Platform':'IOT','BMS and Energy':'BMS'};
+  const solCount={}; SYSTEM_GROUPS.forEach(g=>solCount[g]=0);
+  p.forEach(pr=>{const groups=new Set(projectSystems(pr).map(s=>s.group||inferSystemGroup(s.name))); groups.forEach(g=>{if(g in solCount) solCount[g]++;});});
+  renderVBars('solutionGroupBars',SYSTEM_GROUPS.map(g=>({label:groupShort[g]||g,value:solCount[g],color:groupColors[g]})));
+  const sysCount={}; p.forEach(pr=>projectSystems(pr).forEach(s=>{if(s.name) sysCount[s.name]=(sysCount[s.name]||0)+1;}));
+  renderBars('topSystemBars',Object.entries(sysCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([label,value],i)=>({label,value,color:palette[i%palette.length]})));
+  const hp=p.filter(x=>x.pri==='High').sort((a,b)=>b.val-a.val).slice(0,10);
+  const hpEl=document.getElementById('highPriorityTable'); if(hpEl) hpEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Status</th><th>Value</th><th>BD Lead</th></tr></thead><tbody>'+(hp.map(x=>'<tr><td class="ellipsis">'+esc(x.name)+'</td><td>'+statusTag(x.status)+'</td><td>'+money(x.val)+'</td><td>'+esc(byId(x.bd).name)+'</td></tr>').join('')||'<tr><td colspan="4" class="hint">No data</td></tr>')+'</tbody></table></div>';
+  const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,10);
+  const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(byId(x.owner).name)+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
+  renderCustomCards();
+  applyExecOrder(); initExecDrag(); initExecResize(); initExecAlign(); applyExecSizes(); applyExecAlign(); applyExecEdit();
+  document.getElementById('executiveInsights').innerHTML=buildInsights(p,t);
+}
+function buildInsights(p,t){
+  const segTop=Object.entries(grouped(p,x=>x.seg,x=>x.val)).sort((a,b)=>b[1]-a[1])[0]||['-',0];
+  const brandTop=brandStats(p)[0]||{label:'-',value:0,revenue:0};
+  const overdue=t.filter(isOverdue).length;
+  const winRate=p.length?Math.round(p.filter(x=>x.status==='Win').length/p.length*100):0;
+  return [
+    `<div class="notice"><b>รายงานเชิงวิเคราะห์:</b> Segment ที่มีมูลค่าสูงสุดคือ ${esc(segTop[0])} (${shortMoney(segTop[1])}) และ win rate ตอนนี้ ${winRate}%</div>`,
+    `<div class="notice"><b>รายงานเชิงการขาย:</b> แบรนด์ที่ถูกเสนอมากสุดคือ ${esc(brandTop.label)} จำนวน ${brandTop.value} โครงการ มูลค่าสัมพันธ์ ${shortMoney(brandTop.revenue)} เทียบกับแบรนด์อื่นใน filter เดียวกัน</div>`,
+    `<div class="notice"><b>ประสิทธิภาพทีม:</b> มีงานเกินกำหนด ${overdue} งาน ให้ Manager เห็นภาพทีมในเช้า/เย็น</div>`,
+    `<div class="notice"><b>KPI ผู้บริหาร:</b> มุมนี้ปรับแต่งได้จากปุ่ม Customize เพื่อเลือกกราฟหรือตารางที่ต้องการโชว์</div>`
+  ].join('');
+}
+
+function renderAnalytics(){
+  const p=filteredProjects();
+  const vals=p.filter(x=>x.val>0).map(x=>x.val).sort((a,b)=>a-b);
+  const totalV=p.reduce((s,x)=>s+x.val,0);
+  const setA=(id,val,sub,color)=>{const v=document.getElementById('av-'+id),s=document.getElementById('as-'+id); if(v){v.textContent=val;v.style.color=color||'';} if(s)s.textContent=sub;};
+  setA('total',shortMoney(totalV),money(totalV),'var(--accent)');
+  setA('avg',shortMoney(vals.reduce((a,b)=>a+b,0)/(vals.length||1)),vals.length+' valued projects');
+  setA('largest',shortMoney(vals.at(-1)||0),(p.find(x=>x.val===(vals.at(-1)||0))||{}).name||'-','var(--purple)');
+  setA('brand',uniq(p.flatMap(x=>projectBrandNames(x))).length,'จำนวนแบรนด์ใน filter','var(--accent-2)');
+  const stages=['Quotation','Budgetary','Waiting PO','Pending','Win','Lost'];
+  renderBars('pipelineBars2',stages.map(s=>({label:s,value:p.filter(x=>x.status===s).reduce((a,b)=>a+b.val,0)})),{money:true,colors:['#5b7cfa','#f6b44b','#13b8a6','#b678ff','#2dd36f','#ff5a67']});
+  const curY=today.getFullYear(); const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const byMonth=fn=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due)return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===curY&&fn(t)) a[d.getMonth()]++;}); return a;};
+  renderMultiLine('anaTrendChart',MO,[{label:'Total',color:'#5b7cfa',data:byMonth(()=>true)},{label:'Done',color:'#2dd36f',data:byMonth(t=>t.status==='Done')},{label:'Overdue',color:'#ff5a67',data:byMonth(t=>isOverdue(t))}]);
+  renderFunnel('anaFunnelChart',[{label:'All Projects',value:p.length,color:'#ff5a67'},{label:'Qualified',value:p.filter(x=>x.status!=='Lost').length,color:'#f6b44b'},{label:'Advanced',value:p.filter(x=>['Budgetary','Waiting PO','Win'].includes(x.status)).length,color:'#13b8a6'},{label:'Won',value:p.filter(x=>x.status==='Win').length,color:'#2d5b8a'}]);
+  const winV=p.filter(x=>x.status==='Win').reduce((s,x)=>s+x.val,0), lostV=p.filter(x=>x.status==='Lost').reduce((s,x)=>s+x.val,0), openV=Math.max(0,totalV-winV-lostV);
+  renderDonut('winLossDonut',[{label:'Win',value:winV,color:'#2dd36f'},{label:'Lost',value:lostV,color:'#ff5a67'},{label:'In Pipeline',value:openV,color:'#5b7cfa'}].filter(x=>x.value>0),{money:true,centerValue:shortMoney(totalV)});
+  // Scope analysis using REAL per-brand value (or even distribution fallback)
+  const scopeVal={'Brand Scope':0,'PIRAMID Scope':0}; const psVal={}; PIRAMID_SCOPE.forEach(c=>psVal[c]=0);
+  p.forEach(pr=>brandValueMap(pr).forEach(b=>{scopeVal[scopeOfCategory(b.category)]+=b.v; if(b.category in psVal) psVal[b.category]+=b.v;}));
+  const scopeTotal=scopeVal['Brand Scope']+scopeVal['PIRAMID Scope'];
+  renderDonut('scopeSplitDonut',[{label:'Brand Scope',value:Math.round(scopeVal['Brand Scope']),color:'#5b7cfa'},{label:'PIRAMID Scope',value:Math.round(scopeVal['PIRAMID Scope']),color:'#13b8a6'}].filter(x=>x.value>0),{money:true,centerValue:shortMoney(scopeTotal)});
+  renderBars('piramidScopeBars',PIRAMID_SCOPE.map((c,i)=>({label:c,value:Math.round(psVal[c]),color:['#13b8a6','#5bc0ff','#f6b44b','#b678ff'][i]})),{money:true});
+  renderBars('sizeBars',grouped(p,x=>sizeForValue(x.val)),{colors:['#b678ff','#ff5a67','#f6b44b','#5b7cfa','#2dd36f','#13b8a6']});
+  renderBars('systemBars',Object.entries(systemGroupStats(p)).sort((a,b)=>b[1]-a[1]).map(([label,value])=>({label,value})),{colors:['#5b7cfa','#13b8a6','#f6b44b','#b678ff']});
+  renderBars('salesBars',state.teams.filter(t=>t.role==='Sales').map(t=>({label:t.name,color:t.color,value:p.filter(x=>x.sales===t.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value),{money:true});
+  const taskByProject=grouped(state.tasks,x=>x.project);
+  document.getElementById('watchRows').innerHTML=p.filter(x=>x.pri==='High').sort((a,b)=>b.val-a.val).map(x=>`<tr><td class="ellipsis">${esc(x.name)}</td><td>${statusTag(x.status)}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${taskByProject[x.id]||0}</td></tr>`).join('');
+  renderCustomCards('ana');
+  applyExecOrder('ana'); initExecDrag('ana'); initExecResize('ana'); initExecAlign('ana'); applyExecSizes('ana'); applyExecAlign('ana'); applyExecEdit('ana');
+}
+
+function projectOptions(selected){return state.projects.map(p=>`<option value="${p.id}" ${p.id===selected?'selected':''}>${esc(p.id+' - '+p.name)}</option>`).join('')}
+function teamOptions(selected,role){return state.teams.filter(t=>!role||t.role===role).map(t=>`<option value="${t.id}" ${t.id===selected?'selected':''}>${esc(t.name)}</option>`).join('')}
+function solutionOptions(selected=[]){
+  const keys=new Set(selected.map(s=>`${s.group}|${s.name}`));
+  return `<div class="checklist">${state.solutionGroups.map(s=>`<label><input type="checkbox" name="systemsSelect" value="${esc(s.group+'|'+s.system)}" ${keys.has(`${s.group}|${s.system}`)?'checked':''}>${esc(s.group+' / '+s.system)}</label>`).join('')}</div>`;
+}
+function brandCatalogOptions(selected=[]){
+  const map={}; selected.forEach(b=>map[`${b.category}|${b.name}`]=b);
+  return `<div class="checklist">${state.brandCatalog.map(b=>{const k=`${b.category}|${b.name}`; const sel=map[k]; const ps=PIRAMID_SCOPE.includes(b.category); return `<div class="brow"><label class="bchk"><input type="checkbox" name="brandsSelect" value="${esc(k)}" ${sel?'checked':''}><span class="bscope ${ps?'ps':'bs'}" title="${ps?'PIRAMID Scope':'Brand Scope'}"></span>${esc(b.category+' / '+b.name)}</label><input class="bval" type="number" min="0" data-bval="${esc(k)}" value="${sel&&sel.value?sel.value:''}" placeholder="มูลค่า ฿"></div>`;}).join('')}</div>`;
+}
+function taskTemplateOptions(selected=[]){
+  const keys=new Set(selected);
+  return `<div class="checklist">${state.taskTemplates.map(t=>`<label><input type="checkbox" name="taskTemplatesSelect" value="${esc(t.id)}" ${keys.has(t.id)?'checked':''}>${esc(t.title)}</label>`).join('')}</div>`;
+}
+function projectStatusOptions(selected){return state.projectStatuses.map(s=>`<option value="${esc(s.name)}" ${selected===s.name?'selected':''}>${esc(s.name)}</option>`).join('')}
+function taskStatusOptions(selected){return state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${selected===s.name?'selected':''}>${esc(s.name)} - ${esc(s.description||'')}</option>`).join('')}
+function renderProjects(){
+  const p=filteredProjects();
+  document.getElementById('projectCountLabel').textContent=p.length+' of '+state.projects.length+' projects';
+  document.getElementById('projectRows').innerHTML=p.map(x=>{
+    const relatedTasks=state.tasks.filter(t=>t.project===x.id);
+    const subCount=relatedTasks.reduce((s,t)=>s+(t.subtasks?.length||0),0);
+    const revisions=relatedTasks.reduce((s,t)=>s+Number(t.revision||1),0);
+    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="14"><div class="subpanel">${relatedTasks.map(t=>`<div style="margin-bottom:10px"><b>${esc(t.title)}</b> ${statusTag(isOverdue(t)?'Overdue':t.status)} <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}</div></td></tr>`;
+    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span>${statusTag(x.taskStatus||inferProjectTaskStatus(x.id))}</td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
+    return main+details;
+  }).join('');
+  document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
+  document.querySelectorAll('[data-del-project]').forEach(b=>b.onclick=()=>deleteProject(b.dataset.delProject));
+  document.querySelectorAll('[data-toggle-sub]').forEach(b=>b.onclick=()=>document.getElementById('sub-'+b.dataset.toggleSub)?.classList.toggle('on'));
+}
+function openProjectForm(id){
+  editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,sales:state.teams.find(t=>t.role==='Sales')?.id};
+  const relatedTasks=state.tasks.filter(t=>t.project===p.id);
+  const selectedTemplateIds=p.taskTemplateIds || relatedTasks.map(t=>t.templateId).filter(Boolean);
+  const projectSubtasks=p.projectSubtasks || uniq(relatedTasks.flatMap(t=>t.subtasks||[]));
+  document.getElementById('projectFormTitle').textContent=id?'Edit Project':'New Project';
+  document.getElementById('projectForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(p.id)}" ${id?'readonly':''}></label>
+    <label class="field span2"><span>Project name</span><input name="name" required value="${esc(p.name)}"></label>
+    <label class="field"><span>Segment</span><select name="seg">${['Enterprise','Hospitality','Government','Retail'].map(v=>`<option ${p.seg===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field span2"><span>System groups / systems</span>${solutionOptions(projectSystems(p))}<span class="hint">Checklist จาก Data List ใน Settings</span></label>
+    <label class="field span2"><span>Brand scope</span>${brandCatalogOptions(projectBrands(p))}<span class="hint">Checklist จาก Brand Scope ใน Settings</span></label>
+    <label class="field span2"><span>Task templates</span>${taskTemplateOptions(selectedTemplateIds)}<span class="hint">Template มาจาก Settings และจะสร้าง task ให้ project นี้</span></label>
+    <label class="field span2"><span>Project sub tasks</span><textarea name="projectSubtasksText" placeholder="Revise BOQ round 1&#10;Revise BOQ round 2">${esc(projectSubtasks.join('\n'))}</textarea><span class="hint">เพิ่ม sub task เฉพาะโครงการนี้ได้ที่หน้า Project</span></label>
+    <label class="field"><span>Project Status</span><select name="status">${projectStatusOptions(p.status)}</select></label>
+    <label class="field"><span>Task Status</span><select name="taskStatus" id="projectTaskStatus">${taskStatusOptions(p.taskStatus||inferProjectTaskStatus(p.id))}</select></label>
+    <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(p.due||'')}"></label>
+    <label class="field"><span>Priority</span><select name="pri">${['High','Medium','Low'].map(v=>`<option ${p.pri===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Progress %</span><input id="projectProgress" name="progress" type="number" min="0" max="100" value="${Number(p.progress ?? averageProjectProgress(p.id))||0}" ${(p.taskStatus||inferProjectTaskStatus(p.id))==='Done'?'readonly':''}></label>
+    <label class="field"><span>Value</span><input name="val" type="number" min="0" value="${p.val}"></label>
+    <label class="field"><span>BD Lead</span><select name="bd">${teamOptions(p.bd,'BD Lead')}</select></label>
+    <label class="field"><span>Sales</span><select name="sales">${teamOptions(p.sales,'Sales')}</select></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Project</button><button class="btn" type="button" data-close-form="project">Cancel</button><span class="hint">เมื่อ Assign team ค่า dashboard, KPI, task และ notification จะเชื่อมตามทันที</span></div>`;
+  document.getElementById('projectFormPanel').classList.add('on');
+  const statusSelect=document.getElementById('projectTaskStatus'), progressInput=document.getElementById('projectProgress');
+  if(statusSelect&&progressInput){statusSelect.onchange=()=>{if(statusSelect.value==='Done'){progressInput.value=100;progressInput.readOnly=true}else{progressInput.readOnly=false}}}
+  bindCloseButtons();
+}
+function saveProject(e){
+  e.preventDefault(); const form=e.target; const f=Object.fromEntries(new FormData(form));
+  f.val=Number(f.val||0);
+  f.progress=Number(f.progress||0);
+  if(f.taskStatus==='Done') f.progress=100;
+  f.systems=checkedValues('systemsSelect').map(v=>{const [group,name]=v.split('|');return {group,name}});
+  const bvals={}; document.querySelectorAll('#projectForm [data-bval]').forEach(inp=>{bvals[inp.dataset.bval]=Number(inp.value||0);});
+  f.brands=checkedValues('brandsSelect').map(v=>{const [category,name]=v.split('|');return {category,name,value:bvals[v]||0}});
+  f.taskTemplateIds=checkedValues('taskTemplatesSelect');
+  f.projectSubtasks=String(f.projectSubtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  f.size=sizeForValue(f.val);
+  f.sys=f.systems.map(s=>s.name).join(', ');
+  f.brand=projectBrandNames(f).join(', ');
+  delete f.systemsSelect; delete f.brandsSelect; delete f.taskTemplatesSelect; delete f.projectSubtasksText;
+  if(editing.project){const old=state.projects.find(p=>p.id===editing.project)||{}; f.createdAt=old.createdAt||new Date().toISOString(); state.projects=state.projects.map(p=>p.id===editing.project?f:p)}else{f.createdAt=new Date().toISOString(); state.projects.push(f)}
+  syncProjectTasks(f);
+  const wasEdit=!!editing.project;
+  saveState(); editing.project=null; document.getElementById('projectFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขโครงการ':'เพิ่มโครงการ','projects',f.name||f.id); renderAll(true);
+}
+function deleteProject(id){if(!confirm('Delete project '+id+'?'))return; const nm=(state.projects.find(p=>p.id===id)||{}).name||id; state.projects=state.projects.filter(p=>p.id!==id); state.tasks=state.tasks.filter(t=>t.project!==id); saveState(); logActivity('ลบโครงการ','projects',nm); renderAll(true)}
+function syncProjectTasks(project){
+  const templateIds=project.taskTemplateIds||[];
+  state.tasks=state.tasks.filter(t=>t.project!==project.id || !t.templateId || templateIds.includes(t.templateId));
+  templateIds.forEach(tid=>{
+    const template=state.taskTemplates.find(t=>t.id===tid);
+    if(!template) return;
+    const existing=state.tasks.find(t=>t.project===project.id && t.templateId===tid);
+    const taskData={
+      id:existing?.id||nextId('T',state.tasks),
+      project:project.id,
+      templateId:tid,
+      title:template.title,
+      owner:existing?.owner||project.bd,
+      status:project.taskStatus==='Done'?'Done':(existing?.status||project.taskStatus||'Schedule'),
+      due:existing?.due||project.due||'',
+      level:existing?.level||'Member',
+      progress:project.taskStatus==='Done'?100:(existing?.progress||project.progress||0),
+      revision:existing?.revision||1,
+      subtasks:uniq([...(template.subtasks||[]),...(project.projectSubtasks||[])])
+    };
+    if(existing) state.tasks=state.tasks.map(t=>t.id===existing.id?taskData:t);
+    else state.tasks.push(taskData);
+  });
+}
+
+function isOverdue(t){return t.status!=='Done' && new Date(t.due+'T23:59:59+07:00') < today}
+function daysBetween(a,b){return Math.floor((new Date(a).setHours(0,0,0,0)-new Date(b).setHours(0,0,0,0))/86400000)}
+function inWindow(date,from,to){if(!date)return false;const d=new Date(date+'T12:00:00+07:00');return d>=from&&d<=to}
+function taskWindow(period,previous=false){
+  const len=period==='month'?30:7;
+  const end=new Date(today); end.setHours(23,59,59,999);
+  const start=new Date(today); start.setDate(start.getDate()-len+1); start.setHours(0,0,0,0);
+  if(!previous) return {start,end};
+  const prevEnd=new Date(start); prevEnd.setDate(prevEnd.getDate()-1); prevEnd.setHours(23,59,59,999);
+  const prevStart=new Date(prevEnd); prevStart.setDate(prevStart.getDate()-len+1); prevStart.setHours(0,0,0,0);
+  return {start:prevStart,end:prevEnd};
+}
+function scopeTasks(tasks,scope){
+  const week=taskWindow('week');
+  if(scope==='today') return tasks.filter(t=>daysBetween(t.due,today)===0);
+  if(scope==='week') return tasks.filter(t=>inWindow(t.due,week.start,week.end));
+  if(scope==='overdue') return tasks.filter(isOverdue);
+  if(scope==='waiting') return tasks.filter(t=>['Schedule','Review','Pending','Waiting Update'].includes(t.status));
+  if(scope==='completed') return tasks.filter(t=>t.status==='Done');
+  return tasks;
+}
+function periodCount(tasks,kind,period,previous=false){
+  const w=taskWindow(period,previous);
+  if(kind==='open') return tasks.filter(t=>t.status!=='Done'&&inWindow(t.due,w.start,w.end)).length;
+  if(kind==='due') return tasks.filter(t=>inWindow(t.due,w.start,w.end)).length;
+  if(kind==='overdue') return tasks.filter(t=>isOverdue(t)&&inWindow(t.due,w.start,w.end)).length;
+  if(kind==='completed') return tasks.filter(t=>t.status==='Done'&&inWindow(t.due,w.start,w.end)).length;
+  return 0;
+}
+function deltaText(current,last,type='up'){
+  const d=current-last; const arrow=type==='down'?'↘':'↗'; const color=type==='down'?'var(--red)':'var(--green)';
+  return `<span style="color:${color}">${arrow} ${d>=0?'+':''}${d}</span> vs last period`;
+}
+function renderTasks(){
+  const all=filteredTasks(); const t=scopeTasks(all,taskScope); const groups=state.taskStatuses.map(s=>s.name);
+  const open=periodCount(all,'open',taskPeriod), openPrev=periodCount(all,'open',taskPeriod,true);
+  const due=periodCount(all,'due',taskPeriod), duePrev=periodCount(all,'due',taskPeriod,true);
+  const overdue=periodCount(all,'overdue',taskPeriod), overduePrev=periodCount(all,'overdue',taskPeriod,true);
+  const done=periodCount(all,'completed',taskPeriod), donePrev=periodCount(all,'completed',taskPeriod,true);
+  const completion=due?Math.round(done/due*100):0, completionPrev=duePrev?Math.round(donePrev/duePrev*100):0;
+  document.getElementById('taskMetrics').innerHTML=[
+    metric('My Open Tasks',open,deltaText(open,openPrev)),
+    metric('Due '+(taskPeriod==='month'?'This Month':'This Week'),due,deltaText(due,duePrev),'var(--text)'),
+    metric('Overdue',overdue,deltaText(overdue,overduePrev,'down'),'var(--text)'),
+    metric('Completion Rate',completion+'%',deltaText(completion,completionPrev),'var(--text)')
+  ].join('');
+  document.getElementById('taskBoard').innerHTML=groups.map(g=>`<div class="lane"><h3>${esc(g)}</h3>${t.filter(x=>g==='Overdue'?(isOverdue(x)||x.status==='Overdue'):x.status===g&&!isOverdue(x)).map(taskCard).join('')||'<div class="task hint">No task</div>'}</div>`).join('');
+}
+function shiftDate(base,days){const d=new Date(base);d.setDate(d.getDate()+days);return d}
+function dateKey(d){const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`}
+function windowDays(period){const w=taskWindow(period);const days=[];for(let d=new Date(w.start);d<=w.end;d.setDate(d.getDate()+1)) days.push(new Date(d));return days}
+function taskPeriodSet(tasks,scope,period,previous=false){
+  const w=taskWindow(period,previous);
+  const scoped = tasks.filter(t=>{
+    if(scope==='today') return t.due===dateKey(shiftDate(today,previous?-1:0));
+    if(scope==='overdue') return isOverdue(t) && inWindow(t.due,w.start,w.end);
+    if(scope==='waiting') return ['Schedule','Review','Pending','Waiting Update'].includes(t.status) && inWindow(t.due,w.start,w.end);
+    if(scope==='completed') return t.status==='Done' && inWindow(t.due,w.start,w.end);
+    return inWindow(t.due,w.start,w.end);
+  });
+  return scoped;
+}
+function metricValue(tasks,kind){
+  if(kind==='open') return tasks.filter(t=>t.status!=='Done').length;
+  if(kind==='due') return tasks.length;
+  if(kind==='overdue') return tasks.filter(isOverdue).length;
+  if(kind==='completed') return tasks.filter(t=>t.status==='Done').length;
+  return 0;
+}
+function trendText(current,last,lowerIsBetter=false){
+  if(current===0 && last===0) return '';
+  const diff=current-last;
+  if(diff===0) return '<span class="trend flat">คงที่ 0</span> vs last period';
+  const improved = lowerIsBetter ? diff<0 : diff>0;
+  const cls = improved ? 'up' : 'down';
+  const arrow = diff>0 ? '&uarr;' : '&darr;';
+  const word = diff>0 ? 'เพิ่ม' : 'ลด';
+  return `<span class="trend ${cls}">${arrow} ${word} ${diff>0?'+':''}${diff}</span> vs last period`;
+}
+function renderTaskLeadFilter(){
+  const el=document.getElementById('taskLeadFilter'); if(!el) return;
+  const options='<option value="All">All BD Lead</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  if(el.innerHTML!==options) el.innerHTML=options;
+  el.value=taskLeadFilter;
+  el.onchange=()=>{taskLeadFilter=el.value;renderTasks()};
+}
+function renderTaskCalendar(tasks){
+  const days=windowDays(taskPeriod);
+  const label=document.getElementById('taskCalendarLabel');
+  const host=document.getElementById('taskCalendar');
+  if(!host) return;
+  if(label) label.textContent=`${taskPeriod==='month'?'Next 30 days':'This week'} by due date`;
+  host.innerHTML=days.map(d=>{
+    const key=dateKey(d);
+    const items=tasks.filter(t=>t.due===key);
+    const isToday=key===dateKey(today);
+    return `<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span>${d.toLocaleDateString('en-US',{weekday:'short'})}</span><b>${d.getDate()}</b></div><div class="cal-items">${items.map(t=>{const p=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(p?.name||t.project)} · ${esc(byId(t.owner).name)}</small></div>`}).join('')||'<div class="hint">No due task</div>'}</div></div>`;
+  }).join('');
+}
+function renderTasks(){
+  renderTaskLeadFilter();
+  const all=filteredTasks();
+  const currentSet=taskPeriodSet(all,taskScope,taskPeriod);
+  const previousSet=taskPeriodSet(all,taskScope,taskPeriod,true);
+  const groups=state.taskStatuses.map(s=>s.name);
+  const open=metricValue(currentSet,'open'), openPrev=metricValue(previousSet,'open');
+  const due=metricValue(currentSet,'due'), duePrev=metricValue(previousSet,'due');
+  const overdue=metricValue(currentSet,'overdue'), overduePrev=metricValue(previousSet,'overdue');
+  const done=metricValue(currentSet,'completed'), donePrev=metricValue(previousSet,'completed');
+  const completion=due?Math.round(done/due*100):0, completionPrev=duePrev?Math.round(donePrev/duePrev*100):0;
+  const dueLabel = taskScope==='today' ? 'Due Today' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
+  document.getElementById('taskMetrics').innerHTML=[
+    metric('My Open Tasks',open,trendText(open,openPrev)),
+    metric(dueLabel,due,trendText(due,duePrev),'var(--text)'),
+    metric('Overdue',overdue,trendText(overdue,overduePrev,true),'var(--text)'),
+    metric('Completion Rate',completion+'%',trendText(completion,completionPrev),'var(--text)')
+  ].join('');
+  renderTaskCalendar(currentSet);
+  document.getElementById('taskBoard').innerHTML=groups.map(g=>`<div class="lane"><h3>${esc(g)}</h3>${currentSet.filter(x=>g==='Overdue'?(isOverdue(x)||x.status==='Overdue'):x.status===g&&!isOverdue(x)).map(taskCard).join('')||'<div class="task hint">No task</div>'}</div>`).join('');
+}
+function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(byId(t.owner).name)}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
+function openTaskForm(id){
+  editing.task=id||null; const t=state.taskTemplates.find(x=>x.id===id)||{id:nextId('TT',state.taskTemplates),title:'',subtasks:[]};
+  const taskTitle=document.getElementById('taskFormTitle'); if(taskTitle) taskTitle.textContent=id?'Edit Task':'New Task';
+  document.getElementById('taskForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(t.id)}" ${id?'readonly':''}></label>
+    <label class="field span2"><span>Task template</span><input name="title" required value="${esc(t.title)}"></label>
+    <label class="field span3"><span>Default sub tasks</span><textarea name="subtasksText" placeholder="Site survey&#10;Revise BOQ round 1&#10;Revise BOQ round 2">${esc((t.subtasks||[]).join('\n'))}</textarea><span class="hint">ใช้เป็น Data List ให้ Project เลือก ไม่ใช่ task จริงของโครงการ</span></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Template</button><button class="btn" type="button" data-close-form="task">Cancel</button></div>`;
+  document.getElementById('taskFormPanel').classList.add('on'); bindCloseButtons();
+}
+function saveTask(e){e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); f.subtasks=String(f.subtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean); delete f.subtasksText; if(editing.task){state.taskTemplates=state.taskTemplates.map(t=>t.id===editing.task?f:t)}else state.taskTemplates.push(f); editing.task=null; saveState(); document.getElementById('taskFormPanel').classList.remove('on'); renderAll(false)}
+function deleteTask(id){if(state.projects.some(p=>(p.taskTemplateIds||[]).includes(id))){alert('Cannot delete: this task template is used in projects.');return} if(!confirm('Delete task template '+id+'?'))return; state.taskTemplates=state.taskTemplates.filter(t=>t.id!==id); saveState(); renderAll(false)}
+
+function renderSettings(){
+  renderProjectStatuses();
+  renderTaskStatuses();
+  renderSolutions();
+  renderBrands();
+  renderTaskRows();
+  renderSizeRows();
+}
+function renderSolutions(){
+  document.getElementById('solutionRows').innerHTML=state.solutionGroups.map(s=>`<tr><td>${esc(s.group)}</td><td>${esc(s.system)}</td><td><button class="btn small" data-edit-solution="${s.id}">Edit</button> <button class="btn small danger" data-del-solution="${s.id}">Delete</button></td></tr>`).join('');
+  document.querySelectorAll('[data-edit-solution]').forEach(b=>b.onclick=()=>openSolutionForm(b.dataset.editSolution));
+  document.querySelectorAll('[data-del-solution]').forEach(b=>b.onclick=()=>deleteSolution(b.dataset.delSolution));
+}
+function openSolutionForm(id){
+  editing.solution=id||null;
+  const item=state.solutionGroups.find(x=>x.id===id)||{id:nextId('SG',state.solutionGroups),group:'IT and Communication',system:''};
+  document.getElementById('solutionForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(item.id)}" ${id?'readonly':''}></label>
+    <label class="field"><span>Group</span><select name="group">${SYSTEM_GROUPS.map(g=>`<option ${item.group===g?'selected':''}>${g}</option>`).join('')}</select></label>
+    <label class="field"><span>System</span><input name="system" required value="${esc(item.system)}"></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save System</button><button class="btn" type="button" data-close-form="solution">Cancel</button></div>`;
+  document.getElementById('solutionFormPanel').classList.add('on');
+  bindCloseButtons();
+}
+function saveSolution(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  if(editing.solution) state.solutionGroups=state.solutionGroups.map(x=>x.id===editing.solution?f:x);
+  else state.solutionGroups.push(f);
+  editing.solution=null;
+  saveState();
+  document.getElementById('solutionFormPanel').classList.remove('on');
+  renderAll(true);
+}
+function deleteSolution(id){
+  const item=state.solutionGroups.find(x=>x.id===id);
+  if(item && state.projects.some(p=>projectSystems(p).some(s=>s.name===item.system))){alert('Cannot delete: this system is used in projects.');return}
+  if(!confirm('Delete system setting '+id+'?')) return;
+  state.solutionGroups=state.solutionGroups.filter(x=>x.id!==id);
+  saveState();
+  renderAll(true);
+}
+function renderBrands(){
+  const scopeTag=s=>s==='PIRAMID Scope'?'<span class="tag" style="background:rgba(19,184,166,.16);color:var(--accent-2)">PIRAMID</span>':'<span class="tag" style="background:rgba(96,136,255,.16);color:#8fa4ff">Brand</span>';
+  const row=b=>`<tr><td>${scopeTag(scopeOfCategory(b.category))}</td><td>${esc(b.category)}</td><td>${esc(b.name)}</td><td><button class="btn small" data-edit-brand="${b.id}">Edit</button> <button class="btn small danger" data-del-brand="${b.id}">Delete</button></td></tr>`;
+  const groupHead=(t,n,c)=>`<tr><td colspan="4" style="background:var(--surface);font-weight:700;color:${c};letter-spacing:.4px">${t} · ${n} รายการ</td></tr>`;
+  const brandItems=state.brandCatalog.filter(b=>scopeOfCategory(b.category)==='Brand Scope');
+  const piramidItems=state.brandCatalog.filter(b=>scopeOfCategory(b.category)==='PIRAMID Scope');
+  document.getElementById('brandRows').innerHTML=
+    groupHead('BRAND SCOPE (แบรนด์ภายนอก)',brandItems.length,'#8fa4ff')+brandItems.map(row).join('')+
+    groupHead('PIRAMID SCOPE (บริการ PIRAMID)',piramidItems.length,'var(--accent-2)')+piramidItems.map(row).join('');
+  document.querySelectorAll('[data-edit-brand]').forEach(b=>b.onclick=()=>openBrandForm(b.dataset.editBrand));
+  document.querySelectorAll('[data-del-brand]').forEach(b=>b.onclick=()=>deleteBrand(b.dataset.delBrand));
+}
+function openBrandForm(id){
+  editing.brand=id||null;
+  const item=state.brandCatalog.find(x=>x.id===id)||{id:nextId('BR',state.brandCatalog),category:'Hardware',name:''};
+  document.getElementById('brandForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(item.id)}" ${id?'readonly':''}></label>
+    <label class="field"><span>Category</span><select name="category"><optgroup label="Brand Scope (แบรนด์ภายนอก)">${BRAND_SCOPE_CATS.map(c=>`<option ${item.category===c?'selected':''}>${c}</option>`).join('')}</optgroup><optgroup label="PIRAMID Scope (บริการ PIRAMID)">${PIRAMID_SCOPE.map(c=>`<option ${item.category===c?'selected':''}>${c}</option>`).join('')}</optgroup></select></label>
+    <label class="field"><span>Brand / Item</span><input name="name" required value="${esc(item.name)}"></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Brand</button><button class="btn" type="button" data-close-form="brand">Cancel</button></div>`;
+  document.getElementById('brandFormPanel').classList.add('on');
+  bindCloseButtons();
+}
+function saveBrand(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  if(editing.brand) state.brandCatalog=state.brandCatalog.map(x=>x.id===editing.brand?f:x);
+  else state.brandCatalog.push(f);
+  editing.brand=null;
+  saveState();
+  document.getElementById('brandFormPanel').classList.remove('on');
+  renderAll(true);
+}
+function deleteBrand(id){
+  const item=state.brandCatalog.find(x=>x.id===id);
+  if(item && state.projects.some(p=>projectBrands(p).some(b=>b.category===item.category && b.name===item.name))){alert('Cannot delete: this brand is used in projects.');return}
+  if(!confirm('Delete brand setting '+id+'?')) return;
+  state.brandCatalog=state.brandCatalog.filter(x=>x.id!==id);
+  saveState();
+  renderAll(true);
+}
+function renderTaskRows(){
+  const rows=state.taskTemplates.map(t=>{
+    return `<tr><td class="ellipsis">${esc(t.title)}</td><td><div class="chips">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><button class="btn small" data-edit-task="${t.id}">Edit</button> <button class="btn small danger" data-del-task="${t.id}">Delete</button></td></tr>`;
+  }).join('');
+  document.getElementById('taskRows').innerHTML=rows;
+  document.querySelectorAll('[data-edit-task]').forEach(b=>b.onclick=()=>openTaskForm(b.dataset.editTask));
+  document.querySelectorAll('[data-del-task]').forEach(b=>b.onclick=()=>deleteTask(b.dataset.delTask));
+}
+function renderSizeRows(){
+  document.getElementById('sizeRows').innerHTML=[...state.sizeRanges].sort((a,b)=>Number(a.min)-Number(b.min)).map(r=>`<tr><td>${esc(r.size)}</td><td>${money(r.min)}</td><td>${Number(r.max)>9000000000?'∞':money(r.max)}</td><td><button class="btn small" data-edit-size="${r.id}">Edit</button> <button class="btn small danger" data-del-size="${r.id}">Delete</button></td></tr>`).join('');
+  document.querySelectorAll('[data-edit-size]').forEach(b=>b.onclick=()=>openSizeForm(b.dataset.editSize));
+  document.querySelectorAll('[data-del-size]').forEach(b=>b.onclick=()=>deleteSizeRange(b.dataset.delSize));
+}
+function openSizeForm(id){
+  editing.size=id||null;
+  const r=state.sizeRanges.find(x=>x.id===id)||{id:nextId('SZ',state.sizeRanges),size:'M',min:0,max:1000000};
+  document.getElementById('sizeForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(r.id)}" ${id?'readonly':''}></label>
+    <label class="field"><span>Size</span><select name="size">${['XS','S','M','L','XL','XXL'].map(s=>`<option ${r.size===s?'selected':''}>${s}</option>`).join('')}</select></label>
+    <label class="field"><span>Min value</span><input name="min" type="number" min="0" value="${r.min}"></label>
+    <label class="field"><span>Max value</span><input name="max" type="number" min="0" value="${r.max}"></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Size Range</button><button class="btn" type="button" data-close-form="size">Cancel</button></div>`;
+  document.getElementById('sizeFormPanel').classList.add('on');
+  bindCloseButtons();
+}
+function saveSizeRange(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  f.min=Number(f.min||0); f.max=Number(f.max||0);
+  if(editing.size) state.sizeRanges=state.sizeRanges.map(r=>r.id===editing.size?f:r);
+  else state.sizeRanges.push(f);
+  state.projects=state.projects.map(p=>({...p,size:sizeForValue(p.val,state.sizeRanges)}));
+  editing.size=null;
+  saveState();
+  document.getElementById('sizeFormPanel').classList.remove('on');
+  renderAll(false);
+}
+function deleteSizeRange(id){
+  if(state.sizeRanges.length<=1){alert('At least one size range is required.');return}
+  if(!confirm('Delete size range '+id+'?')) return;
+  state.sizeRanges=state.sizeRanges.filter(r=>r.id!==id);
+  state.projects=state.projects.map(p=>({...p,size:sizeForValue(p.val,state.sizeRanges)}));
+  saveState();
+  renderAll(false);
+}
+
+function renderProjectStatuses(){
+  document.getElementById('projectStatusRows').innerHTML=state.projectStatuses.map(s=>`<tr><td>${esc(s.name)}</td><td><button class="btn small" data-edit-project-status="${s.id}">Edit</button> <button class="btn small danger" data-del-project-status="${s.id}">Delete</button></td></tr>`).join('');
+  document.querySelectorAll('[data-edit-project-status]').forEach(b=>b.onclick=()=>openProjectStatusForm(b.dataset.editProjectStatus));
+  document.querySelectorAll('[data-del-project-status]').forEach(b=>b.onclick=()=>deleteProjectStatus(b.dataset.delProjectStatus));
+}
+function openProjectStatusForm(id){
+  editing.projectStatus=id||null;
+  const s=state.projectStatuses.find(x=>x.id===id)||{id:nextId('PS',state.projectStatuses),name:''};
+  document.getElementById('projectStatusForm').innerHTML=`<label class="field"><span>ID</span><input name="id" value="${esc(s.id)}" ${id?'readonly':''}></label><label class="field span2"><span>Status name</span><input name="name" required value="${esc(s.name)}"></label><div class="span3 toolbar"><button class="btn primary" type="submit">Save Project Status</button><button class="btn" type="button" data-close-form="projectStatus">Cancel</button></div>`;
+  document.getElementById('projectStatusFormPanel').classList.add('on'); bindCloseButtons();
+}
+function saveProjectStatus(e){
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); const wasEdit=!!editing.projectStatus;
+  if(editing.projectStatus) state.projectStatuses=state.projectStatuses.map(s=>s.id===editing.projectStatus?f:s); else state.projectStatuses.push(f);
+  editing.projectStatus=null; saveState(); document.getElementById('projectStatusFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไข Project Status':'เพิ่ม Project Status','settings',f.name||f.id); renderAll(true);
+}
+function deleteProjectStatus(id){
+  const s=state.projectStatuses.find(x=>x.id===id);
+  if(s&&state.projects.some(p=>p.status===s.name)){alert('Cannot delete: status is used in projects.');return}
+  if(!confirm('Delete project status '+id+'?')) return;
+  state.projectStatuses=state.projectStatuses.filter(s=>s.id!==id); saveState(); renderAll(true);
+}
+function renderTaskStatuses(){
+  document.getElementById('taskStatusRows').innerHTML=state.taskStatuses.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.description||'')}</td><td><button class="btn small" data-edit-task-status="${s.id}">Edit</button> <button class="btn small danger" data-del-task-status="${s.id}">Delete</button></td></tr>`).join('');
+  document.querySelectorAll('[data-edit-task-status]').forEach(b=>b.onclick=()=>openTaskStatusForm(b.dataset.editTaskStatus));
+  document.querySelectorAll('[data-del-task-status]').forEach(b=>b.onclick=()=>deleteTaskStatus(b.dataset.delTaskStatus));
+}
+function openTaskStatusForm(id){
+  editing.taskStatus=id||null;
+  const s=state.taskStatuses.find(x=>x.id===id)||{id:nextId('TS',state.taskStatuses),name:'',description:''};
+  document.getElementById('taskStatusForm').innerHTML=`<label class="field"><span>ID</span><input name="id" value="${esc(s.id)}" ${id?'readonly':''}></label><label class="field"><span>Status name</span><input name="name" required value="${esc(s.name)}"></label><label class="field"><span>Description</span><input name="description" value="${esc(s.description||'')}"></label><div class="span3 toolbar"><button class="btn primary" type="submit">Save Task Status</button><button class="btn" type="button" data-close-form="taskStatus">Cancel</button></div>`;
+  document.getElementById('taskStatusFormPanel').classList.add('on'); bindCloseButtons();
+}
+function saveTaskStatus(e){
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); const wasEdit=!!editing.taskStatus;
+  if(editing.taskStatus) state.taskStatuses=state.taskStatuses.map(s=>s.id===editing.taskStatus?f:s); else state.taskStatuses.push(f);
+  editing.taskStatus=null; saveState(); document.getElementById('taskStatusFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไข Task Status':'เพิ่ม Task Status','settings',f.name||f.id); renderAll(true);
+}
+function deleteTaskStatus(id){
+  const s=state.taskStatuses.find(x=>x.id===id);
+  if(s&&(state.tasks.some(t=>t.status===s.name)||state.projects.some(p=>p.taskStatus===s.name))){alert('Cannot delete: task status is used in projects/tasks.');return}
+  if(!confirm('Delete task status '+id+'?')) return;
+  state.taskStatuses=state.taskStatuses.filter(s=>s.id!==id); saveState(); renderAll(true);
+}
+
+function renderTeam(){
+  renderTeamTaskMetrics();
+  const groups = [
+    {label:'Manager', items:state.teams.filter(t=>!['BD Lead','Sales'].includes(t.role))},
+    {label:'BD', items:state.teams.filter(t=>t.role==='BD Lead')},
+    {label:'Sales', items:state.teams.filter(t=>t.role==='Sales')}
+  ];
+  document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
+    const owned=state.projects.filter(p=>p.bd===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>x.owner===t.id);
+    const locked = !activeUser;
+    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="avatar" style="background:${t.color}">${esc(initials(t.name))}</div><div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="width:${pct(owned.length,Math.max(1,state.projects.length))}%;background:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="width:${pct(value,t.target)}%;background:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="width:${pct(tasks.length,Math.max(1,state.tasks.length))}%;background:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
+  }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
+  updateLoginState();
+  document.querySelectorAll('[data-edit-team]').forEach(b=>b.onclick=()=>openTeamForm(b.dataset.editTeam));
+  document.querySelectorAll('[data-del-team]').forEach(b=>b.onclick=()=>deleteTeam(b.dataset.delTeam));
+  renderResetApprovals();
+}
+function renderResetApprovals(){
+  const card=document.getElementById('resetApprovalCard'); if(!card) return;
+  card.style.display=isAdmin()?'block':'none';
+  if(!isAdmin()) return;
+  const rows=(state.passwordResetRequests||[]).slice().reverse();
+  document.getElementById('resetRequestRows').innerHTML=rows.map(r=>`<tr><td>${esc(r.name)}<span class="mini">${esc(r.username)}</span></td><td>${esc(new Date(r.requestedAt).toLocaleString())}</td><td>${esc(r.note||'-')}</td><td>${statusTag(r.status==='Approved'?'Done':r.status==='Rejected'?'Lost':'Pending')}</td><td>${r.status==='Pending'?`<button class="btn small primary" data-approve-reset="${r.id}">Approve</button> <button class="btn small danger" data-reject-reset="${r.id}">Reject</button>`:'-'}</td></tr>`).join('')||'<tr><td colspan="5" class="hint">No reset requests</td></tr>';
+  document.querySelectorAll('[data-approve-reset]').forEach(b=>b.onclick=()=>approveResetRequest(b.dataset.approveReset));
+  document.querySelectorAll('[data-reject-reset]').forEach(b=>b.onclick=()=>rejectResetRequest(b.dataset.rejectReset));
+}
+function approveResetRequest(id){
+  if(!isAdmin()) return alert('Only Wongwaris can approve reset requests.');
+  const req=state.passwordResetRequests.find(r=>r.id===id); if(!req) return;
+  const user=state.teams.find(t=>t.id===req.userId); if(!user) return;
+  user.password=user.username;
+  req.status='Approved'; req.approvedAt=new Date().toISOString(); req.approvedBy=activeUser.username; req.newPasscodeHint='Access reset to username';
+  saveState(); renderTeam(); alert(`Approved. ${user.name} can login with username/passcode: ${user.username}`);
+}
+function rejectResetRequest(id){
+  if(!isAdmin()) return alert('Only Wongwaris can reject reset requests.');
+  const req=state.passwordResetRequests.find(r=>r.id===id); if(!req) return;
+  req.status='Rejected'; req.rejectedAt=new Date().toISOString(); req.approvedBy=activeUser.username;
+  saveState(); renderTeam();
+}
+function renderTeamTaskMetrics(){
+  const open=state.tasks.filter(t=>t.status!=='Done').length;
+  const assignedThisWeek=state.tasks.filter(t=>new Date(t.due||today) >= today && new Date(t.due||today) <= new Date(today.getTime()+7*86400000)).length;
+  const overdue=state.tasks.filter(isOverdue).length;
+  const avgLoad=state.teams.length?Math.round((state.tasks.length/(state.teams.length*2))*100):0;
+  document.getElementById('teamTaskMetrics').innerHTML=[
+    metric('Team Open Tasks',open,'↗ +12% vs last period','var(--text)'),
+    metric('Assigned This Week',assignedThisWeek,'↗ +8% vs last period','var(--text)'),
+    metric('Overdue by Team',overdue,'↘ +5 vs last period','var(--text)'),
+    metric('Average Load',avgLoad+'%','↗ +6% vs last period','var(--text)')
+  ].join('');
+  const cards=document.querySelectorAll('#teamTaskMetrics .metric small');
+  cards.forEach((c,i)=>c.style.color=i===2?'var(--red)':'var(--green)');
+}
+function openTeamForm(id){
+  if(!requireLogin()) return;
+  editing.team=id||null; const t=state.teams.find(x=>x.id===id)||{id:nextId('tm',state.teams),name:'',username:'',password:'',role:'Manager',level:'Manager',email:'',target:10000000,color:'#5b7cfa'};
+  document.getElementById('teamFormTitle').textContent=id?'Edit Member':'New Member';
+  document.getElementById('teamForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(t.id)}" ${id?'readonly':''}></label><label class="field span2"><span>Name</span><input name="name" required value="${esc(t.name)}"></label>
+    <label class="field"><span>Username</span><input name="username" required value="${esc(t.username||firstName(t.name))}" placeholder="Auto: first name"></label>
+    <label class="field"><span>Passcode</span><input name="password" class="masked-entry" type="text" autocomplete="off" required value="${esc(t.password||lastName(t.name))}" placeholder="Auto: surname"></label>
+    <label class="field"><span>Role</span><select name="role">${['Manager','BD Lead','Sales'].map(v=>`<option ${t.role===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Level</span><select name="level">${['Member','Manager','Executive'].map(v=>`<option ${t.level===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Email</span><input name="email" type="email" value="${esc(t.email)}"></label>
+    <label class="field"><span>KPI Target</span><input name="target" type="number" value="${t.target}"></label>
+    <label class="field"><span>Color</span><input name="color" type="color" value="${t.color}"></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Member</button><button class="btn" type="button" data-close-form="team">Cancel</button></div>`;
+  document.getElementById('teamFormPanel').classList.add('on'); bindCloseButtons();
+}
+function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=f.username||firstName(f.name); f.password=f.password||lastName(f.name); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
+function deleteTeam(id){if(!requireLogin()) return; if(state.projects.some(p=>p.bd===id||p.sales===id)||state.tasks.some(t=>t.owner===id)){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
+function requireLogin(){
+  if(activeUser) return true;
+  alert('Please sign in before editing.');
+  return false;
+}
+function updateLoginState(){}
+
+function renderRules(){
+  document.getElementById('ruleCountLabel').textContent=state.rules.length+' rules';
+  document.getElementById('ruleRows').innerHTML=state.rules.map(r=>`<tr><td>${esc(r.level)}</td><td>${esc(r.name)}<span class="mini">Scope: ${esc(r.recipientScope||'Group')}</span></td><td>${esc(r.reportPeriod||'Daily')}</td><td>${r.attachSnapshot?'On':'Off'}<span class="mini">${esc(r.snapshotView||'-')} · ${esc(r.format||'PNG')}</span></td><td>${esc(r.channel)}</td><td>${esc(r.time)}</td><td>${esc(r.recipients)}</td><td>${r.enabled?statusTag('Done'):statusTag('Pending')}</td><td><button class="btn small" data-preview-rule="${r.id}">Preview</button> <button class="btn small" data-trigger-rule="${r.id}">Trigger</button> <button class="btn small" data-edit-rule="${r.id}">Edit</button> <button class="btn small danger" data-del-rule="${r.id}">Delete</button></td></tr>`).join('');
+  document.querySelectorAll('[data-preview-rule]').forEach(b=>b.onclick=()=>previewRule(b.dataset.previewRule));
+  document.querySelectorAll('[data-trigger-rule]').forEach(b=>b.onclick=()=>triggerRule(b.dataset.triggerRule));
+  document.querySelectorAll('[data-edit-rule]').forEach(b=>b.onclick=()=>openRuleForm(b.dataset.editRule));
+  document.querySelectorAll('[data-del-rule]').forEach(b=>b.onclick=()=>deleteRule(b.dataset.delRule));
+}
+function openRuleForm(id){
+  editing.rule=id||null; const r=state.rules.find(x=>x.id===id)||{id:nextId('R',state.rules),level:'Member',name:'Daily task summary',channel:'Email',time:'08:30, 17:30',recipients:'Assignee',recipientScope:'Individual',reportPeriod:'Daily',attachSnapshot:true,snapshotView:'TaskTracker',format:'PNG',enabled:true};
+  document.getElementById('ruleFormTitle').textContent=id?'Edit Rule':'New Rule';
+  document.getElementById('ruleForm').innerHTML=`
+    <label class="field"><span>ID</span><input name="id" value="${esc(r.id)}" ${id?'readonly':''}></label><label class="field span2"><span>Rule name</span><input name="name" required value="${esc(r.name)}"></label>
+    <label class="field"><span>Level</span><select name="level">${['Member','Manager','Executive'].map(v=>`<option ${r.level===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Report Period</span><select name="reportPeriod">${['Daily','Weekly','Monthly'].map(v=>`<option ${r.reportPeriod===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Channel</span><select name="channel">${['Email','Email + Line','Email + Dashboard'].map(v=>`<option ${r.channel===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Recipient scope</span><select name="recipientScope">${['Individual','Group'].map(v=>`<option ${r.recipientScope===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Snapshot View</span><select name="snapshotView">${['Executive','Team','TaskTracker'].map(v=>`<option ${r.snapshotView===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Format</span><select name="format">${['PNG','PDF'].map(v=>`<option ${r.format===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Time</span><input name="time" value="${esc(r.time)}"></label>
+    <label class="field span2"><span>Recipients</span><input name="recipients" value="${esc(r.recipients)}"></label>
+    <label class="switch"><input type="checkbox" name="attachSnapshot" ${r.attachSnapshot?'checked':''}>Attach Snapshot</label>
+    <label class="switch"><input type="checkbox" name="enabled" ${r.enabled?'checked':''}>Enabled</label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Rule</button><button class="btn" type="button" data-close-form="rule">Cancel</button></div>`;
+  document.getElementById('ruleFormPanel').classList.add('on'); bindCloseButtons();
+}
+function saveRule(e){e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); f.enabled=!!f.enabled; f.attachSnapshot=!!f.attachSnapshot; const wasEdit=!!editing.rule; if(editing.rule) state.rules=state.rules.map(r=>r.id===editing.rule?f:r); else state.rules.push(f); saveState(); document.getElementById('ruleFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไข Notification Rule':'เพิ่ม Notification Rule','notify',f.name||f.id); renderRules(); previewRule(f.id)}
+function deleteRule(id){if(!confirm('Delete notification rule '+id+'?'))return; state.rules=state.rules.filter(r=>r.id!==id); saveState(); renderRules()}
+function triggerRule(id){const r=state.rules.find(x=>x.id===id); if(!r) return; previewRule(id); alert(`Manual trigger sent: ${r.name}\\nPeriod: ${r.reportPeriod||'Daily'}\\nSnapshot: ${r.attachSnapshot?'Attached '+(r.format||'PNG'):'Off'}\\nScope: ${r.recipientScope||'Group'}\\nRecipients: ${r.recipients}`)}
+function statusIcon(s){const key=isOverdue(s)?'overdue':String(s.status||s).toLowerCase(); const map={done:['done','✓'],doing:['doing','↻'],review:['review','!'],overdue:['overdue','!'],schedule:['schedule','●'],pending:['schedule','●']}; const [cls,txt]=map[key]||['schedule','●']; return `<span class="status-ico ${cls}">${txt}</span>`}
+function reportWindow(period){
+  const end=new Date(today); end.setHours(23,59,59,999);
+  const start=new Date(today); start.setHours(0,0,0,0);
+  if(period==='Weekly') start.setDate(start.getDate()-6);
+  else if(period==='Monthly') start.setDate(start.getDate()-29);
+  return {start,end,label:`${start.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} - ${end.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}`};
+}
+function reportTasks(rule){
+  const w=reportWindow(rule.reportPeriod||'Daily');
+  return bdTasks().filter(t=>inWindow(t.due,w.start,w.end));
+}
+function taskSummary(tasks){return {total:tasks.length,done:tasks.filter(t=>t.status==='Done').length,doing:tasks.filter(t=>t.status==='Doing').length,review:tasks.filter(t=>t.status==='Review').length,overdue:tasks.filter(isOverdue).length,open:tasks.filter(t=>t.status!=='Done').length}}
+function previewRule(id){
+  const r=state.rules.find(x=>x.id===id); if(!r) return;
+  const tasks=reportTasks(r), summary=taskSummary(tasks), w=reportWindow(r.reportPeriod||'Daily');
+  const subject=`[PIRAMID BD] ${r.reportPeriod||'Daily'} ${r.level} Summary - ${w.label}`;
+  const sampleOwner=state.teams.find(t=>/bd/i.test(t.role||'')&&t.level===r.level)||state.teams.find(t=>/bd/i.test(t.role||''))||state.teams[0]||{name:'Team'};
+  const scoped=r.level==='Member'?tasks.filter(t=>t.owner===sampleOwner.id):tasks;
+  const lines=[
+    `Subject: ${subject}`,
+    ``,
+    r.level==='Executive'?'เรียนผู้บริหาร,':`สวัสดีคุณ ${sampleOwner.name},`,
+    ``,
+    `${r.reportPeriod||'Daily'} BD task summary (${w.label})`,
+    `Total Tasks: ${r.level==='Member'?scoped.length:summary.total}`,
+    `Done: ${r.level==='Member'?scoped.filter(t=>t.status==='Done').length:summary.done}`,
+    `Doing: ${r.level==='Member'?scoped.filter(t=>t.status==='Doing').length:summary.doing}`,
+    `Review: ${r.level==='Member'?scoped.filter(t=>t.status==='Review').length:summary.review}`,
+    `Overdue: ${r.level==='Member'?scoped.filter(isOverdue).length:summary.overdue}`,
+    ``,
+    r.level==='Member'?'Your BD task list:':r.level==='Manager'?'BD team task highlights:':'Executive BD highlights:',
+    ...(scoped.slice(0,6).map((t,i)=>`${i+1}. ${t.status} - ${t.title}\n   Project: ${state.projects.find(p=>p.id===t.project)?.name||t.project}\n   Owner: ${byId(t.owner).name} · Due: ${t.due} · Progress: ${t.progress||0}%`)),
+    scoped.length?'':'No tasks for this period.',
+    ``,
+    r.attachSnapshot?`Attached Snapshot: ${r.snapshotView||'TaskTracker'} (${r.format||'PNG'})`:'Snapshot: Off'
+  ];
+  document.getElementById('previewRuleLabel').textContent=`${r.name} · ${r.level} · ${r.reportPeriod||'Daily'}`;
+  document.getElementById('notificationPreview').innerHTML=`<div class="email-box">${esc(lines.join('\n'))}</div>${snapshotPreview(r,tasks,summary,w)}`;
+}
+function snapshotPreview(rule,tasks,summary,w){
+  if(!rule.attachSnapshot) return '<div class="snapshot-frame hint">Attach Snapshot is Off.</div>';
+  const completion=summary.total?Math.round(summary.done/summary.total*100):0;
+  const high=bdProjects(filteredProjects()).filter(p=>p.pri==='High').slice(0,3);
+  return `<div class="snapshot-frame"><div class="snapshot-head"><div><b>${esc(rule.snapshotView||'TaskTracker')} Snapshot</b><div class="mini">${esc(rule.reportPeriod||'Daily')} · ${esc(w.label)} · BD Team only · ${esc(rule.format||'PNG')}</div></div><span class="tag quot">${esc(rule.level)}</span></div><div class="grid g4" style="margin-bottom:12px">${metric('BD Tasks',summary.total,'in period')}${metric('Done',summary.done,completion+'% complete','var(--green)')}${metric('Doing',summary.doing,'active','var(--accent)')}${metric('Overdue',summary.overdue,'needs action','var(--red)')}</div><div class="status-list">${['Done','Doing','Review','Overdue','Schedule'].map(s=>`<div class="status-line">${statusIcon(s)}<b>${s}</b><span>${tasks.filter(t=>s==='Overdue'?isOverdue(t):t.status===s).length}</span></div>`).join('')}</div><div class="ch" style="padding:12px 0 8px;border-bottom:0"><h2>BD High Priority Watchlist</h2></div>${high.map(p=>`<div class="cal-item"><strong>${esc(p.name)}</strong><small>${esc(p.status)} · ${shortMoney(p.val)} · ${esc(byId(p.bd).name)}</small></div>`).join('')||'<div class="hint">No high priority BD project</div>'}</div>`;
+}
+async function emailFetch(path,opts={}){
+  const res=await fetch(EMAIL_API+path,{...opts,headers:{'Content-Type':'application/json','x-user-role':'admin',...(opts.headers||{})}});
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error||'Email API failed');
+  return data;
+}
+async function loadEmailAdmin(){
+  try{
+    const [settings,templates,queue,logs,prefs]=await Promise.all([
+      emailFetch('/settings'),
+      emailFetch('/templates'),
+      emailFetch('/queue'),
+      emailFetch('/logs'),
+      emailFetch('/preferences')
+    ]);
+    emailAdmin={settings,templates:templates.templates||[],queue:queue.queue||[],logs:logs.logs||[],preferences:prefs.preferences||[]};
+    renderEmailAdmin();
+  }catch(err){document.getElementById('emailSettings').innerHTML=`<div class="hint">Email API not ready: ${esc(err.message)}</div>`}
+}
+function renderEmailAdmin(){
+  renderEmailSettings(); renderEmailTemplateForm(); renderEmailTemplates(); renderEmailQueue(); renderEmailLogs(); renderEmailPreferences();
+}
+function renderEmailSettings(){
+  const s=emailAdmin.settings||{};
+  document.getElementById('emailSettings').innerHTML=`<div class="bars">
+    <div class="bar-row"><span>Provider</span><div>${esc(s.provider||'smtp')}</div><b>${s.smtp_password_configured?'Secret OK':'No secret'}</b></div>
+    <div class="bar-row"><span>SMTP Host</span><div>${esc(s.smtp_host||'Not configured')}</div><b>${esc(s.smtp_port||'-')}</b></div>
+    <div class="bar-row"><span>From</span><div>${esc(s.smtp_from||'Default sender')}</div><b>${s.smtp_secure?'TLS':'Standard'}</b></div>
+  </div><div class="hint" style="margin-top:8px">SMTP secret is never exposed. Set SMTP_PASSWORD in Vercel Environment Variables.</div>`;
+}
+function renderEmailTemplateForm(t={}){
+  const tpl=t.id?t:{template_key:'',name:'',description:'',subject_template:'',html_body_template:'',text_body_template:'',variables:['user_name','task_name','project_name','due_date','status','platform_link'],is_active:true};
+  document.getElementById('emailTemplateForm').innerHTML=`
+    <label class="field"><span>Template Key</span><input name="template_key" required value="${esc(tpl.template_key)}"></label>
+    <label class="field"><span>Name</span><input name="name" required value="${esc(tpl.name)}"></label>
+    <label class="field"><span>Active</span><select name="is_active"><option value="true" ${tpl.is_active!==false?'selected':''}>Active</option><option value="false" ${tpl.is_active===false?'selected':''}>Inactive</option></select></label>
+    <label class="field span3"><span>Subject Template</span><input name="subject_template" required value="${esc(tpl.subject_template)}" placeholder="[PIRAMID BD] {{task_name}}"></label>
+    <label class="field span3"><span>HTML Body Template</span><textarea name="html_body_template" required placeholder="<p>Hello {{user_name}}</p>">${esc(tpl.html_body_template)}</textarea></label>
+    <label class="field span3"><span>Text Body Template</span><textarea name="text_body_template" required>${esc(tpl.text_body_template)}</textarea></label>
+    <label class="field span2"><span>Variables</span><input name="variablesText" value="${esc((tpl.variables||[]).join(', '))}"></label>
+    <label class="field"><span>Description</span><input name="description" value="${esc(tpl.description||'')}"></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">${tpl.id?'Update':'Create'} Template</button><button class="btn" type="button" id="previewTemplateBtn">Preview Template</button><button class="btn" type="button" id="clearTemplateBtn">Clear</button></div>`;
+  editing.emailTemplate=tpl.id||null;
+  document.getElementById('previewTemplateBtn').onclick=previewEmailTemplateForm;
+  document.getElementById('clearTemplateBtn').onclick=()=>renderEmailTemplateForm();
+}
+function renderEmailTemplates(){
+  document.getElementById('emailTemplateRows').innerHTML=emailAdmin.templates.map(t=>`<tr><td>${esc(t.template_key)}</td><td>${esc(t.name)}</td><td>${esc(t.subject_template)}</td><td>${esc((t.variables||[]).join(', '))}</td><td><button class="btn small" data-edit-email-template="${t.id}">Edit</button> <button class="btn small" data-preview-email-template="${t.id}">Preview</button></td></tr>`).join('')||'<tr><td colspan="5" class="hint">No templates</td></tr>';
+  document.querySelectorAll('[data-edit-email-template]').forEach(b=>b.onclick=()=>renderEmailTemplateForm(emailAdmin.templates.find(t=>t.id===b.dataset.editEmailTemplate)));
+  document.querySelectorAll('[data-preview-email-template]').forEach(b=>b.onclick=()=>previewEmailTemplate(emailAdmin.templates.find(t=>t.id===b.dataset.previewEmailTemplate)));
+}
+async function saveEmailTemplate(e){
+  e.preventDefault(); const f=Object.fromEntries(new FormData(e.target));
+  const payload={...f,id:editing.emailTemplate,variables:String(f.variablesText||'').split(',').map(x=>x.trim()).filter(Boolean),is_active:f.is_active==='true'}; delete payload.variablesText;
+  await emailFetch('/templates',{method:'POST',body:JSON.stringify(payload)}); await loadEmailAdmin();
+}
+function sampleTemplateVars(){return {user_name:'Mr. Teerawat',task_name:'Prepare BD proposal',project_name:'PIRAMID Smart Building',due_date:'2026-05-31',status:'Doing',platform_link:'https://bdmgmt.vercel.app',summary:'BD Tasks 8, Done 5, Overdue 1',week_label:'This Week'}}
+async function previewEmailTemplateForm(){const f=Object.fromEntries(new FormData(document.getElementById('emailTemplateForm'))); previewEmailTemplate({subject_template:f.subject_template,html_body_template:f.html_body_template,text_body_template:f.text_body_template},sampleTemplateVars())}
+async function previewEmailTemplate(t,vars=sampleTemplateVars()){
+  const data=await emailFetch('/templates',{method:'POST',body:JSON.stringify({preview:true,template:t,variables:vars})});
+  document.getElementById('notificationPreview').innerHTML=`<div class="email-box">Subject: ${esc(data.preview.subject)}\n\n${esc(data.preview.text_body)}</div><div class="snapshot-frame"><b>HTML Preview</b><div class="email-box" style="margin-top:10px">${data.preview.html_body}</div></div>`;
+}
+function renderEmailQueue(){
+  document.getElementById('emailQueueRows').innerHTML=emailAdmin.queue.map(q=>`<tr><td>${statusTag(q.status)}</td><td>${esc((q.to_emails||[]).join(', '))}</td><td>${esc(q.subject)}</td><td>${esc(q.scheduled_at||'-')}</td><td>${q.retry_count}/${q.max_retry}</td><td><button class="btn small" data-retry-email="${q.id}">Retry</button> <button class="btn small danger" data-cancel-email="${q.id}">Cancel</button></td></tr>`).join('')||'<tr><td colspan="6" class="hint">No queue</td></tr>';
+  document.querySelectorAll('[data-retry-email]').forEach(b=>b.onclick=async()=>{await emailFetch('/queue',{method:'POST',body:JSON.stringify({action:'retry',id:b.dataset.retryEmail})});await loadEmailAdmin()});
+  document.querySelectorAll('[data-cancel-email]').forEach(b=>b.onclick=async()=>{await emailFetch('/queue',{method:'POST',body:JSON.stringify({action:'cancel',id:b.dataset.cancelEmail})});await loadEmailAdmin()});
+}
+function renderEmailLogs(){
+  document.getElementById('emailLogRows').innerHTML=emailAdmin.logs.map(l=>`<tr><td>${statusTag(l.status)}</td><td>${esc(l.recipient)}</td><td>${esc(l.subject)}</td><td>${esc(l.template_key||'-')}</td><td>${esc(l.sent_at||l.created_at||'-')}</td><td>${esc(l.error_message||'-')}</td></tr>`).join('')||'<tr><td colspan="6" class="hint">No logs</td></tr>';
+}
+function renderEmailPreferences(){
+  const prefsByUser=Object.fromEntries((emailAdmin.preferences||[]).map(p=>[p.user_id,p]));
+  const keys=['task_assigned','task_due_reminder','overdue_alert','comment_mention','daily_summary','weekly_summary','monthly_summary','project_risk_alert'];
+  document.getElementById('emailPreferences').innerHTML=state.teams.map(t=>{const p=prefsByUser[t.id]||{};return `<div class="card" style="margin-bottom:8px"><div class="cb"><b>${esc(t.name)}</b><div class="mini">${esc(t.email)}</div><div class="chips" style="margin-top:8px">${keys.map(k=>`<label class="chip"><input type="checkbox" data-pref-user="${t.id}" data-pref-key="${k}" ${p[k]!==false?'checked':''}> ${k.replaceAll('_',' ')}</label>`).join('')}</div></div></div>`}).join('');
+  document.querySelectorAll('[data-pref-user]').forEach(x=>x.onchange=()=>savePreference(x.dataset.prefUser));
+}
+async function savePreference(userId){
+  const t=state.teams.find(x=>x.id===userId); const payload={user_id:userId,email:t.email};
+  document.querySelectorAll(`[data-pref-user="${userId}"]`).forEach(x=>payload[x.dataset.prefKey]=x.checked);
+  await emailFetch('/preferences',{method:'POST',body:JSON.stringify(payload)}); await loadEmailAdmin();
+}
+
+function nextId(prefix,arr){const nums=arr.map(x=>Number(String(x.id).replace(/\D/g,''))).filter(Boolean);return prefix+'-'+String((Math.max(0,...nums)+1)).padStart(3,'0')}
+function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
+function bindCloseButtons(){document.querySelectorAll('[data-close-form]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.closeForm+'FormPanel').classList.remove('on'))}
+function exportCsv(type){
+  const teamName=id=>{const t=byId(id); return t&&t.name?t.name:(id||'');};
+  let headers=[], rows=[];
+  if(type==='tasks'){
+    headers=['Task ID','Project','Task','Owner','Status','Due Date','Level','Progress (%)','Sub Tasks'];
+    rows=state.tasks.map(t=>{
+      const proj=state.projects.find(p=>p.id===t.project);
+      return [t.id, proj?proj.name:t.project, t.title, teamName(t.owner), isOverdue(t)?'Overdue':t.status, t.due||'', t.level||'', Number(t.progress||0), (t.subtasks||[]).join('; ')];
+    });
+  } else if(type==='team'){
+    headers=['Team ID','Name','Role','Level','Email','Target (THB)'];
+    rows=state.teams.map(m=>[m.id, m.name, m.role||'', m.level||'', m.email||'', Number(m.target||0)]);
+  } else {
+    headers=['Project ID','Project Name','Segment','Status','Priority','Size','Value (THB)','BD Lead','Sales','Systems','Brands'];
+    rows=filteredProjects().map(p=>[
+      p.id, p.name, p.seg||'', p.status||'', p.pri||'', p.size||'',
+      Number(p.val||0), teamName(p.bd), teamName(p.sales),
+      projectSystemLabels(p).join('; '), projectBrandLabels(p).join('; ')
+    ]);
+  }
+  const cell=v=>{
+    if(typeof v==='number') return String(v);
+    const s=String(v==null?'':v);
+    return /[",\n\r]/.test(s) ? '"'+s.replaceAll('"','""')+'"' : s;
+  };
+  const csv='﻿'+[headers.join(','),...rows.map(r=>r.map(cell).join(','))].join('\r\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download=`piramid-${type}.csv`; a.click(); URL.revokeObjectURL(a.href);
+}
+function renderAll(rebuildFilters=false){
+  if(!document.getElementById('appShell')){
+    console.warn('App shell not found; skipping render');
+    return;
+  }
+  if(rebuildFilters && initFilters()===false) return;
+  renderCustomizers(); applyLayout(); renderDashboard(); renderProjects(); renderTasks(); renderTeam(); renderRules(); renderSettings(); renderAnalytics();
+}
+let appBooted=false;
+function on(id,event,handler){const el=document.getElementById(id); if(el) el[event]=handler}
+function bindAppEvents(){
+  document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));const view=document.getElementById('v-'+b.dataset.view); if(view) view.classList.add('on'); sessionViewSeen[b.dataset.view]=Date.now(); updateNavDots(); if(b.dataset.view==='notify'){loadEmailAdmin(); renderActivityLog();}});
+  document.querySelectorAll('[data-toggle-custom]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.toggleCustom+'Customizer')?.classList.toggle('on'));
+  document.querySelectorAll('.task-scope').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-scope').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskScope=b.dataset.taskScope;renderTasks()});
+  document.querySelectorAll('.task-period').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-period').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskPeriod=b.dataset.taskPeriod;renderTasks()});
+  on('projectFormToggle','onclick',()=>openProjectForm());
+  on('taskFormToggle','onclick',()=>openTaskForm());
+  on('solutionFormToggle','onclick',()=>openSolutionForm());
+  on('brandFormToggle','onclick',()=>openBrandForm());
+  on('sizeFormToggle','onclick',()=>openSizeForm());
+  on('projectStatusFormToggle','onclick',()=>openProjectStatusForm());
+  on('taskStatusFormToggle','onclick',()=>openTaskStatusForm());
+  on('teamFormToggle','onclick',()=>openTeamForm());
+  on('appLoginForm','onsubmit',loginApp);
+  on('logoutBtn','onclick',logoutApp);
+  on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
+  on('submitResetRequestBtn','onclick',submitResetRequest);
+  on('ruleFormToggle','onclick',()=>openRuleForm());
+  on('themeToggle','onclick',()=>{currentTheme=currentTheme==='light'?'dark':'light';localStorage.setItem('piramid-theme',currentTheme);applyTheme()});
+  on('projectForm','onsubmit',saveProject);
+  on('taskForm','onsubmit',saveTask);
+  on('solutionForm','onsubmit',saveSolution);
+  on('brandForm','onsubmit',saveBrand);
+  on('sizeForm','onsubmit',saveSizeRange);
+  on('projectStatusForm','onsubmit',saveProjectStatus);
+  on('taskStatusForm','onsubmit',saveTaskStatus);
+  on('teamForm','onsubmit',saveTeam);
+  on('ruleForm','onsubmit',saveRule);
+  on('emailTemplateForm','onsubmit',saveEmailTemplate);
+  on('sendTestEmailBtn','onclick',async()=>{const to=document.getElementById('testEmailTo')?.value.trim(); if(!to){alert('Enter test recipient');return} await emailFetch('/send',{method:'POST',body:JSON.stringify({to,triggered_by_user:activeUser?.name||'admin'})}); await loadEmailAdmin(); alert('Test email queued and processed')});
+  on('refreshEmailQueueBtn','onclick',loadEmailAdmin);
+  on('refreshEmailLogsBtn','onclick',loadEmailAdmin);
+  on('processEmailQueueBtn','onclick',async()=>{await emailFetch('/queue',{method:'POST',body:JSON.stringify({action:'process',limit:10})}); await loadEmailAdmin()});
+  on('execLockBtn','onclick',()=>toggleExecLock('exec'));
+  on('execResetLayout','onclick',()=>resetExecLayout('exec'));
+  on('execCheckpointBtn','onclick',()=>saveLayoutCheckpoint('exec'));
+  on('addCardBtn','onclick',()=>openCardEditor('exec',null));
+  on('anaLockBtn','onclick',()=>toggleExecLock('ana'));
+  on('anaResetLayout','onclick',()=>resetExecLayout('ana'));
+  on('anaCheckpointBtn','onclick',()=>saveLayoutCheckpoint('ana'));
+  on('anaAddCard','onclick',()=>openCardEditor('ana',null));
+  document.querySelectorAll('[data-export]').forEach(b=>b.onclick=()=>exportCsv(b.dataset.export));
+}
+function bootApp(){
+  bindAppEvents();
+  applyTheme();
+  initSessionViewSeen();
+  initFilters();
+  restoreSession();
+  if(!appBooted){appBooted=true; initDatabase()}
+  else renderAll(false);
+  updateNavDots();
+}
+['click','keydown','mousemove','scroll','touchstart'].forEach(evt=>document.addEventListener(evt,()=>touchSession(),{passive:true}));
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bootApp);
+else bootApp();
+</script>
+</body>
+</html>
+
