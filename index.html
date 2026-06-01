@@ -47,6 +47,8 @@ button{border:0}
 .sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:20;box-shadow:var(--shadow)}
 .brand{padding:18px;display:flex;gap:11px;align-items:center;border-bottom:1px solid var(--line)}
 .mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800}
+.env-badge{margin-left:auto;align-self:flex-start;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 7px;border-radius:5px;background:var(--amber);color:#1a1200}
+html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 .brand strong{display:block;font-size:15px}.brand span{display:block;color:var(--soft);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px}
 .nav{padding:10px 10px;overflow:auto}.nav-label{padding:12px 10px 5px;color:var(--soft);font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase}
 .nav button{width:100%;display:flex;align-items:center;gap:11px;padding:9px 12px;margin:2px 0;border-radius:9px;background:transparent;color:var(--muted);cursor:pointer;text-align:left;font-weight:500;transition:background .15s,color .15s}
@@ -2130,6 +2132,22 @@ function bootApp(){
 ['click','keydown','mousemove','scroll','touchstart'].forEach(evt=>document.addEventListener(evt,()=>touchSession(),{passive:true}));
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bootApp);
 else bootApp();
+// Environment banner: show DEV/LOCAL badge on any non-production host so editors
+// instantly know they are NOT on the live Production site.
+(function(){
+  const PROD_HOST='bdmgmt.vercel.app';
+  const h=(location.hostname||'').toLowerCase();
+  if(!h || h===PROD_HOST) return;
+  const isLocal=h==='localhost'||h==='127.0.0.1'||h.startsWith('192.168.')||h.endsWith('.local');
+  document.documentElement.classList.add('env-nonprod');
+  const tag=()=>{
+    document.querySelectorAll('.sidebar .brand').forEach(b=>{
+      if(b.querySelector('.env-badge')) return;
+      const c=document.createElement('span'); c.className='env-badge'; c.textContent=isLocal?'LOCAL':'DEV'; b.appendChild(c);
+    });
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tag); else tag();
+})();
 </script>
 </body>
 </html>
