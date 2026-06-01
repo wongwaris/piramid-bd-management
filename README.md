@@ -51,6 +51,22 @@ test/                   # node --test unit tests
 npm test        # run unit tests (node --test)
 ```
 
+## Environments
+
+Two fully isolated environments (separate Vercel project **and** separate Neon database):
+
+| | Production | Development |
+|---|---|---|
+| Vercel project | `bdmgmt` | `bdmgmt-dev` |
+| URL | https://bdmgmt.vercel.app | https://bdmgmt-dev.vercel.app |
+| Git branch (Production Branch) | `main` | `dev` |
+| Database (`DATABASE_URL`) | Neon `main` | Neon `dev` branch |
+| In-app badge | — | 🟡 `DEV` (auto-shown on any non-production host) |
+
+Workflow: develop on `dev` → push (auto-deploys to the dev site + dev DB) → verify →
+merge `dev` → `main` to promote to Production. Secrets are set per-project in Vercel
+Environment Variables only (never committed).
+
 ## Security notes
 
 - SMTP and database secrets live **only** in environment variables — never in the database or client.
