@@ -58,6 +58,20 @@ button{border:0}
 .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
 .nav button:focus-visible{outline-offset:-2px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* touch devices: enlarge tap targets to >=44px (desktop keeps compact density) */
+@media(pointer:coarse){
+  .btn{min-height:44px}
+  .btn.small{min-height:42px;padding:0 12px}
+  .btn.icon{width:44px;min-height:44px}
+  .field input,.field select,.field textarea{min-height:44px}
+  .filters .field input,.filters .field select{height:44px}
+  .nav button{padding:12px}
+  .toggle-link{display:inline-block;padding:8px 2px}
+  #wlCompare{min-height:36px}
+  .drag-handle,.align-btn{width:30px;height:30px}
+  .resize-handle{width:22px;height:22px}
+  .drag-handle::before,.resize-handle::before,.align-btn::before{content:"";position:absolute;inset:-11px}
+}
 .env-badge{margin-left:auto;align-self:flex-start;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 7px;border-radius:5px;background:var(--amber);color:#1a1200}
 html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 .brand strong{display:block;font-size:15px}.brand span{display:block;color:var(--soft);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px}
