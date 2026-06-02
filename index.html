@@ -58,11 +58,22 @@ button{border:0}
 .brand{padding:18px;display:flex;gap:11px;align-items:center;border-bottom:1px solid var(--line)}
 .mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800}
 .toast-host{position:fixed;right:18px;bottom:18px;z-index:var(--z-toast);display:flex;flex-direction:column;gap:8px;max-width:min(360px,90vw)}
-.toast{padding:11px 14px;border-radius:9px;font-size:12.5px;color:var(--text);background:var(--panel-2);border:1px solid var(--line);box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s}
+.toast{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:9px;font-size:12.5px;color:var(--text);background:var(--panel-2);border:1px solid var(--line);box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:opacity .22s cubic-bezier(.22,1,.36,1),transform .22s cubic-bezier(.22,1,.36,1)}
 .toast.show{opacity:1;transform:none}
 .toast.error{border-color:rgba(255,90,103,.5);background:rgba(255,90,103,.12)}
-.toast.success{border-color:rgba(45,211,111,.5)}
+.toast.success{border-color:rgba(45,211,111,.45);background:rgba(45,211,111,.1)}
+.toast-ico{flex:0 0 auto;width:18px;height:18px;display:grid;place-items:center;border-radius:50%;font-size:11px;font-weight:800;color:#fff}
+.toast.success .toast-ico{background:var(--green)}.toast.error .toast-ico{background:var(--red)}
 @media(prefers-reduced-motion:reduce){.toast{transition:opacity .2s}.toast{transform:none}}
+/* navigation feedback: content settles in when a view becomes active */
+.view.on>.content{animation:viewIn .28s cubic-bezier(.22,1,.36,1)}
+@keyframes viewIn{from{transform:translateY(9px)}to{transform:none}}
+/* smooth dark/light handoff (only while toggling; reduced-motion path skips the class) */
+html.theme-anim,html.theme-anim *{transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease,fill .3s ease,stroke .3s ease!important}
+.empty-state{display:flex;flex-direction:column;align-items:center;gap:7px;padding:34px 16px;text-align:center;color:var(--soft)}
+.empty-state svg{width:30px;height:30px;opacity:.55}
+.empty-state b{color:var(--muted);font-weight:600;font-size:13px}
+.empty-state span{font-size:11.5px;max-width:38ch}
 :where(a,button,select,[tabindex],summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:5px}
 .field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
 .nav button:focus-visible{outline-offset:-2px}
@@ -825,7 +836,11 @@ let toastTimer=null;
 function toast(msg,type){
   let host=document.getElementById('toastHost');
   if(!host){host=document.createElement('div'); host.id='toastHost'; host.className='toast-host'; document.body.appendChild(host);}
-  const el=document.createElement('div'); el.className='toast '+(type||'info'); el.textContent=msg; host.appendChild(el);
+  const el=document.createElement('div'); el.className='toast '+(type||'info');
+  const glyph={success:'✓',error:'!'}[type];
+  if(glyph){const ico=document.createElement('span'); ico.className='toast-ico'; ico.setAttribute('aria-hidden','true'); ico.textContent=glyph; el.appendChild(ico);}
+  const body=document.createElement('span'); body.textContent=msg; el.appendChild(body);
+  host.appendChild(el);
   requestAnimationFrame(()=>el.classList.add('show'));
   setTimeout(()=>{el.classList.remove('show'); setTimeout(()=>el.remove(),250);}, type==='error'?5000:2600);
 }
@@ -2117,6 +2132,7 @@ function setTaskStatus(taskId, newStatus){
   if(!applyTaskStatus(t, newStatus, new Date().toISOString())) return;
   saveState();
   logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
+  if(newStatus==='Done'){ const d=taskDelta(t); const tail=d==null?'':(d>0?` · ช้า ${d} วัน`:d<0?` · เร็ว ${-d} วัน`:' · ตรงเวลา'); toast(`${t.title} เสร็จแล้ว${tail}`, d>0?'info':'success'); }
   refreshAfterTaskChange();
 }
 function refreshAfterTaskChange(){
@@ -2143,6 +2159,7 @@ function setProjectTaskStatus(projectId, newStatus){
   p.progress = newStatus==='Done' ? 100 : averageProjectProgress(p.id);
   saveState();
   logActivity('อัปเดตสถานะ Main Task','projects',`${p.name} → ${newStatus}`);
+  if(newStatus==='Done') toast(`ปิดงานทั้งหมดของ ${p.name} แล้ว`,'success');
   refreshAfterTaskChange();
 }
 function renderTimelinessInto(host, tasks){
@@ -2165,6 +2182,9 @@ function renderTimelinessInto(host, tasks){
   ].filter(x=>x.value>0),{centerValue:tl.done,centerLabel:'done'});
 }
 
+function emptyState(title,hint){
+  return `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><b>${esc(title)}</b>${hint?`<span>${esc(hint)}</span>`:''}</div>`;
+}
 let todoSort={key:'due',dir:'asc'};
 const TODO_COLUMNS=[['id','ID'],['title','Task'],['project','Opportunity'],['phase','Phase'],['owner','Owner'],['status','Status'],['priority','Priority'],['due','Due'],['progress','Progress']];
 function todoSortValue(t,key){
@@ -2201,7 +2221,7 @@ function renderTodoTable(){
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
   }).join('')+'</tr>';
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${rows.length} tasks · ฐานข้อมูลกลาง (sync จาก Projects) · เปลี่ยนสถานะได้ในตาราง</small></div><div class="table-wrap"><table class="tbl"><thead>${head}</thead><tbody>${rows.map(t=>`<tr><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="9" class="todo-empty">No tasks match the current filter.</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${rows.length} tasks · ฐานข้อมูลกลาง (sync จาก Projects) · เปลี่ยนสถานะได้ในตาราง</small></div><div class="table-wrap"><table class="tbl"><thead>${head}</thead><tbody>${rows.map(t=>`<tr><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="9">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ BD Lead ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
   bindTaskStatusSelects(body);
 }
@@ -2218,7 +2238,7 @@ function renderTodoProjects(){
   set.forEach(t=>{ if(!byProject.has(t.project)) byProject.set(t.project,[]); byProject.get(t.project).push(t); });
   const projects=[...byProject.keys()].map(id=>projectOf({project:id})||{id,name:id,status:'',val:0})
     .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
-  if(!projects.length){ body.innerHTML='<div class="card"><div class="todo-empty">No tasks match the current filter.</div></div>'; return; }
+  if(!projects.length){ body.innerHTML='<div class="card">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ปรับ scope หรือ BD Lead เพื่อดูงานของแต่ละ Opportunity')+'</div>'; return; }
   body.innerHTML=projects.map(p=>{
     const tasks=byProject.get(p.id);
     const prog=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.progress||0),0)/tasks.length):0;
@@ -2230,7 +2250,7 @@ function renderTodoPriority(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod).filter(t=>t.status!=='Done')
     .sort((a,b)=>taskPriorityScore(b)-taskPriorityScore(a));
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Priority</h2><small>เรียงตามความสำคัญของโครงการ + งานที่เกินกำหนด/ใกล้ครบกำหนด</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Opportunity</th><th>Phase</th><th>Owner</th><th>Priority</th><th>Status</th><th>Due</th></tr></thead><tbody>${set.map((t,i)=>`<tr><td><span class="todo-rank">${i+1}</span></td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${priTag(taskPriority(t))}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${dueBadge(t)}</td></tr>`).join('')||'<tr><td colspan="8" class="todo-empty">No open tasks to prioritize.</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Priority</h2><small>เรียงตามความสำคัญของโครงการ + งานที่เกินกำหนด/ใกล้ครบกำหนด</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Opportunity</th><th>Phase</th><th>Owner</th><th>Priority</th><th>Status</th><th>Due</th></tr></thead><tbody>${set.map((t,i)=>`<tr><td><span class="todo-rank">${i+1}</span></td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${priTag(taskPriority(t))}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${dueBadge(t)}</td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ไม่มีงานค้างให้จัดลำดับ','งานในช่วงที่เลือกเสร็จเรียบร้อยแล้ว')+'</td></tr>'}</tbody></table></div></div>`;
 }
 function renderTodoExec(){
   const body=document.getElementById('todoBody'); if(!body) return;
@@ -2841,7 +2861,12 @@ function bindAppEvents(){
   on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
   on('submitResetRequestBtn','onclick',submitResetRequest);
   on('ruleFormToggle','onclick',()=>openRuleForm());
-  on('themeToggle','onclick',()=>{currentTheme=currentTheme==='light'?'dark':'light';localStorage.setItem('piramid-theme',currentTheme);applyTheme();loadChartColors();renderAll(false)});
+  on('themeToggle','onclick',()=>{
+    const root=document.documentElement;
+    const smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(smooth){ root.classList.add('theme-anim'); clearTimeout(root._themeAnimT); root._themeAnimT=setTimeout(()=>root.classList.remove('theme-anim'),340); }
+    currentTheme=currentTheme==='light'?'dark':'light';localStorage.setItem('piramid-theme',currentTheme);applyTheme();loadChartColors();renderAll(false);
+  });
   on('projectForm','onsubmit',saveProject);
   on('taskForm','onsubmit',saveTask);
   on('solutionForm','onsubmit',saveSolution);
@@ -2876,7 +2901,13 @@ function bootApp(){
   initSessionViewSeen();
   initFilters();
   restoreSession();
-  if(!appBooted){appBooted=true; initDatabase()}
+  if(!appBooted){appBooted=true;
+    try{
+      console.log('%cPIRAMID BD%c Command Center','color:#6088ff;font-weight:800;font-size:14px','color:#16c6b2;font-size:14px');
+      console.log('%cบริหารงาน BD · Presales · Project ด้วยข้อมูลจริง · v1.0.0','color:#697587;font-size:11px');
+    }catch{}
+    initDatabase();
+  }
   else renderAll(false);
   updateNavDots();
 }
