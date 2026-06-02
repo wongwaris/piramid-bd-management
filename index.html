@@ -157,7 +157,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .dash-grid>.widget.metric:hover{box-shadow:none;border-color:var(--line-2);transform:none}
 .dash-grid>.widget>.cb{flex:1;min-height:0;overflow:auto}
 .dash-grid>.widget.metric{grid-column:span 3;grid-row:span 4;justify-content:center}
-.dash-grid>.widget[data-widget="execWorkload"],.dash-grid>.widget[data-widget="execHighPriority"],.dash-grid>.widget[data-widget="execTaskAlert"],.dash-grid>.widget[data-widget="anaTrend"],.dash-grid>.widget[data-widget="anaConvFunnel"],.dash-grid>.widget[data-widget="anaTable"]{grid-column:span 6;grid-row:span 10}
+.dash-grid>.widget[data-widget="execWorkload"],.dash-grid>.widget[data-widget="execHighPriority"],.dash-grid>.widget[data-widget="execTaskAlert"],.dash-grid>.widget[data-widget="execTimeliness"],.dash-grid>.widget[data-widget="anaTrend"],.dash-grid>.widget[data-widget="anaConvFunnel"],.dash-grid>.widget[data-widget="anaTable"]{grid-column:span 6;grid-row:span 10}
 #anaGrid{column-gap:18px;row-gap:18px;grid-auto-rows:28px}
 #anaGrid>.widget.metric{background:var(--surface);border-color:var(--line);grid-column:span 3;grid-row:span 4}
 #anaGrid>.widget[data-widget="anaSummary"]{grid-column:span 12;grid-row:span 5;background:linear-gradient(135deg,rgba(96,136,255,.12),rgba(22,198,178,.06)),var(--panel);border-color:var(--line-2)}
@@ -175,6 +175,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 #execGrid>.widget[data-widget="execSolutions"],#execGrid>.widget[data-widget="execTopSystems"],#execGrid>.widget[data-widget="execSegments"],#execGrid>.widget[data-widget="execTasks"]{grid-column:span 3;grid-row:span 9}
 #execGrid>.widget[data-widget="execHighPriority"]{grid-column:span 6;grid-row:span 10}
 #execGrid>.widget[data-widget="execTaskAlert"]{grid-column:span 6;grid-row:span 10}
+#execGrid>.widget[data-widget="execTimeliness"]{grid-column:span 6;grid-row:span 10}
 .analytics-brief{height:100%;display:grid;grid-template-columns:minmax(220px,.95fr) repeat(4,minmax(0,1fr));gap:16px;align-items:stretch}
 .executive-brief{height:100%;display:grid;grid-template-columns:minmax(240px,1.15fr) repeat(4,minmax(0,1fr));gap:16px;align-items:stretch}
 .analytics-brief .brief-lead,.executive-brief .brief-lead{display:flex;flex-direction:column;justify-content:center;gap:6px;padding-right:6px}
@@ -248,6 +249,11 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .todo-proj{margin-bottom:14px}.todo-proj .ch{gap:14px}.todo-proj .ch .meta{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--soft);font-size:11.5px;white-space:nowrap}
 .todo-rank{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--panel-2);color:var(--muted);font-size:11px;font-weight:700}
 .todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}
+.status-cell{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.task-status-select{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px;font-weight:600;background:var(--panel-2);color:var(--text);cursor:pointer;min-height:28px;max-width:140px}
+.task-status-select:hover{border-color:var(--line-2)}
+.task-status-select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.task-status-select.done{color:var(--green)}.task-status-select.doing{color:var(--amber)}.task-status-select.review{color:var(--blue)}.task-status-select.schedule,.task-status-select.pend{color:var(--purple)}.task-status-select.overdue{color:var(--red)}
 .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.lane{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:280px;box-shadow:var(--shadow)}.lane h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:8px}.lane h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 auto}.lane.schedule h3::before{background:var(--purple)}.lane.doing h3::before{background:var(--amber)}.lane.review h3::before{background:var(--blue)}.lane.overdue h3::before{background:var(--red)}.lane.done h3::before{background:var(--green)}.task{margin:10px;padding:12px;background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:9px;transition:transform .15s,box-shadow .15s,border-color .15s}.task:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--line-2)}.task strong{display:block;margin-bottom:5px}.task p{margin:0;color:var(--muted);font-size:11.5px}.task footer{margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--soft);font-size:11px}
 .calendar{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px}.cal-day{min-height:132px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px;display:flex;flex-direction:column;gap:6px}.cal-day.today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(37,99,235,.18)}.cal-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px}.cal-head b{color:var(--text);font-size:15px}.cal-items{display:flex;flex-direction:column;gap:5px}.cal-item{position:relative;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 6px 6px 15px;color:var(--text);font-size:11px}.cal-item::before{content:"";position:absolute;left:6px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}.cal-item small{display:block;color:var(--soft);margin-top:2px}.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--soft)}
 .cal-nav{display:flex;align-items:center;gap:6px}.cal-nav strong{min-width:150px;text-align:center;font-size:13px;font-weight:700}
@@ -342,6 +348,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
           <div class="card widget" data-widget="execWorkload"><div class="ch"><h2>Team Workload</h2><div style="display:flex;align-items:center;gap:6px"><small>เทียบปี</small><select id="wlCompare" class="btn small" style="height:24px;padding:0 6px" aria-label="เลือกปีที่ใช้เปรียบเทียบ workload"><option value="prev">ปีก่อน</option><option value="next">ปีถัดไป</option></select></div></div><div class="cb"><div id="teamWorkloadChart"></div></div></div>
           <div class="card widget" data-widget="execHighPriority"><div class="ch"><h2>High Priority Projects</h2><small>โครงการสำคัญ Top 10</small></div><div class="cb"><div id="highPriorityTable"></div></div></div>
           <div class="card widget" data-widget="execTaskAlert"><div class="ch"><h2>Tasks: Doing / Overdue</h2><small>งานที่ต้องเร่ง Top 10</small></div><div class="cb"><div id="taskAlertTable"></div></div></div>
+          <div class="card widget" data-widget="execTimeliness"><div class="ch"><h2>Delivery Timeliness</h2><small>งานย่อยส่งทันกำหนดแค่ไหน</small></div><div class="cb"><div id="timelinessBox"></div></div></div>
         </div>
         <div class="grid g2" id="executiveInsights"></div>
       </div>
@@ -609,10 +616,10 @@ const seed = {
   sizeRanges: DEFAULT_SIZE_RANGES,
   projectStatuses: DEFAULT_PROJECT_STATUSES,
   taskStatuses: DEFAULT_TASK_STATUSES,
-  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
 };
 const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
-const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert'];
+const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execTimeliness'];
 const DEFAULT_EXEC_WIDGET_SIZE = {
   execSummary:{cols:12,rows:5},
   mTotal:{cols:3,rows:4},
@@ -633,7 +640,8 @@ const DEFAULT_EXEC_WIDGET_SIZE = {
   execSegments:{cols:3,rows:9},
   execTasks:{cols:3,rows:9},
   execHighPriority:{cols:6,rows:10},
-  execTaskAlert:{cols:6,rows:10}
+  execTaskAlert:{cols:6,rows:10},
+  execTimeliness:{cols:6,rows:10}
 };
 const DEFAULT_ANA_ORDER = ['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaFunnel','anaSize','anaSystems','anaSales','anaTable'];
 const DEFAULT_ANA_WIDGET_SIZE = {
@@ -1119,9 +1127,9 @@ function initFilters(){
   return true;
 }
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
-  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert']);
+  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
   build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
   (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
@@ -1624,6 +1632,7 @@ function renderDashboard(){
   const hpEl=document.getElementById('highPriorityTable'); if(hpEl) hpEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Status</th><th>Value</th><th>BD Lead</th></tr></thead><tbody>'+(hp.map(x=>'<tr><td class="ellipsis">'+esc(x.name)+'</td><td>'+statusTag(x.status)+'</td><td>'+money(x.val)+'</td><td>'+esc(byId(x.bd).name)+'</td></tr>').join('')||'<tr><td colspan="4" class="hint">No data</td></tr>')+'</tbody></table></div>';
   const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,10);
   const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(byId(x.owner).name)+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
+  renderTimelinessInto('timelinessBox', t);
   renderCustomCards();
   applyExecOrder(); ensureGuides('exec'); initExecDrag(); initExecResize(); initExecAlign(); applyExecSizes(); applyExecAlign(); applyExecEdit();
   document.getElementById('executiveInsights').innerHTML=buildInsights(p,t);
@@ -1826,19 +1835,22 @@ function sortProjects(rows){
 function renderProjects(){
   const p=sortProjects(filteredProjects());
   renderProjectHead();
+  const openSubs=[...document.querySelectorAll('#projectRows .subrow.on')].map(r=>r.id);
   document.getElementById('projectCountLabel').textContent=p.length+' of '+state.projects.length+' projects';
   document.getElementById('projectRows').innerHTML=p.map(x=>{
     const relatedTasks=state.tasks.filter(t=>t.project===x.id);
     const subCount=relatedTasks.reduce((s,t)=>s+(t.subtasks?.length||0),0);
     const revisions=relatedTasks.reduce((s,t)=>s+Number(t.revision||1),0);
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
-    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="14"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><b>${esc(t.title)}</b> ${statusTag(isOverdue(t)?'Overdue':t.status)} <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}</div></td></tr>`;
+    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="14"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}</div></td></tr>`;
     const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span>${statusTag(x.taskStatus||inferProjectTaskStatus(x.id))}</td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
   document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
   document.querySelectorAll('[data-del-project]').forEach(b=>b.onclick=()=>deleteProject(b.dataset.delProject));
   document.querySelectorAll('[data-toggle-sub]').forEach(b=>b.onclick=()=>document.getElementById('sub-'+b.dataset.toggleSub)?.classList.toggle('on'));
+  openSubs.forEach(id=>document.getElementById(id)?.classList.add('on'));
+  bindTaskStatusSelects(document.getElementById('projectRows'));
 }
 function openProjectForm(id){
   editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,sales:state.teams.find(t=>t.role==='Sales')?.id};
@@ -2053,6 +2065,79 @@ function dueBadge(t){
   if(d>0) return `<span class="hint">in ${d}d</span>`;
   return '<span class="hint">—</span>';
 }
+// ===== Sub-task status editing + delivery-timeliness (derived, no new persisted fields) =====
+function taskDelta(t){ // days vs due: >0 late, <0 early, 0 on-time; null if not applicable
+  if(t.status!=='Done'||!t.due||!t.completedAt) return null;
+  return daysBetween(dateKey(new Date(t.completedAt)), t.due);
+}
+function timelinessBadge(t){
+  if(t.status==='Done'){
+    const d=taskDelta(t); if(d==null) return '';
+    if(d>0) return `<span class="tag overdue">ช้า ${d}d</span>`;
+    if(d<0) return `<span class="tag done">เร็ว ${-d}d</span>`;
+    return '<span class="tag done">ตรงเวลา</span>';
+  }
+  if(isOverdue(t)) return `<span class="tag overdue">ค้าง ${daysBetween(today,t.due)}d</span>`;
+  return '';
+}
+function timelinessStats(tasks){
+  const deltas=tasks.filter(t=>t.status==='Done'&&t.due&&t.completedAt).map(taskDelta);
+  const late=deltas.filter(d=>d>0), early=deltas.filter(d=>d<0), onTime=deltas.filter(d=>d===0);
+  const openOverdue=tasks.filter(t=>t.status!=='Done'&&isOverdue(t));
+  const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length):0;
+  return {
+    done:deltas.length, late:late.length, early:early.length, onTime:onTime.length,
+    onTimeRate: deltas.length?Math.round((onTime.length+early.length)/deltas.length*100):0,
+    avgLate: avg(late), avgEarly: avg(early.map(d=>-d)),
+    openOverdue: openOverdue.length,
+    avgOverdueDays: avg(openOverdue.map(t=>daysBetween(today,t.due)))
+  };
+}
+function taskStatusDropdown(t){
+  const cls=statusClass((isOverdue(t)&&t.status!=='Done')?'Overdue':t.status);
+  return `<select class="task-status-select ${cls}" data-task-status="${esc(t.id)}" aria-label="Change status for ${esc(t.title)}">`
+    +state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${t.status===s.name?'selected':''}>${esc(s.name)}</option>`).join('')
+    +`</select>`;
+}
+function bindTaskStatusSelects(root){
+  (root||document).querySelectorAll('[data-task-status]').forEach(sel=>sel.onchange=()=>setTaskStatus(sel.dataset.taskStatus, sel.value));
+}
+function setTaskStatus(taskId, newStatus){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t||t.status===newStatus) return;
+  const nowIso=new Date().toISOString();
+  t.status=newStatus;
+  t.statusChangedAt=nowIso;
+  if(newStatus==='Done'){ t.completedAt=t.completedAt||nowIso; t.progress=100; }
+  else { t.completedAt=null; if(Number(t.progress)>=100) t.progress=90; }
+  t.statusLog=[...(t.statusLog||[]),{status:newStatus,at:nowIso}].slice(-30);
+  saveState();
+  logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
+  refreshAfterTaskChange();
+}
+function refreshAfterTaskChange(){
+  const active=activeViewName();
+  Object.keys(VIEW_RENDERERS).forEach(v=>{ if(v!==active) dirtyViews.add(v); });
+  if(active) renderView(active);
+}
+function renderTimelinessInto(host, tasks){
+  host = typeof host==='string'?document.getElementById(host):host; if(!host) return;
+  const tl=timelinessStats(tasks);
+  host.innerHTML=`
+    <div class="grid g2" style="margin-bottom:12px">
+      ${metric('On-time Rate',tl.onTimeRate+'%',`ส่งทันกำหนด ${tl.onTime+tl.early}/${tl.done} งาน`)}
+      ${metric('Open Overdue',tl.openOverdue,tl.openOverdue?`เฉลี่ยค้าง ${tl.avgOverdueDays} วัน`:'ไม่มีงานค้างเกินกำหนด','var(--text)')}
+    </div>
+    <div id="${host.id}Donut"></div>
+    <div class="legend" style="margin-top:10px">
+      <div class="legend-row"><span>เฉลี่ยส่งช้า</span><b>${tl.avgLate} วัน</b></div>
+      <div class="legend-row"><span>เฉลี่ยส่งเร็วกว่ากำหนด</span><b>${tl.avgEarly} วัน</b></div>
+    </div>`;
+  renderDonut(host.id+'Donut',[
+    {label:'On-time',value:tl.onTime,color:CHART[2]},
+    {label:'Early',value:tl.early,color:CHART[5]},
+    {label:'Late',value:tl.late,color:CHART[3]}
+  ].filter(x=>x.value>0),{centerValue:tl.done,centerLabel:'done'});
+}
 
 let todoSort={key:'due',dir:'asc'};
 const TODO_COLUMNS=[['id','ID'],['title','Task'],['project','Opportunity'],['phase','Phase'],['owner','Owner'],['status','Status'],['priority','Priority'],['due','Due'],['progress','Progress']];
@@ -2089,8 +2174,10 @@ function renderTodoTable(){
     const active=todoSort.key===key, mark=active?(todoSort.dir==='asc'?'↑':'↓'):'';
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
   }).join('')+'</tr>';
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${rows.length} tasks · ฐานข้อมูลกลาง (sync จาก Projects)</small></div><div class="table-wrap"><table class="tbl"><thead>${head}</thead><tbody>${rows.map(t=>`<tr><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="9" class="todo-empty">No tasks match the current filter.</td></tr>'}</tbody></table></div></div>`;
+  const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${rows.length} tasks · ฐานข้อมูลกลาง (sync จาก Projects) · เปลี่ยนสถานะได้ในตาราง</small></div><div class="table-wrap"><table class="tbl"><thead>${head}</thead><tbody>${rows.map(t=>`<tr><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="9" class="todo-empty">No tasks match the current filter.</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
+  bindTaskStatusSelects(body);
 }
 function renderTodoKanban(){
   const body=document.getElementById('todoBody'); if(!body) return;
@@ -2124,11 +2211,13 @@ function renderTodoExec(){
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod);
   const total=set.length;
   const phaseColors={BD:CHART[5],Presales:CHART[1],Project:CHART[2],Closed:'var(--soft)'};
-  body.innerHTML=`<div class="grid g3">
+  body.innerHTML=`<div class="card" style="margin-bottom:14px"><div class="ch"><h2>Delivery Timeliness</h2><small>งานย่อยส่งทันกำหนดแค่ไหน (งานเสร็จ + งานค้างเกินกำหนด)</small></div><div class="cb"><div id="todoExecTimeliness"></div></div></div>
+    <div class="grid g3">
       <div class="card"><div class="ch"><h2>By Phase</h2><small>BD · Presales · Project</small></div><div class="cb"><div id="todoExecPhase"></div></div></div>
       <div class="card"><div class="ch"><h2>By Status</h2><small>จำนวนงานแต่ละสถานะ</small></div><div class="cb"><div class="bars" id="todoExecStatus"></div></div></div>
       <div class="card"><div class="ch"><h2>By BD Lead</h2><small>งานที่ยังเปิดอยู่ต่อคน</small></div><div class="cb"><div class="bars" id="todoExecTeam"></div></div></div>
     </div>`;
+  renderTimelinessInto('todoExecTimeliness', set);
   const phaseCounts=grouped(set,taskPhase);
   renderDonut('todoExecPhase',PHASE_ORDER.filter(ph=>phaseCounts[ph]).map(ph=>({label:PHASE_LABEL[ph],value:phaseCounts[ph],color:phaseColors[ph]})),{centerValue:total,centerLabel:'tasks'});
   renderBars('todoExecStatus',state.taskStatuses.map((s,i)=>({label:s.name,value:set.filter(x=>x.status===s.name).length,color:CHART[i%CHART.length]})).filter(x=>x.value>0));
