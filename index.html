@@ -250,6 +250,10 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}
 .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.lane{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:280px;box-shadow:var(--shadow)}.lane h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:8px}.lane h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 auto}.lane.schedule h3::before{background:var(--purple)}.lane.doing h3::before{background:var(--amber)}.lane.review h3::before{background:var(--blue)}.lane.overdue h3::before{background:var(--red)}.lane.done h3::before{background:var(--green)}.task{margin:10px;padding:12px;background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:9px;transition:transform .15s,box-shadow .15s,border-color .15s}.task:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--line-2)}.task strong{display:block;margin-bottom:5px}.task p{margin:0;color:var(--muted);font-size:11.5px}.task footer{margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--soft);font-size:11px}
 .calendar{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px}.cal-day{min-height:132px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px;display:flex;flex-direction:column;gap:6px}.cal-day.today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(37,99,235,.18)}.cal-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px}.cal-head b{color:var(--text);font-size:15px}.cal-items{display:flex;flex-direction:column;gap:5px}.cal-item{position:relative;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 6px 6px 15px;color:var(--text);font-size:11px}.cal-item::before{content:"";position:absolute;left:6px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}.cal-item small{display:block;color:var(--soft);margin-top:2px}.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--soft)}
+.cal-nav{display:flex;align-items:center;gap:6px}.cal-nav strong{min-width:150px;text-align:center;font-size:13px;font-weight:700}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:8px}.cal-wd{color:var(--soft);font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:2px 0}
+.cal-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.cal-month-grid .cal-day{min-height:104px}.cal-month-grid .cal-day.empty{background:transparent;border-color:transparent;box-shadow:none;min-height:0}.cal-more{color:var(--soft);font-size:10.5px;margin-top:1px}
+@media(max-width:760px){.cal-month-grid{gap:4px}.cal-month-grid .cal-day{min-height:62px;padding:5px;gap:2px}.cal-weekdays{gap:4px}.cal-wd{font-size:8.5px}.cal-month-grid .cal-item{font-size:9.5px;padding:3px 4px 3px 11px}.cal-month-grid .cal-item small{display:none}.cal-nav strong{min-width:120px;font-size:12px}}
 .email-preview{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.email-box{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px;white-space:pre-wrap;min-height:280px}.snapshot-frame{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--surface));border-radius:8px;padding:14px;min-height:280px}.snapshot-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px}.status-list{display:flex;flex-direction:column;gap:8px}.status-line{display:flex;align-items:center;gap:8px;color:var(--muted)}.status-ico{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;color:white;font-size:11px;font-weight:800;flex:0 0 auto}.status-ico.done{background:var(--green)}.status-ico.doing{background:var(--accent);animation:spin 1.3s linear infinite}.status-ico.review{background:var(--amber)}.status-ico.overdue{background:var(--red)}.status-ico.schedule{background:var(--purple)}@keyframes spin{to{transform:rotate(360deg)}}
 .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
 .chips{display:flex;gap:5px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:20px;padding:2px 7px;color:var(--muted);background:var(--surface);font-size:10.5px;white-space:nowrap}.mini{display:block;color:var(--soft);font-size:10.5px;margin-top:3px}.detail-stack{display:flex;flex-direction:column;gap:4px;min-width:190px}.login-box{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.lock{filter:saturate(.75);opacity:.72}.login-state{color:var(--soft);font-size:11.5px}.login-state.ok{color:var(--green)}.login-state.bad{color:var(--red)}.group-title{margin:6px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.7px}.group-block{display:flex;flex-direction:column;gap:10px}.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:var(--space-md)}
@@ -380,13 +384,19 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
     <section id="v-calendar" class="view">
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>CALENDAR</div><h1>Calendar</h1><p>ดูกำหนดส่งงาน (Due Date) ของทีม รายสัปดาห์หรือรายเดือน</p></div><div class="actions"><button class="btn" id="calResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
       <div class="content">
-        <div class="toolbar" style="justify-content:flex-end">
-          <button class="btn small cal-period on" data-cal-period="week">Weekly</button>
-          <button class="btn small cal-period" data-cal-period="month">Monthly</button>
-          <label class="field" style="min-width:210px"><span>BD Lead</span><select id="calLeadFilter"></select></label>
+        <div class="toolbar" style="gap:8px">
+          <button class="btn small cal-period" data-cal-period="week">Week</button>
+          <button class="btn small cal-period on" data-cal-period="month">Month</button>
+          <div class="cal-nav" id="calMonthNav">
+            <button class="btn icon" id="calPrevMonth" aria-label="Previous month">‹</button>
+            <strong id="calMonthLabel"></strong>
+            <button class="btn icon" id="calNextMonth" aria-label="Next month">›</button>
+            <button class="btn small" id="calTodayBtn">Today</button>
+          </div>
+          <label class="field" style="min-width:210px;margin-left:auto"><span>BD Lead</span><select id="calLeadFilter"></select></label>
         </div>
         <div class="grid g4" id="calMetrics"></div>
-        <div class="card"><div class="ch"><h2>Due Date Calendar</h2><small id="taskCalendarLabel"></small></div><div class="cb"><div class="calendar" id="taskCalendar"></div></div></div>
+        <div class="card"><div class="ch"><h2>Due Date Calendar</h2><small id="taskCalendarLabel"></small></div><div class="cb"><div id="taskCalendar"></div></div></div>
       </div>
     </section>
 
@@ -2011,12 +2021,12 @@ function renderTaskCalendar(tasks, period=taskPeriod){
   const host=document.getElementById('taskCalendar');
   if(!host) return;
   if(label) label.textContent=`${period==='month'?'Next 30 days':'This week'} by due date`;
-  host.innerHTML=days.map(d=>{
+  host.innerHTML='<div class="calendar">'+days.map(d=>{
     const key=dateKey(d);
     const items=tasks.filter(t=>t.due===key);
     const isToday=key===dateKey(today);
     return `<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span>${d.toLocaleDateString('en-US',{weekday:'short'})}</span><b>${d.getDate()}</b></div><div class="cal-items">${items.map(t=>{const p=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(p?.name||t.project)} · ${esc(byId(t.owner).name)}</small></div>`}).join('')||'<div class="hint">No due task</div>'}</div></div>`;
-  }).join('');
+  }).join('')+'</div>';
 }
 
 // ===== To-Do List: derived task dimensions (no persisted fields; all from parent Project) =====
@@ -2148,7 +2158,16 @@ function renderTodo(){
   (TODO_RENDERERS[todoView]||renderTodoTable)();
 }
 // ===== Calendar page (independent period + lead filter) =====
-let calPeriod='week', calLead='All';
+let calPeriod='month', calLead='All', calMonth=new Date(today.getFullYear(),today.getMonth(),1);
+function setCalMetrics(dueLabel, scoped, all){
+  const cm=document.getElementById('calMetrics'); if(!cm) return;
+  cm.innerHTML=[
+    metric(dueLabel,scoped.length,'ตามกำหนดส่ง'),
+    metric('Overdue',all.filter(isOverdue).length,'เกินกำหนด','var(--text)'),
+    metric('Open',scoped.filter(t=>t.status!=='Done').length,'ยังไม่เสร็จ','var(--text)'),
+    metric('Done',scoped.filter(t=>t.status==='Done').length,'เสร็จแล้ว','var(--text)')
+  ].join('');
+}
 function renderCalendarPage(){
   const sel=document.getElementById('calLeadFilter');
   if(sel){
@@ -2158,17 +2177,45 @@ function renderCalendarPage(){
     sel.onchange=()=>{calLead=sel.value;renderCalendarPage();};
   }
   document.querySelectorAll('.cal-period').forEach(b=>b.classList.toggle('on',b.dataset.calPeriod===calPeriod));
+  const nav=document.getElementById('calMonthNav'); if(nav) nav.style.display=calPeriod==='month'?'flex':'none';
   const tasks=filteredTasks(calLead);
-  const w=taskWindow(calPeriod);
-  const inWin=tasks.filter(t=>inWindow(t.due,w.start,w.end));
-  const cm=document.getElementById('calMetrics');
-  if(cm) cm.innerHTML=[
-    metric(calPeriod==='month'?'Due (30 days)':'Due (this week)',inWin.length,'ตามกำหนดส่ง'),
-    metric('Overdue',tasks.filter(isOverdue).length,'เกินกำหนด','var(--text)'),
-    metric('Open',inWin.filter(t=>t.status!=='Done').length,'ยังไม่เสร็จ','var(--text)'),
-    metric('Done',inWin.filter(t=>t.status==='Done').length,'เสร็จแล้ว','var(--text)')
-  ].join('');
-  renderTaskCalendar(inWin,calPeriod);
+  if(calPeriod==='month'){
+    const y=calMonth.getFullYear(), m=calMonth.getMonth();
+    const lab=document.getElementById('calMonthLabel'); if(lab) lab.textContent=calMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    const mStart=new Date(y,m,1,0,0,0,0), mEnd=new Date(y,m+1,0,23,59,59,999);
+    const inMonth=tasks.filter(t=>inWindow(t.due,mStart,mEnd));
+    setCalMetrics('Due ('+calMonth.toLocaleDateString('en-US',{month:'short'})+')',inMonth,tasks);
+    renderCalendarMonth(tasks,calMonth);
+  } else {
+    const w=taskWindow('week');
+    const inWin=tasks.filter(t=>inWindow(t.due,w.start,w.end));
+    setCalMetrics('Due (this week)',inWin,tasks);
+    renderTaskCalendar(inWin,'week');
+  }
+}
+function renderCalendarMonth(tasks, monthDate){
+  const host=document.getElementById('taskCalendar'); if(!host) return;
+  const label=document.getElementById('taskCalendarLabel');
+  const y=monthDate.getFullYear(), m=monthDate.getMonth();
+  const startWd=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const todayKey=dateKey(today);
+  const wd=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let cells='';
+  for(let i=0;i<startWd;i++) cells+='<div class="cal-day empty" aria-hidden="true"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const key=dateKey(new Date(y,m,d));
+    const items=tasks.filter(t=>t.due===key);
+    const isToday=key===todayKey;
+    const shown=items.slice(0,3);
+    const more=items.length-shown.length;
+    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>`<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(byId(t.owner).name)}</small></div>`).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
+  }
+  const trail=(7-((startWd+daysInMonth)%7))%7;
+  for(let i=0;i<trail;i++) cells+='<div class="cal-day empty" aria-hidden="true"></div>';
+  host.innerHTML=`<div class="cal-weekdays">${wd.map(w=>`<div class="cal-wd">${esc(w)}</div>`).join('')}</div><div class="cal-month-grid">${cells}</div>`;
+  const dueCount=tasks.filter(t=>inWindow(t.due,new Date(y,m,1,0,0,0,0),new Date(y,m+1,0,23,59,59,999))).length;
+  if(label) label.textContent=`${monthDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})} · ${dueCount} tasks due`;
 }
 function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(byId(t.owner).name)}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
 function openTaskForm(id){
@@ -2662,7 +2709,10 @@ function bindAppEvents(){
   document.querySelectorAll('.task-period').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-period').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskPeriod=b.dataset.taskPeriod;renderTodo()});
   document.querySelectorAll('.todo-view').forEach(b=>b.onclick=()=>{todoView=b.dataset.todoView;state.todoView=todoView;saveState();renderTodo()});
   document.querySelectorAll('.cal-period').forEach(b=>b.onclick=()=>{calPeriod=b.dataset.calPeriod;renderCalendarPage()});
-  on('calResetFilterBtn','onclick',()=>{calPeriod='week';calLead='All';renderCalendarPage()});
+  on('calPrevMonth','onclick',()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);renderCalendarPage()});
+  on('calNextMonth','onclick',()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);renderCalendarPage()});
+  on('calTodayBtn','onclick',()=>{calPeriod='month';calMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendarPage()});
+  on('calResetFilterBtn','onclick',()=>{calPeriod='month';calLead='All';calMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendarPage()});
   on('projectFormToggle','onclick',()=>openProjectForm());
   on('taskFormToggle','onclick',()=>openTaskForm());
   on('solutionFormToggle','onclick',()=>openSolutionForm());
