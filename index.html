@@ -21,7 +21,9 @@
   --card-grad:linear-gradient(180deg,rgba(255,255,255,.022),rgba(255,255,255,0));
   --grid-bg:radial-gradient(circle at 1px 1px,rgba(255,255,255,.018) 1px,transparent 0);
   --r:8px;--side:238px;
-  --space-xs:4px;--space-sm:8px;--space-md:14px;--space-lg:28px;--space-xl:44px
+  --space-xs:4px;--space-sm:8px;--space-md:14px;--space-lg:28px;--space-xl:44px;
+  --chart-1:#5b7cfa;--chart-2:#f6b44b;--chart-3:#2dd36f;--chart-4:#ff5a67;--chart-5:#b678ff;--chart-6:#5bc0ff;--chart-7:#13b8a6;
+  --progress-from:#22d3ee;--progress-to:#4f7cff
 }
 [data-theme="light"]{
   --bg:#eef2f7;--surface:#ffffff;--panel:#ffffff;--panel-2:#f4f7fb;
@@ -247,7 +249,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .ch .ch-t{display:flex;flex-direction:column;gap:2px;min-width:0}
 .ch .ch-t small{margin:0}
 #v-settings .panel-form.on{margin-bottom:var(--space-md)}.checklist{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:8px;display:grid;gap:6px}.checklist label{display:flex;gap:7px;align-items:flex-start;color:var(--muted);font-size:12px}.checklist input{width:auto;accent-color:var(--accent);margin-top:2px}.brow{display:flex;align-items:center;gap:8px}.brow .bchk{flex:1;display:flex;gap:7px;align-items:center;color:var(--muted);font-size:12px;cursor:pointer}.brow .bval{width:104px;flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;margin-top:0}.bscope{width:7px;height:7px;border-radius:50%;flex:0 0 auto}.bscope.bs{background:#8fa4ff}.bscope.ps{background:var(--accent-2)}.battery{width:98px;height:18px;border:1px solid var(--line-2);border-radius:4px;padding:2px;position:relative;background:var(--surface)}.battery:after{content:"";position:absolute;right:-5px;top:5px;width:4px;height:6px;background:var(--line-2);border-radius:0 2px 2px 0}.battery-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));min-width:3px}.battery-text{font-size:10px;color:var(--text);margin-top:3px}
-.pbar{display:flex;align-items:center;gap:10px;min-width:130px}.pbar-track{flex:1;min-width:56px;max-width:130px;height:7px;background:rgba(255,255,255,.09);border-radius:20px;overflow:hidden}.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,#22d3ee,#4f7cff)}.pbar b{font-size:12.5px;font-weight:700;min-width:36px;color:var(--text)}
+.pbar{display:flex;align-items:center;gap:10px;min-width:130px}.pbar-track{flex:1;min-width:56px;max-width:130px;height:7px;background:rgba(255,255,255,.09);border-radius:20px;overflow:hidden}.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--progress-from),var(--progress-to))}.pbar b{font-size:12.5px;font-weight:700;min-width:36px;color:var(--text)}
 [data-theme="light"] .pbar-track{background:rgba(15,23,42,.08)}.subrow{display:none}.subrow.on{display:table-row}.subpanel{background:var(--surface);border-radius:8px;padding:10px}.toggle-link{color:#8fa4ff;cursor:pointer;font-weight:700}
 @media(max-width:1180px){.g5,.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2,.filters,.settings-grid{grid-template-columns:1fr}.wide{grid-column:auto}.kanban{grid-template-columns:repeat(2,1fr)}.calendar{grid-template-columns:repeat(3,1fr)}.email-preview{grid-template-columns:1fr}}
 @media(max-width:760px){:root{--side:0}.sidebar{position:static;width:100%;height:auto}.app{display:block}.main{margin-left:0}.nav{display:grid;grid-template-columns:repeat(2,1fr);padding:8px}.nav-label{display:none}.nav button{border-left:0;border-radius:8px}.topbar{height:auto;min-height:62px;align-items:stretch;flex-direction:column;padding:14px}.title{width:100%;min-width:0}.title p{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.content{padding:14px}.g5,.g4,.g3,.g2,.kanban,.form-grid,.calendar,.email-preview{grid-template-columns:1fr}.form-grid .span2,.form-grid .span3{grid-column:auto}}
@@ -790,6 +792,9 @@ function normalizeState(data){
 const money = n => n ? '฿'+Number(n).toLocaleString('th-TH') : '-';
 const shortMoney = n => n>=1000000 ? '฿'+(n/1000000).toFixed(n>=10000000?0:1)+'M' : money(n);
 const byId = id => state.teams.find(t=>t.id===id) || {name:'Unassigned',role:'-',color:'#657187',target:0,email:'-'};
+// Chart palette resolved from CSS tokens (single source of truth, works in SVG attrs)
+let CHART=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
+function loadChartColors(){const cs=getComputedStyle(document.documentElement); const c=[1,2,3,4,5,6,7].map(i=>(cs.getPropertyValue('--chart-'+i)||'').trim()).filter(Boolean); if(c.length===7) CHART=c;}
 const uniq = arr => [...new Set(arr.filter(Boolean))];
 const esc = v => String(v ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function grouped(items,keyFn,valFn=()=>1){return items.reduce((a,x)=>{const k=keyFn(x);a[k]=(a[k]||0)+valFn(x);return a},{})}
@@ -1231,20 +1236,19 @@ function biCompute(card){
 }
 function biRecommend(card){ if(card.dim==='month') return 'vbar'; if(['status','seg','pri','size','level','role'].includes(card.dim)) return 'donut'; return 'bar'; }
 function biRecoLabel(card){const m={bar:'Bar',vbar:'Vertical Bar',donut:'Donut'}; return m[biRecommend(card)]||'Bar';}
-const BI_PAL=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
 function renderCustomCardBody(c, elId){
   const host=document.getElementById(elId); if(!host) return;
   const {items,money}=biCompute(c);
   if(!items.length){host.innerHTML='<div class="hint">No data</div>'; return;}
   const chart=c.chart||biRecommend(c);
-  let colored=items.map((x,i)=>({...x,color:BI_PAL[i%BI_PAL.length]}));
-  if(c.source==='team'&&c.dim==='name') colored=items.map((x,i)=>{const tm=state.teams.find(t=>t.name===x.label); return {...x,color:(tm&&tm.color)||BI_PAL[i%BI_PAL.length]};});
+  let colored=items.map((x,i)=>({...x,color:CHART[i%CHART.length]}));
+  if(c.source==='team'&&c.dim==='name') colored=items.map((x,i)=>{const tm=state.teams.find(t=>t.name===x.label); return {...x,color:(tm&&tm.color)||CHART[i%CHART.length]};});
   const sum=items.reduce((s,x)=>s+x.value,0);
   if(chart==='donut') renderDonut(elId,colored,{money,centerValue:money?shortMoney(sum):sum});
   else if(chart==='vbar') renderVBars(elId,colored.slice(0,12),{money});
   else if(chart==='table') host.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>รายการ</th><th>ค่า</th></tr></thead><tbody>'+items.map(x=>'<tr><td>'+esc(x.label)+'</td><td>'+(money?shortMoney(x.value):esc(x.value))+'</td></tr>').join('')+'</tbody></table></div>';
   else if(chart==='metric') host.innerHTML='<div class="metric" style="border:0;box-shadow:none;padding:0;min-height:0"><strong>'+(money?shortMoney(sum):sum)+'</strong><small>'+items.length+' รายการ</small></div>';
-  else if(chart==='line') renderMultiLine(elId, colored.map(x=>x.label), [{label:'',color:'#5b7cfa',data:colored.map(x=>x.value)}]);
+  else if(chart==='line') renderMultiLine(elId, colored.map(x=>x.label), [{label:'',color:CHART[0],data:colored.map(x=>x.value)}]);
   else if(chart==='funnel') renderFunnel(elId, colored);
   else renderBars(elId,colored.slice(0,12),{money});
 }
@@ -1425,7 +1429,7 @@ function renderDashboard(){
     periodTrendPct('trend-winpct', p, gran);
   }
   document.getElementById('statusTotal').textContent=total+' projects';
-  const palette=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
+  const palette=CHART;
   const stat=grouped(p,x=>x.status);
   renderBars('statusBars',Object.entries(stat).map(([label,value],i)=>({label,value,color:palette[i%palette.length]})));
   const brands=brandStats(p).map(b=>({label:b.label,value:b.revenue})).filter(b=>b.value>0).sort((a,b)=>b.value-a.value).slice(0,7).map((b,i)=>({...b,color:palette[i%palette.length]}));
@@ -1445,9 +1449,9 @@ function renderDashboard(){
     <div class="brief-stat"><label>KPI Focus</label><strong>${esc(kpiFocus.label)}</strong><small>${kpiFocus.value}% of target</small></div>
   </div>`;
   renderWorkloadChart();
-  const thColors={Done:'#2dd36f',Doing:'#5b7cfa',Review:'#f6b44b',Schedule:'#b678ff',Overdue:'#ff5a67'};
-  renderDonut('taskHealthDonut',Object.entries(grouped(t,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||'#5bc0ff'})),{centerValue:t.length,centerLabel:'tasks'});
-  const groupColors={'IT and Communication':'#5b7cfa','Security Solutions':'#ff5a67','IOT and Platform':'#13b8a6','BMS and Energy':'#f6b44b'};
+  const thColors={Done:CHART[2],Doing:CHART[0],Review:CHART[1],Schedule:CHART[4],Overdue:CHART[3]};
+  renderDonut('taskHealthDonut',Object.entries(grouped(t,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||CHART[5]})),{centerValue:t.length,centerLabel:'tasks'});
+  const groupColors={'IT and Communication':CHART[0],'Security Solutions':CHART[3],'IOT and Platform':CHART[6],'BMS and Energy':CHART[1]};
   const groupShort={'IT and Communication':'IT/Comm','Security Solutions':'Security','IOT and Platform':'IOT','BMS and Energy':'BMS'};
   const solCount={}; SYSTEM_GROUPS.forEach(g=>solCount[g]=0);
   p.forEach(pr=>{const groups=new Set(projectSystems(pr).map(s=>s.group||inferSystemGroup(s.name))); groups.forEach(g=>{if(g in solCount) solCount[g]++;});});
@@ -1498,21 +1502,21 @@ function renderAnalytics(){
     <div class="brief-stat"><label>Risk Queue</label><strong style="color:${overdueCount?'var(--red)':'var(--green)'}">${overdueCount}</strong><small>overdue BD tasks</small></div>
   </div>`;
   const stages=['Quotation','Budgetary','Waiting PO','Pending','Win','Lost'];
-  renderBars('pipelineBars2',stages.map(s=>({label:s,value:p.filter(x=>x.status===s).reduce((a,b)=>a+b.val,0)})),{money:true,colors:['#5b7cfa','#f6b44b','#13b8a6','#b678ff','#2dd36f','#ff5a67']});
+  renderBars('pipelineBars2',stages.map(s=>({label:s,value:p.filter(x=>x.status===s).reduce((a,b)=>a+b.val,0)})),{money:true,colors:CHART});
   const curY=today.getFullYear(); const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const byMonth=fn=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due)return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===curY&&fn(t)) a[d.getMonth()]++;}); return a;};
-  renderMultiLine('anaTrendChart',MO,[{label:'Total',color:'#5b7cfa',data:byMonth(()=>true)},{label:'Done',color:'#2dd36f',data:byMonth(t=>t.status==='Done')},{label:'Overdue',color:'#ff5a67',data:byMonth(t=>isOverdue(t))}]);
-  renderFunnel('anaFunnelChart',[{label:'All Projects',value:p.length,color:'#ff5a67'},{label:'Qualified',value:p.filter(x=>x.status!=='Lost').length,color:'#f6b44b'},{label:'Advanced',value:p.filter(x=>['Budgetary','Waiting PO','Win'].includes(x.status)).length,color:'#13b8a6'},{label:'Won',value:p.filter(x=>x.status==='Win').length,color:'#2d5b8a'}]);
+  renderMultiLine('anaTrendChart',MO,[{label:'Total',color:CHART[0],data:byMonth(()=>true)},{label:'Done',color:CHART[2],data:byMonth(t=>t.status==='Done')},{label:'Overdue',color:CHART[3],data:byMonth(t=>isOverdue(t))}]);
+  renderFunnel('anaFunnelChart',[{label:'All Projects',value:p.length,color:CHART[3]},{label:'Qualified',value:p.filter(x=>x.status!=='Lost').length,color:CHART[1]},{label:'Advanced',value:p.filter(x=>['Budgetary','Waiting PO','Win'].includes(x.status)).length,color:CHART[6]},{label:'Won',value:p.filter(x=>x.status==='Win').length,color:CHART[0]}]);
   const winV=p.filter(x=>x.status==='Win').reduce((s,x)=>s+x.val,0), lostV=p.filter(x=>x.status==='Lost').reduce((s,x)=>s+x.val,0), openV=Math.max(0,totalV-winV-lostV);
-  renderDonut('winLossDonut',[{label:'Win',value:winV,color:'#2dd36f'},{label:'Lost',value:lostV,color:'#ff5a67'},{label:'In Pipeline',value:openV,color:'#5b7cfa'}].filter(x=>x.value>0),{money:true,centerValue:shortMoney(totalV)});
+  renderDonut('winLossDonut',[{label:'Win',value:winV,color:CHART[2]},{label:'Lost',value:lostV,color:CHART[3]},{label:'In Pipeline',value:openV,color:CHART[0]}].filter(x=>x.value>0),{money:true,centerValue:shortMoney(totalV)});
   // Scope analysis using REAL per-brand value (or even distribution fallback)
   const scopeVal={'Brand Scope':0,'PIRAMID Scope':0}; const psVal={}; PIRAMID_SCOPE.forEach(c=>psVal[c]=0);
   p.forEach(pr=>brandValueMap(pr).forEach(b=>{scopeVal[scopeOfCategory(b.category)]+=b.v; if(b.category in psVal) psVal[b.category]+=b.v;}));
   const scopeTotal=scopeVal['Brand Scope']+scopeVal['PIRAMID Scope'];
-  renderDonut('scopeSplitDonut',[{label:'Brand Scope',value:Math.round(scopeVal['Brand Scope']),color:'#5b7cfa'},{label:'PIRAMID Scope',value:Math.round(scopeVal['PIRAMID Scope']),color:'#13b8a6'}].filter(x=>x.value>0),{money:true,centerValue:shortMoney(scopeTotal)});
-  renderBars('piramidScopeBars',PIRAMID_SCOPE.map((c,i)=>({label:c,value:Math.round(psVal[c]),color:['#13b8a6','#5bc0ff','#f6b44b','#b678ff'][i]})),{money:true});
-  renderBars('sizeBars',grouped(p,x=>sizeForValue(x.val)),{colors:['#b678ff','#ff5a67','#f6b44b','#5b7cfa','#2dd36f','#13b8a6']});
-  renderBars('systemBars',Object.entries(systemGroupStats(p)).sort((a,b)=>b[1]-a[1]).map(([label,value])=>({label,value})),{colors:['#5b7cfa','#13b8a6','#f6b44b','#b678ff']});
+  renderDonut('scopeSplitDonut',[{label:'Brand Scope',value:Math.round(scopeVal['Brand Scope']),color:CHART[0]},{label:'PIRAMID Scope',value:Math.round(scopeVal['PIRAMID Scope']),color:CHART[6]}].filter(x=>x.value>0),{money:true,centerValue:shortMoney(scopeTotal)});
+  renderBars('piramidScopeBars',PIRAMID_SCOPE.map((c,i)=>({label:c,value:Math.round(psVal[c]),color:[CHART[6],CHART[5],CHART[1],CHART[4]][i]})),{money:true});
+  renderBars('sizeBars',grouped(p,x=>sizeForValue(x.val)),{colors:[CHART[4],CHART[3],CHART[1],CHART[0],CHART[2],CHART[6]]});
+  renderBars('systemBars',Object.entries(systemGroupStats(p)).sort((a,b)=>b[1]-a[1]).map(([label,value])=>({label,value})),{colors:[CHART[0],CHART[6],CHART[1],CHART[4]]});
   renderBars('salesBars',state.teams.filter(t=>t.role==='Sales').map(t=>({label:t.name,color:t.color,value:p.filter(x=>x.sales===t.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value),{money:true});
   const taskByProject=grouped(state.tasks,x=>x.project);
   document.getElementById('watchRows').innerHTML=p.filter(x=>x.pri==='High').sort((a,b)=>b.val-a.val).map(x=>`<tr><td class="ellipsis">${esc(x.name)}</td><td>${statusTag(x.status)}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${taskByProject[x.id]||0}</td></tr>`).join('');
@@ -2252,7 +2256,7 @@ function bindAppEvents(){
   on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
   on('submitResetRequestBtn','onclick',submitResetRequest);
   on('ruleFormToggle','onclick',()=>openRuleForm());
-  on('themeToggle','onclick',()=>{currentTheme=currentTheme==='light'?'dark':'light';localStorage.setItem('piramid-theme',currentTheme);applyTheme()});
+  on('themeToggle','onclick',()=>{currentTheme=currentTheme==='light'?'dark':'light';localStorage.setItem('piramid-theme',currentTheme);applyTheme();loadChartColors();renderAll(false)});
   on('projectForm','onsubmit',saveProject);
   on('taskForm','onsubmit',saveTask);
   on('solutionForm','onsubmit',saveSolution);
@@ -2281,6 +2285,7 @@ function bindAppEvents(){
 function bootApp(){
   bindAppEvents();
   applyTheme();
+  loadChartColors();
   initSessionViewSeen();
   initFilters();
   restoreSession();
