@@ -89,7 +89,7 @@ html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 .grid{display:grid;gap:14px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.wide{grid-column:span 2}
 .card,.metric{background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s,border-color .2s}
 .metric{padding:14px 15px;min-height:92px}.metric label{display:block;color:var(--muted);font-size:11.5px;font-weight:500;margin-bottom:8px;letter-spacing:.2px}.metric strong{display:block;font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1}.metric small{display:block;margin-top:7px;color:var(--soft)}
-.dash-grid>.widget.metric[data-widget="mValue"]{grid-column:span 4}
+.dash-grid>.widget.metric[data-widget="mValue"]{grid-column:span 4;background:var(--panel);background-image:var(--card-grad);box-shadow:var(--shadow);border-color:var(--line-2)}
 .dash-grid>.widget.metric[data-widget="mValue"] strong{font-size:36px;letter-spacing:-1px;color:var(--accent)}
 .dash-grid>.widget.metric[data-widget="mValue"] label{font-size:12px;color:var(--text)}
 .dash-grid.editing .widget:hover{box-shadow:var(--shadow-hover)}
@@ -123,8 +123,11 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .donut-svg .ds{cursor:pointer;transition:opacity .15s}
 .donut-svgbox:hover .ds{opacity:.45}.donut-svgbox .ds:hover{opacity:1}
 .legend-row .ell{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dash-grid{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;align-items:stretch;grid-auto-rows:30px}
+.dash-grid{position:relative;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--space-md);row-gap:var(--space-md);align-items:stretch;grid-auto-rows:30px}
 .dash-grid>.widget{grid-column:span 4;grid-row:span 9;min-width:0;min-height:0;z-index:1;display:flex;flex-direction:column}
+/* 2-tier hierarchy: KPI tiles are a flat summary band; chart cards float above it */
+.dash-grid>.widget.metric{box-shadow:none;background-image:none;background:var(--surface)}
+.dash-grid>.widget.metric:hover{box-shadow:none;border-color:var(--line-2);transform:none}
 .dash-grid>.widget>.cb{flex:1;min-height:0;overflow:auto}
 .dash-grid>.widget.metric{grid-column:span 3;grid-row:span 4;justify-content:center}
 .dash-grid>.widget[data-widget="execWorkload"],.dash-grid>.widget[data-widget="execHighPriority"],.dash-grid>.widget[data-widget="execTaskAlert"],.dash-grid>.widget[data-widget="anaTrend"],.dash-grid>.widget[data-widget="anaConvFunnel"],.dash-grid>.widget[data-widget="anaTable"]{grid-column:span 6;grid-row:span 10}
