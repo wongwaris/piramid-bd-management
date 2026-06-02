@@ -1843,7 +1843,7 @@ function renderProjects(){
     const revisions=relatedTasks.reduce((s,t)=>s+Number(t.revision||1),0);
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
     const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="14"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}</div></td></tr>`;
-    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span>${statusTag(x.taskStatus||inferProjectTaskStatus(x.id))}</td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
+    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
   document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
@@ -1851,6 +1851,7 @@ function renderProjects(){
   document.querySelectorAll('[data-toggle-sub]').forEach(b=>b.onclick=()=>document.getElementById('sub-'+b.dataset.toggleSub)?.classList.toggle('on'));
   openSubs.forEach(id=>document.getElementById(id)?.classList.add('on'));
   bindTaskStatusSelects(document.getElementById('projectRows'));
+  bindProjectTaskStatusSelects(document.getElementById('projectRows'));
 }
 function openProjectForm(id){
   editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,sales:state.teams.find(t=>t.role==='Sales')?.id};
@@ -2102,14 +2103,18 @@ function taskStatusDropdown(t){
 function bindTaskStatusSelects(root){
   (root||document).querySelectorAll('[data-task-status]').forEach(sel=>sel.onchange=()=>setTaskStatus(sel.dataset.taskStatus, sel.value));
 }
-function setTaskStatus(taskId, newStatus){
-  const t=state.tasks.find(x=>x.id===taskId); if(!t||t.status===newStatus) return;
-  const nowIso=new Date().toISOString();
+function applyTaskStatus(t, newStatus, nowIso){ // pure mutation; returns true if changed
+  if(t.status===newStatus) return false;
   t.status=newStatus;
   t.statusChangedAt=nowIso;
   if(newStatus==='Done'){ t.completedAt=t.completedAt||nowIso; t.progress=100; }
   else { t.completedAt=null; if(Number(t.progress)>=100) t.progress=90; }
   t.statusLog=[...(t.statusLog||[]),{status:newStatus,at:nowIso}].slice(-30);
+  return true;
+}
+function setTaskStatus(taskId, newStatus){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  if(!applyTaskStatus(t, newStatus, new Date().toISOString())) return;
   saveState();
   logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
   refreshAfterTaskChange();
@@ -2118,6 +2123,27 @@ function refreshAfterTaskChange(){
   const active=activeViewName();
   Object.keys(VIEW_RENDERERS).forEach(v=>{ if(v!==active) dirtyViews.add(v); });
   if(active) renderView(active);
+}
+// Main-task status (project rollup) — editable from the Projects "Sub Tasks" cell.
+// Cascades the chosen status to every sub-task of the project (Done → completedAt set for timeliness).
+function projectTaskStatusDropdown(p){
+  const cur=p.taskStatus||inferProjectTaskStatus(p.id);
+  return `<select class="task-status-select ${statusClass(cur)}" data-project-taskstatus="${esc(p.id)}" aria-label="Change main task status for ${esc(p.name)}">`
+    +state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${cur===s.name?'selected':''}>${esc(s.name)}</option>`).join('')
+    +`</select>`;
+}
+function bindProjectTaskStatusSelects(root){
+  (root||document).querySelectorAll('[data-project-taskstatus]').forEach(sel=>sel.onchange=()=>setProjectTaskStatus(sel.dataset.projectTaskstatus, sel.value));
+}
+function setProjectTaskStatus(projectId, newStatus){
+  const p=state.projects.find(x=>x.id===projectId); if(!p||(p.taskStatus||inferProjectTaskStatus(p.id))===newStatus) return;
+  p.taskStatus=newStatus;
+  const nowIso=new Date().toISOString();
+  state.tasks.filter(t=>t.project===projectId).forEach(t=>applyTaskStatus(t, newStatus, nowIso));
+  p.progress = newStatus==='Done' ? 100 : averageProjectProgress(p.id);
+  saveState();
+  logActivity('อัปเดตสถานะ Main Task','projects',`${p.name} → ${newStatus}`);
+  refreshAfterTaskChange();
 }
 function renderTimelinessInto(host, tasks){
   host = typeof host==='string'?document.getElementById(host):host; if(!host) return;
