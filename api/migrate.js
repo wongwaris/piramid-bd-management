@@ -184,7 +184,7 @@ export default async function handler(req, res) {
 
   for (const step of steps) {
     try {
-      await db(step.sql);
+      await db.query(step.sql);
       results.push({ step: step.name, status: 'ok' });
     } catch (err) {
       results.push({ step: step.name, status: 'error', message: err.message });
