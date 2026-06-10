@@ -421,7 +421,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <div class="card widget metric" data-widget="mTaskDoing"><label>Doing Task</label><strong id="mv-taskdoing">0</strong><div id="trend-taskdoing"></div><small id="ms-taskdoing"></small></div>
           <div class="card widget" data-widget="execStatus"><div class="ch"><h2>Project Status</h2><small id="statusTotal"></small></div><div class="cb"><div class="bars" id="statusBars"></div></div></div>
           <div class="card widget" data-widget="execBrand"><div class="ch"><h2>Solutions Sales</h2><small>มูลค่าตามกลุ่มโซลูชัน/แบรนด์ · hover ดูมูลค่าและ %</small></div><div class="cb" id="brandDonut"></div></div>
-          <div class="card widget" data-widget="execTeam"><div class="ch"><h2>KPI Team</h2><small>เป้าหมาย vs ทำได้</small></div><div class="cb"><div class="bars" id="teamKpiBars"></div></div></div>
+          <div class="card widget" data-widget="execTeam"><div class="ch"><h2>Team Involvement</h2><small>มูลค่าโครงการที่แต่ละคนมีส่วนร่วม · hover ดูมูลค่า</small></div><div class="cb"><div class="bars" id="teamKpiBars"></div></div></div>
           <div class="card widget" data-widget="execSolutions"><div class="ch"><h2>Solutions Mix</h2><small>4 กลุ่มโซลูชันหลัก · จำนวนโครงการ</small></div><div class="cb"><div class="vbars" id="solutionGroupBars"></div></div></div>
           <div class="card widget" data-widget="execTopSystems"><div class="ch"><h2>Top 5 Systems</h2><small>ระบบที่ทำบ่อยที่สุด</small></div><div class="cb"><div class="bars" id="topSystemBars"></div></div></div>
           <div class="card widget" data-widget="execSegments"><div class="ch"><h2>Value by Segment</h2><small>มูลค่าตาม Segment · hover ดูมูลค่าและ %</small></div><div class="cb" id="segmentDonut"></div></div>
@@ -520,7 +520,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-team" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีม เป้าหมายการขาย และสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีมและสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
       <div class="content">
         <div class="grid g4" id="teamTaskMetrics"></div>
         <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
@@ -1405,7 +1405,7 @@ function initFilters(){
   return true;
 }
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
   build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
@@ -1655,7 +1655,7 @@ const BI_SOURCES={
   ],measures:[
     {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).length},
     {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).reduce((s,p)=>s+(p.val||0),0)},
-    {key:'target',label:'เป้าหมาย (฿)',agg:'sum',money:true,val:m=>m.target||0}
+    {key:'target',label:'Reference Value (฿)',agg:'sum',money:true,val:m=>m.target||0}
   ]}
 };
 function biCompute(card){
@@ -1879,15 +1879,14 @@ function renderDashboard(){
   renderDonut('brandDonut',brands,{money:true,centerValue:shortMoney(brands.reduce((s,x)=>s+x.value,0)),centerLabel:'sales'});
   const segItems=Object.entries(grouped(p,x=>x.seg,x=>x.val)).sort((a,b)=>b[1]-a[1]).map(([label,value],i)=>({label,value,color:palette[i%palette.length]}));
   renderDonut('segmentDonut',segItems,{money:true,centerValue:shortMoney(segItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
-  const teamKpi=state.teams.filter(tm=>/bd/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:Math.round((p.filter(x=>x.bd===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)/(tm.target||1))*100)})).sort((a,b)=>b.value-a.value).slice(0,6);
-  renderBars('teamKpiBars',teamKpi);
+  // Team Involvement: show actual pipeline value each member is participating in (not % of a target)
+  const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>x.bd===tm.id||x.presales===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,6);
+  renderBars('teamKpiBars',teamKpi,{money:true});
   const selectedTeam=state.teams.find(tm=>tm.id===filters.team);
-  const bdTeams=state.teams.filter(tm=>/bd/i.test(tm.role||''));
   const teamValue=p.reduce((s,x)=>s+x.val,0);
-  const teamTarget=bdTeams.reduce((s,tm)=>s+Number(tm.target||0),0);
   const kpiFocus=selectedTeam
-    ? {label:selectedTeam.name,value:Math.round((p.reduce((s,x)=>s+(x.bd===selectedTeam.id||x.sales===selectedTeam.id?x.val:0),0)/(selectedTeam.target||1))*100)}
-    : {label:'KPI Team',value:teamTarget?Math.round(teamValue/teamTarget*100):0};
+    ? {label:selectedTeam.name,value:shortMoney(p.reduce((s,x)=>s+(x.bd===selectedTeam.id||x.presales===selectedTeam.id||x.sales===selectedTeam.id?x.val:0),0))}
+    : {label:'Team Involvement',value:shortMoney(teamValue)};
   const summary=document.getElementById('execSummaryPanel');
   if(summary) summary.innerHTML=`<div class="executive-brief">
     <div class="brief-lead"><b>Executive reading order</b><span>เริ่มจาก health ของ pipeline แล้วอ่านสถานะ, solution sales, KPI team และ risk queue เพื่อใช้ตัดสินใจรายสัปดาห์.</span></div>
@@ -1895,7 +1894,7 @@ function renderDashboard(){
     <div class="brief-stat"><label>Win Value</label><strong style="color:var(--green)">${winPct}%</strong><small>${shortMoney(winValue)} confirmed</small></div>
     <div class="brief-stat"><label>Priority</label><strong style="color:${high.length?'var(--amber)':'var(--green)'}">${high.length}</strong><small>high priority projects</small></div>
     <div class="brief-stat"><label>Task Risk</label><strong style="color:${overdue.length?'var(--red)':'var(--green)'}">${overdue.length}</strong><small>overdue tasks</small></div>
-    <div class="brief-stat"><label>KPI Focus</label><strong>${esc(kpiFocus.label)}</strong><small>${kpiFocus.value}% of target</small></div>
+    <div class="brief-stat"><label>Involvement</label><strong>${esc(kpiFocus.label)}</strong><small>${kpiFocus.value} pipeline value</small></div>
   </div>`;
   renderWorkloadChart();
   const thColors={Done:CHART[2],Doing:CHART[0],Review:CHART[1],Schedule:CHART[4],Overdue:CHART[3]};
@@ -3496,7 +3495,7 @@ function openTeamForm(id){
     <label class="field"><span>Access Role</span><select name="accessRole">${['Admin','Member','Guest'].map(v=>`<option ${accessRole(t)===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Level</span><select name="level">${['Member','Manager','Executive'].map(v=>`<option ${t.level===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Email</span><input name="email" type="email" value="${esc(t.email)}"></label>
-    <label class="field"><span>KPI Target</span><input name="target" type="number" value="${t.target}"></label>
+    <label class="field"><span>Reference Value (฿)</span><input name="target" type="number" value="${t.target}" placeholder="มูลค่าอ้างอิง (ไม่ใช่ KPI)"></label>
     <label class="field"><span>Color</span><input name="color" type="color" value="${t.color}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Member</button><button class="btn" type="button" data-close-form="team">Cancel</button></div>`;
   showFormPanel('teamFormPanel'); bindCloseButtons();
