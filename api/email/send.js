@@ -22,6 +22,14 @@ export default async function handler(req, res) {
       triggered_by_user: body.triggered_by_user || 'admin',
     });
     const processed = body.send_now === false ? [] : await worker.processOne(item);
+    if (processed && ['failed', 'retry'].includes(processed.status)) {
+      sendJson(res, 502, {
+        error: processed.error_message || 'Email provider rejected the message',
+        queued: item,
+        processed,
+      });
+      return;
+    }
     sendJson(res, 200, { queued: item, processed });
   } catch (error) {
     sendJson(res, 500, { error: error.message });

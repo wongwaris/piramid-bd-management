@@ -33,6 +33,16 @@ function sanitizeDeep(value) {
   return value;
 }
 
+function isValidAppState(value) {
+  return Boolean(
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Array.isArray(value.projects) &&
+    Array.isArray(value.teams)
+  );
+}
+
 export default async function handler(req, res) {
   if (!process.env.DATABASE_URL) {
     send(res, 500, { error: 'DATABASE_URL is not configured' });
@@ -69,6 +79,11 @@ export default async function handler(req, res) {
 
       if (!body || typeof body.data !== 'object' || Array.isArray(body.data)) {
         send(res, 400, { error: 'Expected JSON body with object field: data' });
+        return;
+      }
+
+      if (!isValidAppState(body.data)) {
+        send(res, 400, { error: 'Invalid app state: projects and teams arrays are required' });
         return;
       }
 
