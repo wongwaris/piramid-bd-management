@@ -86,6 +86,20 @@ create table if not exists email_configuration_logs (
   created_at timestamptz not null default now()
 );
 
+create table if not exists email_settings (
+  id text primary key default 'default',
+  provider text not null default 'smtp',
+  smtp_host text not null default '',
+  smtp_port integer not null default 587,
+  smtp_secure boolean not null default false,
+  smtp_user text not null default '',
+  smtp_from text not null default '',
+  smtp_password_encrypted text,
+  updated_by text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create index if not exists email_queue_status_scheduled_idx on email_queue(status, scheduled_at);
 create index if not exists email_logs_created_at_idx on email_logs(created_at desc);
 create index if not exists notification_preferences_user_idx on notification_preferences(user_id);

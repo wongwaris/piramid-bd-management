@@ -1,27 +1,18 @@
 import { getSql, json } from '../../lib/email/db.js';
+import { EmailSettingsService } from '../../lib/email/EmailSettingsService.js';
 import { readJsonBody, requireAdmin, sendJson } from '../../lib/email/utils.js';
 
-function publicSettings() {
-  return {
-    provider: process.env.EMAIL_PROVIDER || 'smtp',
-    smtp_host: process.env.SMTP_HOST || '',
-    smtp_port: process.env.SMTP_PORT || '587',
-    smtp_secure: process.env.SMTP_SECURE === 'true',
-    smtp_user: process.env.SMTP_USER || '',
-    smtp_from: process.env.EMAIL_FROM || process.env.SMTP_FROM || '',
-    smtp_password_configured: Boolean(process.env.SMTP_PASSWORD),
-  };
-}
-
 export default async function handler(req, res) {
+  const service = new EmailSettingsService();
   try {
     if (req.method === 'GET') {
-      sendJson(res, 200, publicSettings());
+      sendJson(res, 200, await service.publicSettings());
       return;
     }
     if (req.method === 'POST') {
       requireAdmin(req);
       const body = await readJsonBody(req);
+      await service.update(body, body.changed_by || 'admin');
       const safeChanges = {
         provider: body.provider,
         smtp_host: body.smtp_host,
@@ -37,8 +28,8 @@ export default async function handler(req, res) {
       `;
       sendJson(res, 200, {
         ok: true,
-        message: 'Settings change logged. Configure SMTP secrets in Vercel Environment Variables.',
-        settings: publicSettings(),
+        message: 'Email settings saved.',
+        settings: await service.publicSettings(),
       });
       return;
     }

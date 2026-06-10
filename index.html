@@ -311,6 +311,52 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 @media(max-width:900px){.option-head{grid-template-columns:repeat(2,minmax(0,1fr))}.option-item{grid-template-columns:repeat(2,minmax(0,1fr))}.option-item .btn{align-self:end}}
 @media(max-width:760px){:root{--side:0}.app{display:block}.sidebar{position:sticky;top:0;width:100%;height:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr;z-index:var(--z-nav)}.main{margin-left:0}.sidebar .brand{padding:10px 14px}.brand strong{font-size:13px}.brand span{font-size:9.5px}.nav{display:flex;gap:6px;padding:7px 10px;overflow-x:auto;scroll-snap-type:x proximity;border-top:1px solid var(--line);border-bottom:1px solid var(--line);scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav-label{display:none}.nav button{position:relative;flex:0 0 auto;width:46px;height:42px;min-height:42px;justify-content:center;margin:0;padding:0;border-radius:8px;font-size:0;scroll-snap-align:start}.nav button .ico{width:20px;height:20px}.nav button .ico svg{width:20px;height:20px}.navdot{position:absolute;margin:0;right:6px;top:6px}.user{margin:0;padding:8px 14px;border-top:0}.user .avatar{width:28px;height:28px}.user strong{font-size:12px}.user small{font-size:10px}.sidebar>div:has(#themeToggle),.sidebar>div:has(#logoutBtn){padding:0 10px 8px!important}.sidebar #themeToggle,.sidebar #logoutBtn{height:32px;min-height:32px;font-size:11.5px}.content{padding:14px}.g5,.g4,.g3,.g2,.form-grid,.email-preview{grid-template-columns:1fr}.form-grid .span2,.form-grid .span3{grid-column:auto}.filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.filters .f-wide{grid-column:span 2}.metric{min-height:86px}.metric strong{font-size:22px}.dash-grid{display:flex;flex-direction:column;gap:12px}.dash-grid>.widget,.dash-grid>.widget.metric,#execGrid>.widget,#anaGrid>.widget{grid-column:auto!important;grid-row:auto!important;min-height:auto}.dash-grid>.widget.metric{padding:14px 15px}.dash-grid>.widget>.cb{overflow:visible}.executive-brief,.analytics-brief{display:flex;height:auto;overflow-x:auto;gap:10px;padding-bottom:2px;scroll-snap-type:x proximity}.executive-brief .brief-lead,.analytics-brief .brief-lead{flex:0 0 230px}.brief-stat{flex:0 0 150px;border:0;padding:0 0 0 12px;scroll-snap-align:start}.kanban{display:flex;overflow-x:auto;gap:10px;padding-bottom:4px;scroll-snap-type:x proximity}.lane{flex:0 0 min(86vw,340px);min-height:240px;scroll-snap-align:start}.calendar{display:flex;overflow-x:auto;gap:8px;padding-bottom:4px;scroll-snap-type:x proximity}.cal-day{flex:0 0 min(72vw,260px);scroll-snap-align:start}.toolbar{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px;scrollbar-width:thin}.toolbar .btn,.toolbar .field{flex:0 0 auto}.login-box{grid-template-columns:1fr}.brow{align-items:stretch;flex-direction:column}.brow .bval{width:100%}.pbar{min-width:112px}.battery{width:84px}}
 @media(max-width:420px){body{font-size:12.5px}.content{padding:10px}.topbar{padding:12px}.filters{grid-template-columns:1fr}.filters .f-wide{grid-column:auto}.login-panel{padding:24px 20px}.tbl{min-width:680px}.bar-row{grid-template-columns:1fr auto;gap:6px}.bar-row .track{grid-column:1 / -1;grid-row:2}.bar-row b{text-align:right}.ch{padding:12px}.cb{padding:12px}.executive-brief .brief-lead,.analytics-brief .brief-lead{flex-basis:220px}.brief-stat{flex-basis:136px}.lane{flex-basis:88vw}.cal-day{flex-basis:82vw}.vbars{gap:8px}.fn-head span{white-space:normal}.search-row{flex-direction:column;align-items:stretch}.search-row .btn{width:100%}}
+/* ===== Feature additions ===== */
+/* #6 Internal tasks */
+.tag.internal{background:rgba(91,192,255,.14);color:var(--blue)}
+/* #2 Quick-add widget */
+#execGrid>.widget[data-widget="execQuickAdd"]{grid-column:span 5;grid-row:span 8}
+.qa-field{display:flex;flex-direction:column;gap:4px;min-width:0}.qa-field span{color:var(--soft);font-size:11px}.qa-field input,.qa-field select{background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;outline:none;width:100%}.qa-field input:focus-visible,.qa-field select:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.qa-grid .qa-span2{grid-column:span 2}
+/* #4 BD Work Queue */
+.q-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);background:var(--surface);border-radius:9px;transition:border-color .15s,box-shadow .15s}.q-item:hover{border-color:var(--line-2)}.q-item.q-working{border-color:var(--green);background:rgba(45,211,111,.05)}.q-item .q-body{flex:1;min-width:0}.q-item .q-rank{width:24px;height:24px;border-radius:7px;background:var(--panel-2);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--soft);flex:0 0 auto}.q-item.q-working .q-rank{background:var(--green);color:#fff}.q-controls{display:flex;gap:4px;flex:0 0 auto}.q-list{display:flex;flex-direction:column;gap:7px}
+/* #3 Change requests */
+.cr-row{display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}.cr-row:last-child{border-bottom:0}.cr-inline-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;margin-top:8px}
+/* #5 Training tracker */
+.cert-exp{display:inline-flex;align-items:center;border-radius:5px;padding:1px 6px;font-size:10.5px;font-weight:700}.cert-exp.ok{background:rgba(45,211,111,.14);color:var(--green)}.cert-exp.warn{background:rgba(246,180,75,.14);color:var(--amber)}.cert-exp.exp{background:rgba(255,90,103,.14);color:var(--red)}.cert-exp.na{background:rgba(105,117,135,.16);color:var(--soft)}.train-card{background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:11px;padding:13px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:7px;transition:border-color .2s,box-shadow .2s,transform .2s}.train-card:hover{border-color:var(--line-2);box-shadow:var(--shadow-hover);transform:translateY(-2px)}.train-section{display:flex;flex-direction:column;gap:10px}
+/* #1 Project event notifications + per-user inbox */
+.ev-item{display:flex;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}.ev-item .ev-ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:0 0 auto;font-size:14px}.ev-item .ev-body{flex:1;min-width:0}.ev-item.ev-new{border-color:rgba(96,136,255,.4);background:rgba(96,136,255,.05)}.ev-list{display:flex;flex-direction:column;gap:6px}
+.notif-badge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;border-radius:9px;background:var(--red);color:#fff;font-size:9.5px;font-weight:800;padding:0 4px;line-height:1;animation:notif-pop .3s cubic-bezier(.22,1,.36,1)}
+@keyframes notif-pop{from{transform:scale(0)}to{transform:scale(1)}}
+.bell-btn{position:relative;flex:0 0 auto;width:34px;height:34px;border-radius:9px;background:var(--panel-2);display:grid;place-items:center;cursor:pointer;border:1px solid var(--line);transition:background .15s,border-color .15s;color:var(--muted)}
+.bell-btn:hover{background:var(--panel);border-color:var(--line-2);color:var(--text)}
+.bell-btn .bell-count{position:absolute;top:-4px;right:-4px}
+.bell-btn.has-unread{border-color:rgba(96,136,255,.5);color:var(--accent)}
+.inbox-mark{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:0 0 auto;margin-top:5px}
+.inbox-divider{font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--soft);text-transform:uppercase;padding:8px 0 4px;border-bottom:1px solid var(--line);margin-bottom:4px}
+/* Presales role tag */
+.tag.role-presales{background:rgba(182,120,255,.15);color:var(--chart-5)}
+.workflow-hint{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 10px;background:rgba(96,136,255,.07);border:1px solid rgba(96,136,255,.2);border-radius:8px;font-size:11px;color:var(--soft);margin-bottom:2px}
+.workflow-hint .wf-step{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:var(--text)}
+.workflow-hint .wf-arrow{color:var(--soft);font-size:10px}
+/* Drag-and-drop — To-Do List (table, kanban, queue) */
+.todo-grip{cursor:grab;color:var(--soft);padding:0 7px;font-size:15px;user-select:none;line-height:1;transition:color .15s;display:inline-block}
+.todo-grip:hover,.todo-grip:focus-visible{color:var(--accent)}
+.todo-grip:active{cursor:grabbing}
+.tbl tr.todo-dnd-row{transition:background .1s}
+.tbl tr.todo-dnd-row.is-dragging>td{opacity:.35}
+.tbl tr.todo-dnd-row.drop-above>td{background:rgba(96,136,255,.1);box-shadow:inset 0 2px 0 var(--accent)}
+.tbl tr.todo-dnd-row.drop-below>td{background:rgba(96,136,255,.1);box-shadow:inset 0 -2px 0 var(--accent)}
+th.grip-col,td.grip-col{width:22px;padding:0!important}
+/* Kanban DnD */
+.task[draggable="true"]{cursor:grab}
+.task[draggable="true"]:active{cursor:grabbing}
+.task.is-dragging{opacity:.35;transform:scale(.97);outline:2px dashed var(--accent)}
+.lane.drop-target{background:rgba(96,136,255,.07)!important;outline:2px dashed var(--accent);outline-offset:-4px;border-radius:inherit}
+/* Queue DnD */
+.q-item[draggable="true"]{cursor:grab}
+.q-item.is-dragging{opacity:.4}
+.q-item.drop-above{box-shadow:0 -3px 0 var(--accent),var(--shadow)}
+.q-item.drop-below{box-shadow:0 3px 0 var(--accent),var(--shadow)}
 </style>
 </head>
 <body>
@@ -344,12 +390,13 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
       <button data-view="tasks"><span class="ico"><svg viewBox="0 0 24 24"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>To-Do List <span class="navdot"></span></button>
       <button data-view="calendar"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Calendar <span class="navdot"></span></button>
       <button data-view="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="5" width="3" height="13" rx="1"/></svg></span>BD KPI <span class="navdot"></span></button>
+      <button data-view="training"><span class="ico"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c3 1.5 9 1.5 12 0v-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Training <span class="navdot"></span></button>
       <button data-view="team"><span class="ico"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Team <span class="navdot"></span></button>
       <div class="nav-label">System</div>
-      <button data-view="notify"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>Notifications <span class="navdot"></span></button>
+      <button data-view="notify"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>Notifications <span class="badge" id="notifNavBadge" style="display:none">0</span><span class="navdot"></span></button>
       <button data-view="settings"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Settings <span class="navdot"></span></button>
     </nav>
-    <div class="user"><div class="avatar" id="currentAvatar">BD</div><div><b id="currentUserName">BD Command Center</b><div class="hint" id="currentUserRole">Executive workspace</div></div></div>
+    <div class="user"><div class="avatar" id="currentAvatar">BD</div><div style="flex:1;min-width:0"><b id="currentUserName">BD Command Center</b><div class="hint" id="currentUserRole">Executive workspace</div></div><button class="bell-btn" id="bellBtn" aria-label="การแจ้งเตือน"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge bell-count" id="bellCount" style="display:none">0</span></button></div>
     <div style="padding:0 18px 8px"><button class="btn" id="themeToggle" style="width:100%">Light Theme</button></div>
     <div style="padding:0 18px 14px"><button class="btn danger" id="logoutBtn" style="width:100%">Logout</button></div>
   </aside>
@@ -383,6 +430,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
           <div class="card widget" data-widget="execHighPriority"><div class="ch"><h2>High Priority Projects</h2><small>โครงการสำคัญ Top 10</small></div><div class="cb"><div id="highPriorityTable"></div></div></div>
           <div class="card widget" data-widget="execTaskAlert"><div class="ch"><h2>Tasks: Doing / Overdue</h2><small>งานที่ต้องเร่ง Top 10</small></div><div class="cb"><div id="taskAlertTable"></div></div></div>
           <div class="card widget" data-widget="execTimeliness"><div class="ch"><h2>Delivery Timeliness</h2><small>งานย่อยส่งทันกำหนดแค่ไหน</small></div><div class="cb"><div id="timelinessBox"></div></div></div>
+          <div class="card widget" data-widget="execQuickAdd"><div class="ch"><h2>Quick Add Project</h2><small>เพิ่มโครงการใหม่เร็ว ๆ</small></div><div class="cb" id="quickAddBox"></div></div>
         </div>
         <div class="grid g2" id="executiveInsights"></div>
       </div>
@@ -398,14 +446,16 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
     </section>
 
     <section id="v-tasks" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 5 รูปแบบ</p></div><div class="actions"><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 6 รูปแบบ</p></div><div class="actions"><button class="btn primary" id="internalTaskFormToggle">+ Internal Task</button><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
       <div class="content">
+        <div class="panel-form card" id="internalTaskFormPanel"><div class="ch"><h2>New Internal Task</h2><button class="btn icon" data-close-form="internalTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="internalTaskForm"></form></div></div>
         <div class="toolbar todo-switcher" role="tablist" aria-label="To-do view mode">
           <button class="btn small todo-view on" data-todo-view="table" role="tab">Master Table</button>
           <button class="btn small todo-view" data-todo-view="kanban" role="tab">Kanban Stage</button>
           <button class="btn small todo-view" data-todo-view="project" role="tab">Project</button>
           <button class="btn small todo-view" data-todo-view="priority" role="tab">Priority</button>
           <button class="btn small todo-view" data-todo-view="exec" role="tab">Executive</button>
+          <button class="btn small todo-view" data-todo-view="queue" role="tab">BD Queue</button>
         </div>
         <div class="toolbar todo-filters" style="justify-content:flex-end">
           <button class="btn small task-scope" data-task-scope="today">Today</button>
@@ -415,7 +465,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
           <button class="btn small task-scope" data-task-scope="completed">Completed</button>
           <button class="btn small task-period on" data-task-period="week">Weekly</button>
           <button class="btn small task-period" data-task-period="month">Monthly</button>
-          <label class="field" style="min-width:210px"><span>BD Lead</span><select id="taskLeadFilter"></select></label>
+          <label class="field" style="min-width:210px"><span>Owner</span><select id="taskLeadFilter"></select></label>
         </div>
         <div class="grid g4" id="taskMetrics"></div>
         <div id="todoBody"></div>
@@ -434,7 +484,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
             <button class="btn icon" id="calNextMonth" aria-label="Next month">›</button>
             <button class="btn small" id="calTodayBtn">Today</button>
           </div>
-          <label class="field" style="min-width:210px;margin-left:auto"><span>BD Lead</span><select id="calLeadFilter"></select></label>
+          <label class="field" style="min-width:210px;margin-left:auto"><span>Owner</span><select id="calLeadFilter"></select></label>
         </div>
         <div class="grid g4" id="calMetrics"></div>
         <div class="card"><div class="ch"><h2>Due Date Calendar</h2><small id="taskCalendarLabel"></small></div><div class="cb"><div id="taskCalendar"></div></div></div>
@@ -458,6 +508,17 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
       </div>
     </section>
 
+    <section id="v-training" class="view">
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TRAINING</div><h1>Training &amp; Certifications</h1><p>ติดตามการฝึกอบรม ใบรับรอง และการพัฒนาทักษะของทีม BD</p></div><div class="actions"><button class="btn primary" id="certFormToggle">+ Certification</button><button class="btn" id="trainEventFormToggle">+ Training</button></div></div>
+      <div class="content">
+        <div class="grid g4" id="trainMetrics"></div>
+        <div class="panel-form card" id="certFormPanel"><div class="ch"><h2 id="certFormTitle">New Certification</h2><button class="btn icon" data-close-form="cert" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="certForm"></form></div></div>
+        <div class="panel-form card" id="trainEventFormPanel"><div class="ch"><h2 id="trainEventFormTitle">New Training Event</h2><button class="btn icon" data-close-form="trainEvent" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="trainEventForm"></form></div></div>
+        <div class="card"><div class="ch"><h2>Certifications</h2><small id="certCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Member</th><th>Certification</th><th>Issuer</th><th>Category</th><th>Issued</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead><tbody id="certRows"></tbody></table></div></div>
+        <div class="card"><div class="ch"><h2>Training Events</h2><small id="trainEventCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Member</th><th>Title</th><th>Type</th><th>Provider</th><th>Date</th><th>Hours</th><th>Notes</th><th>Actions</th></tr></thead><tbody id="trainEventRows"></tbody></table></div></div>
+      </div>
+    </section>
+
     <section id="v-team" class="view">
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีม เป้าหมายการขาย และสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
       <div class="content">
@@ -471,12 +532,16 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
     <section id="v-notify" class="view">
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>NOTIFICATIONS</div><h1>Notification Center</h1><p>การแจ้งเตือนทางอีเมลตามระดับ Member / Manager / Executive และ Activity Log</p></div><div class="actions"><button class="btn primary" id="ruleFormToggle">+ New Rule</button></div></div>
       <div class="content">
-        <div class="card"><div class="ch"><h2>Activity Log</h2><small>ใคร · ทำอะไร · ส่วนไหน · เมื่อไหร่ (50 รายการล่าสุด)</small></div><div class="cb"><div id="activityLog" style="display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto"></div></div></div>
+        <div class="card" style="border-color:rgba(96,136,255,.35)"><div class="ch" style="background:rgba(96,136,255,.06)"><div class="ch-t"><h2>🔔 My Inbox</h2><small id="myInboxLabel">การแจ้งเตือนส่วนตัว — เฉพาะ account ของคุณ</small></div><button class="btn small" id="markAllReadBtn">Mark all read</button></div><div class="cb"><div id="myInbox" style="display:flex;flex-direction:column;gap:6px;max-height:380px;overflow:auto"></div></div></div>
+        <div class="grid g2" style="margin-bottom:0">
+          <div class="card"><div class="ch"><h2>Project Events</h2><small>โครงการใหม่ · เปลี่ยนสถานะ · มอบหมายทีม (30 ล่าสุด)</small></div><div class="cb"><div id="projectEventLog" style="max-height:320px;overflow:auto"></div></div></div>
+          <div class="card"><div class="ch"><h2>Activity Log</h2><small>ใคร · ทำอะไร · ส่วนไหน · เมื่อไหร่ (50 รายการล่าสุด)</small></div><div class="cb"><div id="activityLog" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow:auto"></div></div></div>
+        </div>
         <div class="panel-form card" id="ruleFormPanel"><div class="ch"><h2 id="ruleFormTitle">New Notification Rule</h2><button class="btn icon" data-close-form="rule">x</button></div><div class="cb"><form class="form-grid" id="ruleForm"></form></div></div>
         <div class="card"><div class="ch"><h2>Rules</h2><small id="ruleCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Level</th><th>Rule</th><th>Period</th><th>Snapshot</th><th>Channel</th><th>Time</th><th>Recipients</th><th>Status</th><th>Actions</th></tr></thead><tbody id="ruleRows"></tbody></table></div></div>
         <div class="card"><div class="ch"><h2>Manual Trigger + Preview Snapshot</h2><small id="previewRuleLabel">Select Preview on a rule</small></div><div class="cb"><div class="email-preview" id="notificationPreview"><div class="email-box hint">Choose a rule to preview email content.</div><div class="snapshot-frame hint">Snapshot preview will appear here.</div></div></div></div>
         <div class="grid g2">
-          <div class="card"><div class="ch"><h2>Email Settings</h2><small>SMTP secret is stored only in environment variables</small></div><div class="cb"><div id="emailSettings"></div><div class="toolbar" style="margin-top:10px"><input id="testEmailTo" placeholder="test@email.com" style="flex:1"><button class="btn primary" id="sendTestEmailBtn">Send Test Email</button></div></div></div>
+          <div class="card"><div class="ch"><h2>Email Settings</h2><small>Admin editable · password encrypted before storage</small></div><div class="cb"><div id="emailSettings"></div><div class="toolbar" style="margin-top:10px"><input id="testEmailTo" placeholder="test@email.com" style="flex:1"><button class="btn primary" id="sendTestEmailBtn">Send Test Email</button></div></div></div>
           <div class="card"><div class="ch"><h2>Notification Preferences</h2><small>Per user opt-in/out</small></div><div class="cb"><div id="emailPreferences"></div></div></div>
         </div>
         <div class="card"><div class="ch"><h2>Email Templates</h2><small>CRUD + preview variables</small></div><div class="cb"><form class="form-grid" id="emailTemplateForm"></form><div class="table-wrap" style="margin-top:12px"><table class="tbl"><thead><tr><th>Key</th><th>Name</th><th>Subject</th><th>Variables</th><th>Actions</th></tr></thead><tbody id="emailTemplateRows"></tbody></table></div></div></div>
@@ -617,7 +682,7 @@ const DEFAULT_TASK_STATUSES = [
   {id:'TS-005',name:'Done',description:'เสร็จแล้ว'}
 ];
 // ===== BD KPI: one central activity record feeds every KPI =====
-const KPI_TYPES = ['Proposal','BOQ','Solution Design','Demo','Research','Partner Onboard','Monthly Report'];
+const KPI_TYPES = ['Proposal','BOQ','Solution Design','Demo','Research','Partner Onboard','Monthly Report','Quotation','Vendor Contact','Distributor Contact','BOQ Revision','Site Survey'];
 const KPI_DIMS = {A:'ตรงเวลา · On-time',B:'ครบถ้วน · Completeness',C:'คุณภาพ · Quality',D:'ปริมาณ · Discovery',E:'Conversion'};
 const DEFAULT_KPI_TARGETS = {ontimeDocs:90,ontimeReport:100,ontimeResearch:100,docComplete:95,demoFeedback:80,demoPass:75,docStandard:90,newSolution:3,partner:2,winRate:50};
 const DEFAULT_KPI_ACTIVITIES = [
@@ -649,12 +714,14 @@ const DEFAULT_NOTIFICATION_RULES = [
 ];
 const seed = {
   teams:[
-    {id:'tm1',name:'Mr. Wongwaris',role:'BD Lead',level:'Manager',email:'wongwaris@piramid.local',target:360000000,color:'#5b7cfa'},
-    {id:'tm2',name:'Mr. Teerawat',role:'BD Lead',level:'Member',email:'teerawat@piramid.local',target:22000000,color:'#13b8a6'},
-    {id:'tm3',name:'Mr. Ball',role:'BD Lead',level:'Member',email:'ball@piramid.local',target:18000000,color:'#b678ff'},
-    {id:'tm4',name:'Ms. Supaporn',role:'Sales',level:'Manager',email:'supaporn@piramid.local',target:300000000,color:'#f6b44b'},
-    {id:'tm5',name:'Ms. Tannasiyaporn',role:'Sales',level:'Member',email:'tannasiyaporn@piramid.local',target:60000000,color:'#ff5a67'},
-    {id:'tm6',name:'Ms. Prapaphan',role:'Sales',level:'Member',email:'prapaphan@piramid.local',target:30000000,color:'#5bc0ff'}
+    {id:'tm1',name:'Mr. Wongwaris',username:'wongwaris',password:'wongwaris32188',role:'BD Lead',level:'Manager',accessRole:'Admin',email:'wongwaris@piramid.local',target:360000000,color:'#5b7cfa'},
+    {id:'tm2',name:'Mr. Teerawat',username:'teerawat',password:'teerawat32188',role:'BD Lead',level:'Member',accessRole:'Member',email:'teerawat@piramid.local',target:22000000,color:'#13b8a6'},
+    {id:'tm3',name:'Mr. Ball',username:'ball',password:'ball32188',role:'BD Lead',level:'Member',accessRole:'Member',email:'ball@piramid.local',target:18000000,color:'#b678ff'},
+    {id:'tm4',name:'Ms. Supaporn',username:'supaporn',password:'supaporn32188',role:'Sales',level:'Manager',accessRole:'Guest',email:'supaporn@piramid.local',target:300000000,color:'#f6b44b'},
+    {id:'tm5',name:'Ms. Tannasiyaporn',username:'tannasiyaporn',password:'tannasiyaporn32188',role:'Sales',level:'Member',accessRole:'Guest',email:'tannasiyaporn@piramid.local',target:60000000,color:'#ff5a67'},
+    {id:'tm6',name:'Ms. Prapaphan',username:'prapaphan',password:'prapaphan32188',role:'Sales',level:'Member',accessRole:'Guest',email:'prapaphan@piramid.local',target:30000000,color:'#5bc0ff'},
+    {id:'tm7',name:'Mr. Mongkolphat',username:'mongkolphat',password:'Mongkolphat32188',role:'BD Lead',level:'Member',accessRole:'Member',email:'Mongkolpat@psolutions.co.th',target:18000000,color:'#8b5cf6'},
+    {id:'tm8',name:'Mr. Dechsakun',username:'dechsakun',password:'Dechsakun32188',role:'BD Lead',level:'Member',accessRole:'Member',email:'Dechsakun@psolutions.co.th',target:18000000,color:'#0ea5e9'}
   ],
   projects:[
     {id:'P-001',name:'The Parliament - 4D Cinema',seg:'Government',sys:'AV System, Digital Signage',brand:'Panasonic',status:'Quotation',pri:'High',size:'XXL',val:180000000,bd:'tm1',sales:'tm4'},
@@ -689,10 +756,10 @@ const seed = {
   taskStatuses: DEFAULT_TASK_STATUSES,
   kpiActivities: DEFAULT_KPI_ACTIVITIES,
   kpiTargets: DEFAULT_KPI_TARGETS,
-  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
 };
 const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
-const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execTimeliness'];
+const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd'];
 const DEFAULT_EXEC_WIDGET_SIZE = {
   execSummary:{cols:12,rows:5},
   mTotal:{cols:3,rows:4},
@@ -714,7 +781,8 @@ const DEFAULT_EXEC_WIDGET_SIZE = {
   execTasks:{cols:3,rows:9},
   execHighPriority:{cols:6,rows:10},
   execTaskAlert:{cols:6,rows:10},
-  execTimeliness:{cols:6,rows:10}
+  execTimeliness:{cols:6,rows:10},
+  execQuickAdd:{cols:5,rows:8}
 };
 const DEFAULT_ANA_ORDER = ['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaFunnel','anaSize','anaSystems','anaSales','anaTable'];
 const DEFAULT_ANA_WIDGET_SIZE = {
@@ -774,10 +842,14 @@ function applyTheme(){
   const btn=document.getElementById('themeToggle');
   if(btn) btn.textContent = currentTheme==='light' ? 'Dark Theme' : 'Light Theme';
 }
-function findUser(username,password){return state.teams.find(t=>String(t.username||'')===username && String(t.password||'')===password)}
+function findUser(username,password){
+  const userKey=String(username||'').trim().toLowerCase();
+  const passKey=String(password||'').trim();
+  return state.teams.find(t=>String(t.username||'').trim().toLowerCase()===userKey && String(t.password||'').trim()===passKey);
+}
 function setActiveUser(user){
   activeUser=user||null;
-  if(user){localStorage.setItem('piramid-active-user',user.id);localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer()}
+  if(user){localStorage.setItem('piramid-active-user',user.id);localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer();loadUserLayout(user.id);}
   else {localStorage.removeItem('piramid-active-user');localStorage.removeItem('piramid-session-at');clearTimeout(idleTimer)}
   updateAuthUI();
 }
@@ -787,7 +859,7 @@ function restoreSession(){
   if(id && (!at || Date.now()-at>SESSION_TIMEOUT_MS)){expireSession('Session expired after 30 minutes idle. Please login again.');return}
   const user=state.teams.find(t=>t.id===id);
   activeUser=user||null;
-  if(activeUser) startIdleTimer();
+  if(activeUser){ startIdleTimer(); loadUserLayout(activeUser.id); }
   updateAuthUI();
 }
 function touchSession(){if(activeUser){localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer()}}
@@ -804,8 +876,10 @@ function updateAuthUI(){
   loginScreen.hidden=logged;
   appShell.classList.toggle('locked',!logged);
   const name=document.getElementById('currentUserName'), role=document.getElementById('currentUserRole'), avatar=document.getElementById('currentAvatar');
-  if(name&&role&&avatar&&activeUser){name.textContent=activeUser.name;role.textContent=`${activeUser.role} · ${activeUser.level}`;avatar.textContent=initials(activeUser.name)}
+  if(name&&role&&avatar&&activeUser){name.textContent=activeUser.name;role.textContent=`${accessRole(activeUser)} · ${activeUser.role} · ${activeUser.level}`;avatar.textContent=initials(activeUser.name)}
   updateLoginState();
+  updateNotifBadge();
+  applyRbacUI();
 }
 function loginApp(e){
   e.preventDefault();
@@ -821,12 +895,50 @@ function logoutApp(){
   setActiveUser(null);
   const pass=document.getElementById('appLoginPass'); if(pass) pass.value='';
 }
-function isAdmin(){return activeUser?.username==='wongwaris'}
+function accessRole(user=activeUser){
+  if(!user) return 'Guest';
+  const username=String(user.username||'').trim().toLowerCase();
+  if(username==='wongwaris') return 'Admin';
+  if(user.role==='Sales') return 'Guest';
+  return user.accessRole&&user.accessRole!=='Guest'?user.accessRole:'Member';
+}
+function isAdmin(){return accessRole()==='Admin'}
+function isMember(){return accessRole()==='Member'}
+function isGuest(){return accessRole()==='Guest'}
+function canAccessView(view){
+  const role=accessRole();
+  const map={
+    Admin:['exec','analytics','projects','tasks','calendar','kpi','training','team','notify','settings'],
+    Member:['exec','analytics','projects','tasks','calendar','kpi','training','notify'],
+    Guest:['exec','analytics','projects','calendar','notify']
+  };
+  return (map[role]||map.Guest).includes(view);
+}
+function canEditModule(module){
+  if(isAdmin()) return true;
+  if(isMember()) return ['projects','tasks','kpi','training'].includes(module);
+  return false;
+}
+function applyRbacUI(){
+  document.querySelectorAll('.nav button[data-view]').forEach(b=>{
+    const allowed=canAccessView(b.dataset.view);
+    b.hidden=!allowed;
+    b.style.display=allowed?'':'none';
+    if(!allowed&&b.classList.contains('on')){
+      const first=[...document.querySelectorAll('.nav button[data-view]')].find(x=>!x.hidden);
+      if(first) first.click();
+    }
+  });
+  document.querySelectorAll('[data-admin-only]').forEach(el=>el.hidden=!isAdmin());
+  document.querySelectorAll('[data-edit-module]').forEach(el=>el.hidden=!canEditModule(el.dataset.editModule));
+  ['projectFormToggle','internalTaskFormToggle','kpiFormToggle','certFormToggle','trainEventFormToggle'].forEach(id=>{const el=document.getElementById(id); if(el) el.hidden=!canEditModule(id.includes('kpi')?'kpi':id.includes('project')?'projects':id.includes('internal')?'tasks':'training')});
+  ['teamFormToggle','ruleFormToggle','solutionFormToggle','brandFormToggle','sizeFormToggle','projectStatusFormToggle','taskStatusFormToggle','processEmailQueueBtn'].forEach(id=>{const el=document.getElementById(id); if(el) el.hidden=!isAdmin()});
+}
 function toggleForgotPasscode(){document.getElementById('forgotPasscodePanel').classList.toggle('on')}
 function submitResetRequest(){
   const username=document.getElementById('resetUsername').value.trim();
   const note=document.getElementById('resetNote').value.trim();
-  const user=state.teams.find(t=>t.username===username);
+  const user=state.teams.find(t=>String(t.username||'').trim().toLowerCase()===username.toLowerCase());
   const box=document.getElementById('resetRequestState');
   if(!user){box.textContent='Username not found.';box.style.color='var(--red)';return}
   state.passwordResetRequests ||= [];
@@ -847,7 +959,50 @@ function loadState(){
 }
 const REMOTE_SAVE_DEBOUNCE_MS=600;
 let remoteSaveTimer=null, remoteSavePending=false;
+// ─── Per-user dashboard layout persistence ───────────────────────────────────
+// Snapshot the current layout keys into state.userLayouts[activeUser.id]
+// Called by saveState() so every layout change is automatically captured.
+function syncUserLayout(){
+  if(!activeUser?.id) return;
+  state.userLayouts = state.userLayouts||{};
+  state.userLayouts[activeUser.id]={
+    execLayoutVersion:state.execLayoutVersion,
+    layout:structuredClone(state.layout),
+    layoutOrder:[...state.layoutOrder],
+    widgetSize:structuredClone(state.widgetSize),
+    widgetAlign:{...(state.widgetAlign||{})},
+    customCards:structuredClone(state.customCards||[]),
+    layoutCheckpoint:structuredClone(state.layoutCheckpoint??null),
+    anaLayoutVersion:state.anaLayoutVersion,
+    anaOrder:[...state.anaOrder],
+    anaWidgetSize:structuredClone(state.anaWidgetSize),
+    anaWidgetAlign:{...(state.anaWidgetAlign||{})},
+    anaCustomCards:structuredClone(state.anaCustomCards||[]),
+    anaCheckpoint:structuredClone(state.anaCheckpoint??null),
+  };
+}
+// Restore a previously-saved user layout into the live state layout keys.
+// If the user has never saved a personal layout this is a no-op,
+// so they simply inherit the current global/default layout.
+function loadUserLayout(userId){
+  const ul=(state.userLayouts||{})[userId]; if(!ul) return;
+  if(ul.execLayoutVersion) state.execLayoutVersion=ul.execLayoutVersion;
+  if(ul.layout) Object.assign(state.layout,ul.layout);
+  if(Array.isArray(ul.layoutOrder)&&ul.layoutOrder.length) state.layoutOrder=[...ul.layoutOrder];
+  if(ul.widgetSize) Object.assign(state.widgetSize,ul.widgetSize);
+  if(ul.widgetAlign) state.widgetAlign={...ul.widgetAlign};
+  if(ul.customCards) state.customCards=structuredClone(ul.customCards);
+  if('layoutCheckpoint' in ul) state.layoutCheckpoint=structuredClone(ul.layoutCheckpoint);
+  if(ul.anaLayoutVersion) state.anaLayoutVersion=ul.anaLayoutVersion;
+  if(Array.isArray(ul.anaOrder)&&ul.anaOrder.length) state.anaOrder=[...ul.anaOrder];
+  if(ul.anaWidgetSize) Object.assign(state.anaWidgetSize,ul.anaWidgetSize);
+  if(ul.anaWidgetAlign) state.anaWidgetAlign={...ul.anaWidgetAlign};
+  if(ul.anaCustomCards) state.anaCustomCards=structuredClone(ul.anaCustomCards);
+  if('anaCheckpoint' in ul) state.anaCheckpoint=structuredClone(ul.anaCheckpoint);
+}
+// ─────────────────────────────────────────────────────────────────────────────
 function saveState(){
+  syncUserLayout(); // keep per-user layout slot in sync before every write
   // Local persistence stays immediate: synchronous, reliable, and the offline fallback.
   try{ localStorage.setItem('piramid-bd-state',JSON.stringify(state)); }
   catch(e){ console.warn('Local save failed',e); }
@@ -904,19 +1059,34 @@ function toast(msg,type){
   const el=document.createElement('div'); el.className='toast '+(type||'info');
   const glyph={success:'✓',error:'!'}[type];
   if(glyph){const ico=document.createElement('span'); ico.className='toast-ico'; ico.setAttribute('aria-hidden','true'); ico.textContent=glyph; el.appendChild(ico);}
-  const body=document.createElement('span'); body.textContent=msg; el.appendChild(body);
+  const body=document.createElement('span'); body.textContent=msg; body.style.whiteSpace='pre-line'; el.appendChild(body);
   host.appendChild(el);
   requestAnimationFrame(()=>el.classList.add('show'));
   setTimeout(()=>{el.classList.remove('show'); setTimeout(()=>el.remove(),250);}, type==='error'?5000:2600);
 }
+function friendlyEmailError(message){
+  const raw=String(message||'');
+  if(/535|BadCredentials|Username and Password not accepted/i.test(raw)){
+    return 'Gmail ปฏิเสธการ Login SMTP\nต้องใช้ Gmail App Password ไม่ใช่รหัสเข้า Gmail ปกติ\nไปที่ Google Account > Security > 2-Step Verification > App passwords แล้วนำรหัส 16 ตัวมาใส่ใน Email Settings';
+  }
+  if(/Invalid login|EAUTH/i.test(raw)) return 'SMTP login ไม่สำเร็จ กรุณาตรวจสอบ SMTP User และ App Password';
+  if(/Invalid .*email|recipient/i.test(raw)) return 'อีเมลผู้รับไม่ถูกต้อง กรุณาตรวจสอบรูปแบบอีเมล';
+  return raw;
+}
 function normalizeState(data){
-  data.teams = (data.teams||[]).map((t,i)=>({
-    username:t.username || firstName(t.name||`user${i+1}`),
-    password:t.password || lastName(t.name||`user${i+1}`),
-    ...t,
-    role:t.role==='Group'?'Manager':t.role,
-    level:t.level==='Staff'?'Member':t.level
-  }));
+  data.teams = (data.teams||[]).map((t,i)=>{
+    const username=String(t.username || firstName(t.name||`user${i+1}`)).trim();
+    const role=t.role==='Group'?'Manager':t.role;
+    const accessRole=username.toLowerCase()==='wongwaris'?'Admin':role==='Sales'?'Guest':(t.accessRole&&t.accessRole!=='Guest'?t.accessRole:'Member');
+    return {
+      ...t,
+      username,
+      password:t.password || lastName(t.name||`user${i+1}`),
+      role,
+      level:t.level==='Staff'?'Member':t.level,
+      accessRole
+    };
+  });
   data.projects = (data.projects||[]).map(p=>({...p,systems:projectSystems(p),proposalOptions:normalizeProposalOptions(p),brands:projectBrands({...p,proposalOptions:normalizeProposalOptions(p)})}));
   data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level}));
   data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
@@ -940,6 +1110,24 @@ function normalizeState(data){
   data.todoView = data.todoView || 'table';
   data.kpiActivities = data.kpiActivities?.length ? data.kpiActivities : structuredClone(DEFAULT_KPI_ACTIVITIES);
   data.kpiTargets = {...DEFAULT_KPI_TARGETS, ...(data.kpiTargets||{})};
+  // #6 Internal tasks: tasks without a project are allowed
+  // #4 BD Work Queue: ordered list of taskIds for personal queue
+  data.taskQueue = (data.taskQueue||[]).filter(id=>data.tasks.some(t=>t.id===id));
+  // Table DnD manual order
+  data.taskManualOrder = Array.isArray(data.taskManualOrder)?data.taskManualOrder:[];
+  // Presales: backfill presales field on existing projects
+  data.projects = data.projects.map(p=>({presales:'', ...p}));
+  // #3 Change requests: per-project CRUD list
+  data.projects = data.projects.map(p=>({changeRequests:[], ...p}));
+  // #5 Training tracker
+  data.certifications = data.certifications||[];
+  data.trainingEvents = data.trainingEvents||[];
+  // #1 Event log for project notifications
+  data.projectEventLog = (data.projectEventLog||[]).slice(-100);
+  // Bell: per-user notification inbox
+  data.userNotifications = (data.userNotifications||[]).slice(-200);
+  // Per-user dashboard layouts (Executive + Analytics each stored under state.userLayouts[userId])
+  data.userLayouts = data.userLayouts||{};
   data.layout ||= structuredClone(seed.layout);
   Object.entries(seed.layout).forEach(([k,v])=>{if(data.layout[k]===undefined) data.layout[k]=v;});
   // migrate legacy pixel widget sizes (flex era) -> grid column spans handle width now
@@ -950,6 +1138,10 @@ function normalizeState(data){
     data.widgetAlign = {};
     data.execLayoutVersion = 3;
   }
+  // Additive: inject execQuickAdd into existing layouts without resetting them
+  if(!data.layoutOrder.includes('execQuickAdd')){ data.layoutOrder.push('execQuickAdd'); }
+  if(!data.widgetSize.execQuickAdd){ data.widgetSize.execQuickAdd={cols:5,rows:8}; }
+  if(data.layout.execQuickAdd===undefined){ data.layout.execQuickAdd=true; }
   if(data.anaLayoutVersion !== 2){
     data.anaOrder = [...DEFAULT_ANA_ORDER];
     data.anaWidgetSize = structuredClone(DEFAULT_ANA_WIDGET_SIZE);
@@ -1122,7 +1314,11 @@ function filteredProjects(){
 function filteredTasks(leadOverride){
   const lead = leadOverride!==undefined ? leadOverride : taskLeadFilter;
   const ids = new Set(filteredProjects().map(p=>p.id));
-  return state.tasks.filter(t=>ids.has(t.project) && (filters.team==='All'||t.owner===filters.team) && (lead==='All'||t.owner===lead));
+  // Internal tasks (no project) pass the project filter; otherwise task must belong to a filtered project
+  return state.tasks.filter(t=>{
+    const passProject = !t.project || ids.has(t.project);
+    return passProject && (filters.team==='All'||t.owner===filters.team) && (lead==='All'||t.owner===lead);
+  });
 }
 function pct(v,max){return max?Math.max(3,Math.round(v/max*100)):0}
 function statusClass(s){const m={Win:'win',Quotation:'quot',Budgetary:'budg','Waiting PO':'wapo',Pending:'pend',Lost:'lost',Schedule:'schedule',Doing:'doing',Review:'review',Done:'done',Overdue:'overdue'};return m[s]||'pend'}
@@ -1209,9 +1405,9 @@ function initFilters(){
   return true;
 }
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
-  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness']);
+  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
   build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
   (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
@@ -1220,7 +1416,7 @@ function renderCustomizers(){
 function applyLayout(){document.querySelectorAll('.widget').forEach(w=>{w.hidden = state.layout[w.dataset.widget]===false})}
 // Activity log + sidebar dot indicators (in-memory seen state; resets on refresh)
 let sessionViewSeen={};
-const VIEWS=['exec','analytics','projects','tasks','team','notify','settings'];
+const VIEWS=['exec','analytics','projects','tasks','calendar','kpi','training','team','notify','settings'];
 function initSessionViewSeen(){const now=Date.now(); VIEWS.forEach(v=>sessionViewSeen[v]=now);}
 function logActivity(action, view, target){
   state.activityLog=state.activityLog||[];
@@ -1233,7 +1429,7 @@ function updateNavDots(){
   const log=state.activityLog||[];
   document.querySelectorAll('.nav button[data-view]').forEach(b=>{
     const v=b.dataset.view; const seen=sessionViewSeen[v]||0;
-    let newest=0; for(const e of log){if(e.view===v){const t=+new Date(e.ts); if(t>newest)newest=t;}}
+    let newest=0; for(const e of log){if(e.view===v){const t=+new Date(e.ts||e.at); if(t>newest)newest=t;}}
     const dot=b.querySelector('.navdot'); if(dot) dot.classList.toggle('on',newest>seen);
   });
 }
@@ -1241,7 +1437,7 @@ function renderActivityLog(){
   const host=document.getElementById('activityLog'); if(!host) return;
   const log=(state.activityLog||[]).slice().reverse().slice(0,50);
   if(!log.length){host.innerHTML='<div class="hint">ยังไม่มี activity</div>';return;}
-  host.innerHTML=log.map(e=>{const d=new Date(e.ts); const tStr=d.toLocaleString('th-TH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); return '<div class="act-row"><div class="act-time">'+esc(tStr)+'</div><div class="act-body"><b>'+esc(e.user||'')+'</b><span class="act-view">'+esc(e.view||'')+'</span><div>'+esc(e.action||'')+(e.target?' · '+esc(e.target):'')+'</div></div></div>';}).join('');
+  host.innerHTML=log.map(e=>{const d=new Date(e.ts||e.at); const tStr=isNaN(d)?'-':d.toLocaleString('th-TH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); const detail=e.target||e.detail||'', view=e.view||e.module||''; return '<div class="act-row"><div class="act-time">'+esc(tStr)+'</div><div class="act-body"><b>'+esc(e.user||'')+'</b>'+(view?'<span class="act-view"> · '+esc(view)+'</span>':'')+'<div>'+esc(e.action||'')+(detail?' · '+esc(detail):'')+'</div></div></div>';}).join('');
 }
 // Vertical (column) bar chart. items=[{label,value,color}]
 function renderVBars(elId, items, opts={}){
@@ -1437,6 +1633,7 @@ const BI_SOURCES={
     {key:'pri',label:'Priority',get:p=>[p.pri]},
     {key:'size',label:'Size',get:p=>[p.size]},
     {key:'bd',label:'BD Lead',get:p=>[byId(p.bd).name]},
+    {key:'presales',label:'Presales',get:p=>[p.presales?byId(p.presales).name:'']},
     {key:'sales',label:'Sales',get:p=>[byId(p.sales).name]},
     {key:'brand',label:'Brand',get:p=>projectBrandNames(p)},
     {key:'scope',label:'Scope (Brand/PIRAMID)',get:p=>[...new Set(projectBrands(p).map(b=>scopeOfCategory(b.category)))]},
@@ -1715,6 +1912,7 @@ function renderDashboard(){
   const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,10);
   const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(byId(x.owner).name)+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
   renderTimelinessInto('timelinessBox', t);
+  renderQuickAddWidget();
   renderCustomCards();
   applyExecOrder(); ensureGuides('exec'); initExecDrag(); initExecResize(); initExecAlign(); applyExecSizes(); applyExecAlign(); applyExecEdit();
   document.getElementById('executiveInsights').innerHTML=buildInsights(p,t);
@@ -1872,7 +2070,7 @@ function bindProposalOptionsEditor(){
   const add=document.getElementById('addProposalOptionBtn'); if(add) add.onclick=()=>{syncProposalOptionFromInputs(); proposalEditorOptions.push({id:`OPT-${proposalEditorOptions.length+1}`,name:`Option ${proposalEditorOptions.length+1} Alternative`,type:'Alternative',status:'Proposed',value:0,revision:1,submittedAt:'',selected:false,reason:'',review:'',items:[]}); renderProposalOptionsEditor();};
 }
 const PROJECT_SORT_COLUMNS = [
-  ['id','ID'],['name','Project'],['seg','Segment'],['systems','System Groups'],['brands','Brand Scope'],['tasks','Sub Tasks'],['progress','Progress'],['status','Status'],['pri','Priority'],['size','Size'],['val','Value'],['bd','BD Lead'],['sales','Sales']
+  ['id','ID'],['name','Project'],['seg','Segment'],['systems','System Groups'],['brands','Brand Scope'],['tasks','Sub Tasks'],['progress','Progress'],['status','Status'],['pri','Priority'],['size','Size'],['val','Value'],['bd','BD Lead'],['presales','Presales'],['sales','Sales']
 ];
 function renderProjectHead(){
   const head=document.getElementById('projectTableHead'); if(!head) return;
@@ -1902,6 +2100,7 @@ function projectSortValue(p,key){
     size:sizeForValue(p.val),
     val:Number(p.val||0),
     bd:byId(p.bd).name,
+    presales:byId(p.presales).name,
     sales:byId(p.sales).name
   };
   return map[key] ?? '';
@@ -1924,8 +2123,9 @@ function renderProjects(){
     const subCount=relatedTasks.reduce((s,t)=>s+(t.subtasks?.length||0),0);
     const revisions=relatedTasks.reduce((s,t)=>s+Number(t.revision||1),0);
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
-    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="14"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}</div></td></tr>`;
-    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
+    const crHtml=changeRequestsHtml(x);
+    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
+    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
   document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
@@ -1934,9 +2134,13 @@ function renderProjects(){
   openSubs.forEach(id=>document.getElementById(id)?.classList.add('on'));
   bindTaskStatusSelects(document.getElementById('projectRows'));
   bindProjectTaskStatusSelects(document.getElementById('projectRows'));
+  document.querySelectorAll('[data-add-cr]').forEach(b=>b.onclick=()=>showChangeRequestForm(b.dataset.addCr));
+  document.querySelectorAll('[data-del-cr]').forEach(b=>b.onclick=()=>deleteChangeRequest(b.dataset.delCr));
+  document.querySelectorAll('[data-resolve-cr]').forEach(b=>b.onclick=()=>resolveChangeRequest(b.dataset.resolveCr));
 }
 function openProjectForm(id){
-  editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,sales:state.teams.find(t=>t.role==='Sales')?.id};
+  if(!canEditModule('projects')){toast('สิทธิ์ Guest/Visitor ดูข้อมูลได้อย่างเดียว','error');return}
+  editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,presales:state.teams.find(t=>t.role==='Presales')?.id||'',sales:state.teams.find(t=>t.role==='Sales')?.id};
   proposalEditorOptions=structuredClone(normalizeProposalOptions(p));
   const relatedTasks=state.tasks.filter(t=>t.project===p.id);
   const selectedTemplateIds=p.taskTemplateIds || relatedTasks.map(t=>t.templateId).filter(Boolean);
@@ -1958,15 +2162,18 @@ function openProjectForm(id){
     <label class="field"><span>Progress %</span><input id="projectProgress" name="progress" type="number" min="0" max="100" value="${Number(p.progress ?? averageProjectProgress(p.id))||0}" ${(p.taskStatus||inferProjectTaskStatus(p.id))==='Done'?'readonly':''}></label>
     <label class="field"><span>Value</span><input name="val" type="number" min="0" value="${p.val}"></label>
     <label class="field"><span>BD Lead</span><select name="bd">${teamOptions(p.bd,'BD Lead')}</select></label>
+    <label class="field"><span>Presales</span><select name="presales"><option value="">— ไม่มี —</option>${teamOptions(p.presales,'Presales')}</select></label>
     <label class="field"><span>Sales</span><select name="sales">${teamOptions(p.sales,'Sales')}</select></label>
+    <div class="span3 workflow-hint"><span class="wf-step">Sales</span><span class="wf-arrow">→</span><span class="wf-step">BD</span><span class="wf-arrow">→</span><span class="wf-step">Presales</span><span class="wf-arrow">→</span><span class="wf-step">Manager</span><span class="wf-arrow">→</span><span class="wf-step">Sales</span><span style="margin-left:8px;color:var(--soft)">หรือ Sales → Presales → Manager → Sales (ถ้ามีข้อมูลพร้อมแล้ว)</span></div>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Project</button><button class="btn" type="button" data-close-form="project">Cancel</button><span class="hint">เมื่อ Assign team ค่า dashboard, KPI, task และ notification จะเชื่อมตามทันที</span></div>`;
-  document.getElementById('projectFormPanel').classList.add('on');
+  showFormPanel('projectFormPanel');
   renderProposalOptionsEditor();
   const statusSelect=document.getElementById('projectTaskStatus'), progressInput=document.getElementById('projectProgress');
   if(statusSelect&&progressInput){statusSelect.onchange=()=>{if(statusSelect.value==='Done'){progressInput.value=100;progressInput.readOnly=true}else{progressInput.readOnly=false}}}
   bindCloseButtons();
 }
 function saveProject(e){
+  if(!canEditModule('projects')){e.preventDefault();toast('คุณไม่มีสิทธิ์แก้ไข Project','error');return}
   e.preventDefault(); const form=e.target; const f=Object.fromEntries(new FormData(form));
   f.val=Number(f.val||0);
   f.progress=Number(f.progress||0);
@@ -1994,18 +2201,25 @@ function saveProject(e){
     f.wonAt=f.status==='Win'?(old.wonAt||nowIso):(old.wonAt||null);
     f.lostAt=f.status==='Lost'?(old.lostAt||nowIso):(old.lostAt||null);
     f.statusLog=(()=>{const log=(old.statusLog||[]).slice(); if(statusChanged) log.push({status:f.status,at:nowIso}); return log.slice(-30);})();
+    f.changeRequests=old.changeRequests||[];
+    // #1 Event logging
+    if(statusChanged) logProjectEvent('status_change',f,old);
+    if(old.bd!==f.bd) logProjectEvent('bd_assign',f,old);
+    if(old.presales!==f.presales) logProjectEvent('presales_assign',f,old);
+    if(old.sales!==f.sales) logProjectEvent('sales_assign',f,old);
     state.projects=state.projects.map(p=>p.id===editing.project?f:p);
   } else {
     f.createdAt=nowIso; f.statusChangedAt=nowIso;
     f.wonAt=f.status==='Win'?nowIso:null; f.lostAt=f.status==='Lost'?nowIso:null;
     f.statusLog=[{status:f.status,at:nowIso}];
-    state.projects.push(f);
+    f.changeRequests=[];
+    logProjectEvent('new_project',f,null); // #1
   }
   syncProjectTasks(f);
   const wasEdit=!!editing.project;
   saveState(); editing.project=null; document.getElementById('projectFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขโครงการ':'เพิ่มโครงการ','projects',f.name||f.id); renderAll(true);
 }
-function deleteProject(id){if(!confirm('Delete project '+id+'?'))return; const nm=(state.projects.find(p=>p.id===id)||{}).name||id; state.projects=state.projects.filter(p=>p.id!==id); state.tasks=state.tasks.filter(t=>t.project!==id); saveState(); logActivity('ลบโครงการ','projects',nm); renderAll(true)}
+function deleteProject(id){if(!canEditModule('projects')){toast('คุณไม่มีสิทธิ์ลบ Project','error');return} if(!confirm('Delete project '+id+'?'))return; const nm=(state.projects.find(p=>p.id===id)||{}).name||id; state.projects=state.projects.filter(p=>p.id!==id); state.tasks=state.tasks.filter(t=>t.project!==id); saveState(); logActivity('ลบโครงการ','projects',nm); renderAll(true)}
 function syncProjectTasks(project){
   const templateIds=project.taskTemplateIds||[];
   state.tasks=state.tasks.filter(t=>t.project!==project.id || !t.templateId || templateIds.includes(t.templateId));
@@ -2021,7 +2235,7 @@ function syncProjectTasks(project){
       project:project.id,
       templateId:tid,
       title:template.title,
-      owner:existing?.owner||project.bd,
+      owner:existing?.owner||(PHASE_BY_STATUS[project.status]==='Presales'&&project.presales?project.presales:project.bd),
       status:newStatus,
       due:existing?.due||project.due||'',
       level:existing?.level||'Member',
@@ -2105,7 +2319,7 @@ function trendText(current,last,lowerIsBetter=false){
 }
 function renderTaskLeadFilter(){
   const el=document.getElementById('taskLeadFilter'); if(!el) return;
-  const options='<option value="All">All BD Lead</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  const options='<option value="All">All Owner</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
   if(el.innerHTML!==options) el.innerHTML=options;
   el.value=taskLeadFilter;
   el.onchange=()=>{taskLeadFilter=el.value;renderTodo()};
@@ -2129,7 +2343,7 @@ const PHASE_BY_STATUS={Pending:'BD',Quotation:'Presales',Budgetary:'Presales','W
 const PHASE_LABEL={BD:'BD',Presales:'Presales',Project:'Project',Closed:'Closed'};
 const PHASE_ORDER=['BD','Presales','Project','Closed'];
 function projectOf(t){return state.projects.find(x=>x.id===t.project)||null}
-function taskPhase(t){const p=projectOf(t);return PHASE_BY_STATUS[p?.status]||'Presales'}
+function taskPhase(t){if(!t.project) return 'BD'; const p=projectOf(t);return PHASE_BY_STATUS[p?.status]||'Presales'}
 function phaseTag(ph){return `<span class="tag phase-${String(ph).toLowerCase()}">${esc(PHASE_LABEL[ph]||ph)}</span>`}
 function taskPriority(t){const p=projectOf(t);return p?.pri||'Low'}
 function taskPriorityScore(t){
@@ -2197,6 +2411,8 @@ function applyTaskStatus(t, newStatus, nowIso){ // pure mutation; returns true i
 function setTaskStatus(taskId, newStatus){
   const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
   if(!applyTaskStatus(t, newStatus, new Date().toISOString())) return;
+  // Notify task owner if someone else changed it
+  if(t.owner && activeUser && t.owner!==activeUser.id) logUserNotification(t.owner,'task_update',`งาน "${t.title}" ถูกเปลี่ยนสถานะเป็น ${newStatus} โดย ${activeUser.name}`,{taskId});
   saveState();
   logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
   if(newStatus==='Done'){ const d=taskDelta(t); const tail=d==null?'':(d>0?` · ช้า ${d} วัน`:d<0?` · เร็ว ${-d} วัน`:' · ตรงเวลา'); toast(`${t.title} เสร็จแล้ว${tail}`, d>0?'info':'success'); }
@@ -2224,6 +2440,8 @@ function setProjectTaskStatus(projectId, newStatus){
   const nowIso=new Date().toISOString();
   state.tasks.filter(t=>t.project===projectId).forEach(t=>applyTaskStatus(t, newStatus, nowIso));
   p.progress = newStatus==='Done' ? 100 : averageProjectProgress(p.id);
+  // Notify BD lead if someone else changed Main Task status
+  if(p.bd && activeUser && p.bd!==activeUser.id) logUserNotification(p.bd,'status',`Main Task "${p.name}" ถูกเปลี่ยนสถานะเป็น ${newStatus} โดย ${activeUser.name}`,{projectId});
   saveState();
   logActivity('อัปเดตสถานะ Main Task','projects',`${p.name} → ${newStatus}`);
   if(newStatus==='Done') toast(`ปิดงานทั้งหมดของ ${p.name} แล้ว`,'success');
@@ -2252,6 +2470,441 @@ function renderTimelinessInto(host, tasks){
 function emptyState(title,hint){
   return `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><b>${esc(title)}</b>${hint?`<span>${esc(hint)}</span>`:''}</div>`;
 }
+
+// ===== #2 Quick-Add Project Widget (Executive Dashboard) =====
+function renderQuickAddWidget(){
+  const host=document.getElementById('quickAddBox'); if(!host) return;
+  host.innerHTML=`<form id="quickAddForm" class="quick-add-inner">
+    <div class="qa-grid">
+      <div class="qa-field qa-span2"><span>Project name *</span><input name="name" required placeholder="ชื่อโครงการ"></div>
+      <div class="qa-field"><span>BD Lead</span><select name="bd">${state.teams.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}</select></div>
+      <div class="qa-field"><span>Presales</span><select name="presales"><option value="">— ไม่มี —</option>${state.teams.filter(t=>t.role==='Presales').map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}</select></div>
+      <div class="qa-field"><span>Status</span><select name="status">${state.projectStatuses.map(s=>`<option value="${esc(s.name)}" ${s.name==='Quotation'?'selected':''}>${esc(s.name)}</option>`).join('')}</select></div>
+      <div class="qa-field"><span>Value (฿)</span><input name="val" type="number" min="0" placeholder="0"></div>
+      <div class="qa-field"><span>Priority</span><select name="pri"><option>High</option><option selected>Medium</option><option>Low</option></select></div>
+    </div>
+    <button class="btn primary" type="submit" style="width:100%;margin-top:4px">+ Add Project</button>
+  </form>`;
+  document.getElementById('quickAddForm').onsubmit=saveQuickProject;
+}
+function saveQuickProject(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  if(!f.name?.trim()){toast('กรุณากรอกชื่อโครงการ','error');return;}
+  const nowIso=new Date().toISOString();
+  const proj={
+    id:nextId('P',state.projects),name:f.name.trim(),seg:'Enterprise',
+    status:f.status||'Quotation',pri:f.pri||'Medium',
+    val:Number(f.val||0),bd:f.bd||state.teams[0]?.id,
+    presales:f.presales||state.teams.find(t=>t.role==='Presales')?.id||'',
+    sales:f.sales||state.teams.find(t=>t.role==='Sales')?.id||'',
+    systems:[],brands:[],proposalOptions:[],
+    sys:'',brand:'',
+    size:sizeForValue(Number(f.val||0)),
+    createdAt:nowIso,statusChangedAt:nowIso,
+    wonAt:f.status==='Win'?nowIso:null,lostAt:f.status==='Lost'?nowIso:null,
+    statusLog:[{status:f.status||'Quotation',at:nowIso}],
+    changeRequests:[],progress:0
+  };
+  state.projects.push(proj);
+  logProjectEvent('new_project',proj,null);
+  saveState();
+  logActivity('เพิ่มโครงการ (Quick Add)','projects',proj.name);
+  toast(`เพิ่ม "${proj.name}" แล้ว 🎉`,'success');
+  e.target.reset();
+  renderAll(true);
+}
+
+// ===== #6 Internal Tasks =====
+function openInternalTaskForm(id){
+  if(!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข Task','error');return}
+  const t=id?state.tasks.find(x=>x.id===id):null;
+  document.getElementById('internalTaskForm').innerHTML=`
+    <label class="field span3"><span>Task title *</span><input name="title" required value="${esc(t?.title||'')}" placeholder="ชื่องาน"></label>
+    <label class="field"><span>Owner</span><select name="owner">${state.teams.map(m=>`<option value="${esc(m.id)}" ${(t?.owner||state.teams[0]?.id)===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></label>
+    <label class="field"><span>Status</span><select name="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${(t?.status||'Schedule')===s.name?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
+    <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(t?.due||'')}"></label>
+    <label class="field"><span>Progress %</span><input type="number" name="progress" min="0" max="100" value="${t?.progress||0}"></label>
+    <label class="field span2"><span>Sub tasks (1 per line)</span><textarea name="subtasksText" placeholder="Sub task 1&#10;Sub task 2">${esc((t?.subtasks||[]).join('\n'))}</textarea></label>
+    <input type="hidden" name="_id" value="${esc(id||'')}">
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Task</button><button class="btn" type="button" data-close-form="internalTask">Cancel</button></div>`;
+  showFormPanel('internalTaskFormPanel');
+  bindCloseButtons();
+}
+function saveInternalTask(e){
+  e.preventDefault();
+  if(!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข Task','error');return}
+  const f=Object.fromEntries(new FormData(e.target));
+  if(!f.title?.trim()){toast('กรุณากรอกชื่องาน','error');return;}
+  const nowIso=new Date().toISOString();
+  f.subtasks=String(f.subtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  delete f.subtasksText;
+  f.project=''; // explicitly no project
+  f.progress=Number(f.progress||0);
+  const wasId=f._id; delete f._id;
+  if(wasId){
+    const existing=state.tasks.find(t=>t.id===wasId)||{};
+    applyTaskStatus({...existing,...f}, f.status, nowIso);
+    state.tasks=state.tasks.map(t=>t.id===wasId?{...existing,...f,id:wasId,createdAt:existing.createdAt||nowIso,level:existing.level||'Member',revision:existing.revision||1}:t);
+  } else {
+    state.tasks.push({id:nextId('T',state.tasks),createdAt:nowIso,statusChangedAt:nowIso,completedAt:f.status==='Done'?nowIso:null,statusLog:[{status:f.status,at:nowIso}],level:'Member',revision:1,...f});
+  }
+  saveState();
+  logActivity(wasId?'แก้ไขงาน Internal':'เพิ่มงาน Internal','tasks',f.title);
+  document.getElementById('internalTaskFormPanel').classList.remove('on');
+  refreshAfterTaskChange();
+}
+
+// ===== #3 Change Requests =====
+const CR_TYPES=['Add-on','Revise','Remove','Clarification'];
+const CR_STATUSES=['Open','In Progress','Resolved','Cancelled'];
+function crStatusClass(s){return {Open:'overdue','In Progress':'doing',Resolved:'done',Cancelled:'lost'}[s]||'pend';}
+function crTypeClass(s){return {Revise:'quot','Add-on':'medium',Remove:'lost',Clarification:'phase-bd'}[s]||'pend';}
+function changeRequestsHtml(project){
+  const crs=project.changeRequests||[];
+  if(!crs.length) return '<div class="hint" style="padding:4px 0">ยังไม่มี Change Request</div>';
+  return '<div>'+crs.map(cr=>`<div class="cr-row"><span class="tag ${crStatusClass(cr.status)}">${esc(cr.status)}</span><span class="tag ${crTypeClass(cr.type)}">${esc(cr.type)}</span><span style="flex:1;min-width:0">${esc(cr.description)}</span><span class="mini" style="white-space:nowrap">โดย ${esc(cr.requestedBy)} · ${esc(cr.requestedAt)}</span>${cr.status==='Open'||cr.status==='In Progress'?`<button class="btn small" data-resolve-cr="${esc(project.id)}|${esc(cr.id)}">✓</button>`:''}  <button class="btn small danger" data-del-cr="${esc(project.id)}|${esc(cr.id)}" aria-label="Delete change request">✕</button></div>`).join('')+'</div>';
+}
+function showChangeRequestForm(projectId){
+  const p=state.projects.find(x=>x.id===projectId); if(!p) return;
+  const listEl=document.getElementById('crlist-'+projectId); if(!listEl) return;
+  // If form already shown, toggle off
+  if(listEl.querySelector('.cr-inline-form')){listEl.querySelector('.cr-inline-form').remove();return;}
+  const formHtml=`<div class="cr-inline-form" id="crform-${esc(projectId)}">
+    <label class="field"><span>Type</span><select name="crtype">${CR_TYPES.map(t=>`<option>${esc(t)}</option>`).join('')}</select></label>
+    <label class="field"><span>Description</span><input name="crdesc" required placeholder="รายละเอียด"></label>
+    <label class="field"><span>Requested by</span><input name="crby" placeholder="ลูกค้า / Sales" value="${esc(byId(p.sales).name||'Customer')}"></label>
+    <div class="span3 toolbar"><button type="button" class="btn primary" id="savecr-${esc(projectId)}">+ Add</button><button type="button" class="btn" onclick="this.closest('.cr-inline-form').remove()">Cancel</button></div>
+  </div>`;
+  listEl.insertAdjacentHTML('beforeend',formHtml);
+  document.getElementById('savecr-'+projectId).onclick=()=>{
+    const form=listEl.querySelector('.cr-inline-form');
+    const desc=form.querySelector('[name="crdesc"]').value.trim();
+    const type=form.querySelector('[name="crtype"]').value;
+    const by=form.querySelector('[name="crby"]').value.trim()||'Customer';
+    if(!desc){toast('กรุณากรอกรายละเอียด','error');return;}
+    if(!p.changeRequests) p.changeRequests=[];
+    p.changeRequests.push({id:nextId('CR',p.changeRequests),description:desc,type,requestedBy:by,requestedAt:dateKey(today),status:'Open',resolvedAt:''});
+    saveState();
+    logActivity('เพิ่ม Change Request','projects',desc);
+    toast('เพิ่ม Change Request แล้ว','success');
+    renderProjects();
+  };
+}
+function deleteChangeRequest(key){
+  const [pid,cid]=key.split('|'); if(!confirm('Delete change request?')) return;
+  const p=state.projects.find(x=>x.id===pid); if(!p) return;
+  p.changeRequests=(p.changeRequests||[]).filter(cr=>cr.id!==cid);
+  saveState(); renderProjects();
+}
+function resolveChangeRequest(key){
+  const [pid,cid]=key.split('|');
+  const p=state.projects.find(x=>x.id===pid); if(!p) return;
+  const cr=(p.changeRequests||[]).find(c=>c.id===cid); if(!cr) return;
+  cr.status='Resolved'; cr.resolvedAt=dateKey(today);
+  saveState(); toast('Resolved ✓','success'); renderProjects();
+}
+
+// ===== #4 BD Work Queue =====
+function renderTodoQueue(){
+  const body=document.getElementById('todoBody'); if(!body) return;
+  const open=filteredTasks().filter(t=>t.status!=='Done');
+  // Queued tasks in order; unqueued high-priority tasks appended
+  const queuedIds=state.taskQueue.filter(id=>open.some(t=>t.id===id));
+  const queued=queuedIds.map(id=>open.find(t=>t.id===id));
+  const unqueued=open.filter(t=>!state.taskQueue.includes(t.id)).sort((a,b)=>taskPriorityScore(b)-taskPriorityScore(a));
+  const working=queued[0];
+  const itemHtml=(t,idx,inQueue)=>{
+    const rank=inQueue?idx+1:'—';
+    const isWorking=inQueue&&idx===0;
+    const proj=projectOf(t);
+    return `<div class="q-item${isWorking?' q-working':''}" ${inQueue?`draggable="true" data-task-id="${esc(t.id)}"`:''}>
+      <span class="q-rank">${inQueue?`<span class="todo-grip" aria-hidden="true" title="ลากเพื่อจัดลำดับ">⠿</span>`:isWorking?'▶':rank}</span>
+      <div class="q-body">
+        <strong>${esc(t.title)}</strong>
+        <span class="mini">${!t.project?'<span class="tag internal">Internal</span>':esc(proj?.name||t.project)} · ${esc(byId(t.owner).name)} · ${esc(t.due||'No due')}</span>
+        <span style="margin-top:3px;display:block">${statusTag(isOverdue(t)?'Overdue':t.status)} ${priTag(taskPriority(t))} ${timelinessBadge(t)}</span>
+      </div>
+      <div class="q-controls">
+        ${inQueue&&idx>0?`<button class="btn small icon" data-qup="${esc(t.id)}" title="ขึ้น" aria-label="ขึ้น">↑</button>`:''}
+        ${inQueue&&idx<queuedIds.length-1?`<button class="btn small icon" data-qdown="${esc(t.id)}" title="ลง" aria-label="ลง">↓</button>`:''}
+        ${inQueue?`<button class="btn small danger" data-qremove="${esc(t.id)}" title="Remove from queue" aria-label="Remove from queue">✕</button>`:`<button class="btn small" data-qadd="${esc(t.id)}" title="Add to queue" aria-label="Add to queue">+ Queue</button>`}
+      </div>
+    </div>`;
+  };
+  body.innerHTML=`
+    <div class="card" style="margin-bottom:12px"><div class="ch"><h2>BD Work Queue</h2><small>จัดลำดับงานที่ต้องทำด้วยตัวเอง · ▶ = กำลังทำอยู่</small></div><div class="cb">
+      ${working?`<div style="margin-bottom:10px;padding:10px;background:rgba(45,211,111,.06);border:1px solid rgba(45,211,111,.3);border-radius:8px;font-size:12.5px;font-weight:600;color:var(--green)">▶ กำลังทำ: ${esc(working.title)}</div>`:''}
+      <div class="q-list">${queued.length?queued.map((t,i)=>itemHtml(t,i,true)).join(''):emptyState('ยังไม่มีงานในคิว','กดปุ่ม "+ Queue" จากรายการด้านล่างเพื่อเพิ่มงาน')}</div>
+    </div></div>
+    ${unqueued.length?`<div class="card"><div class="ch"><h2>งานเปิดอยู่ (ยังไม่ได้เข้าคิว)</h2><small>เรียงตาม Priority สูง→ต่ำ · คลิก "+ Queue" เพื่อเพิ่มในคิว</small></div><div class="cb"><div class="q-list">${unqueued.map((t,i)=>itemHtml(t,i,false)).join('')}</div></div></div>`:''}`;
+  body.querySelectorAll('[data-qadd]').forEach(b=>b.onclick=()=>{state.taskQueue.push(b.dataset.qadd);saveState();renderTodoQueue();});
+  body.querySelectorAll('[data-qremove]').forEach(b=>b.onclick=()=>{state.taskQueue=state.taskQueue.filter(id=>id!==b.dataset.qremove);saveState();renderTodoQueue();});
+  body.querySelectorAll('[data-qup]').forEach(b=>b.onclick=()=>{moveInQueue(b.dataset.qup,-1);});
+  body.querySelectorAll('[data-qdown]').forEach(b=>b.onclick=()=>{moveInQueue(b.dataset.qdown,1);});
+  initQueueDnd(body);
+}
+function moveInQueue(taskId,dir){
+  const idx=state.taskQueue.indexOf(taskId); if(idx===-1) return;
+  const n=idx+dir; if(n<0||n>=state.taskQueue.length) return;
+  [state.taskQueue[idx],state.taskQueue[n]]=[state.taskQueue[n],state.taskQueue[idx]];
+  saveState(); renderTodoQueue();
+}
+
+// ===== DnD: Kanban, Table, Queue =====
+function initKanbanDnd(body){
+  let dragId=null;
+  body.querySelectorAll('.task[draggable]').forEach(card=>{
+    card.addEventListener('dragstart',e=>{
+      dragId=card.dataset.taskId;
+      setTimeout(()=>card.classList.add('is-dragging'),0);
+      e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain',dragId);
+    });
+    card.addEventListener('dragend',()=>card.classList.remove('is-dragging'));
+  });
+  body.querySelectorAll('.lane[data-lane-status]').forEach(lane=>{
+    lane.addEventListener('dragover',e=>{e.preventDefault();lane.classList.add('drop-target');});
+    lane.addEventListener('dragleave',e=>{if(!lane.contains(e.relatedTarget)) lane.classList.remove('drop-target');});
+    lane.addEventListener('drop',e=>{
+      e.preventDefault(); lane.classList.remove('drop-target');
+      const id=e.dataTransfer.getData('text/plain')||dragId;
+      const status=lane.dataset.laneStatus;
+      if(id&&status&&status!=='Overdue') setTaskStatus(id,status);
+    });
+  });
+}
+function initTableDnd(tbody){
+  let dragId=null,dragEl=null;
+  const rows=()=>tbody.querySelectorAll('tr.todo-dnd-row[data-task-id]');
+  const clearInd=()=>rows().forEach(r=>r.classList.remove('drop-above','drop-below'));
+  rows().forEach(row=>{
+    row.addEventListener('dragstart',e=>{
+      dragId=row.dataset.taskId; dragEl=row;
+      setTimeout(()=>row.classList.add('is-dragging'),0);
+      e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain',dragId);
+    });
+    row.addEventListener('dragend',()=>{row.classList.remove('is-dragging');clearInd();dragId=null;});
+    row.addEventListener('dragover',e=>{
+      if(!dragId||row===dragEl) return; e.preventDefault();
+      clearInd();
+      const rect=row.getBoundingClientRect();
+      row.classList.add(e.clientY<rect.top+rect.height/2?'drop-above':'drop-below');
+    });
+    row.addEventListener('drop',e=>{
+      e.preventDefault(); if(!dragId) return; clearInd();
+      const rect=row.getBoundingClientRect(); const before=e.clientY<rect.top+rect.height/2;
+      const ids=[...rows()].map(r=>r.dataset.taskId).filter(id=>id!==dragId);
+      const ti=ids.indexOf(row.dataset.taskId);
+      ids.splice(before?ti:ti+1,0,dragId);
+      state.tasks.forEach(t=>{if(!ids.includes(t.id)) ids.push(t.id);});
+      state.taskManualOrder=ids;
+      todoSort={key:'manual',dir:'asc'};
+      saveState(); renderTodoTable();
+    });
+  });
+}
+function initQueueDnd(body){
+  let dragId=null;
+  const items=()=>[...body.querySelectorAll('.q-list:first-of-type .q-item[data-task-id]')];
+  const clearInd=()=>body.querySelectorAll('.q-item').forEach(i=>i.classList.remove('drop-above','drop-below'));
+  items().forEach(item=>{
+    item.addEventListener('dragstart',e=>{
+      dragId=item.dataset.taskId;
+      setTimeout(()=>item.classList.add('is-dragging'),0);
+      e.dataTransfer.effectAllowed='move';
+      e.dataTransfer.setData('text/plain',dragId);
+    });
+    item.addEventListener('dragend',()=>{item.classList.remove('is-dragging');clearInd();dragId=null;});
+    item.addEventListener('dragover',e=>{
+      if(!dragId||item.dataset.taskId===dragId) return; e.preventDefault();
+      clearInd();
+      const rect=item.getBoundingClientRect();
+      item.classList.add(e.clientY<rect.top+rect.height/2?'drop-above':'drop-below');
+    });
+    item.addEventListener('drop',e=>{
+      e.preventDefault(); if(!dragId) return; clearInd();
+      const targetId=item.dataset.taskId; if(targetId===dragId) return;
+      const rect=item.getBoundingClientRect(); const before=e.clientY<rect.top+rect.height/2;
+      const newQ=state.taskQueue.filter(id=>id!==dragId);
+      const ti=newQ.indexOf(targetId);
+      newQ.splice(before?ti:ti+1,0,dragId);
+      state.taskQueue=newQ;
+      saveState(); renderTodoQueue();
+    });
+  });
+}
+
+// ===== Scroll-to-form helper =====
+function showFormPanel(id){
+  const el=document.getElementById(id); if(!el) return;
+  el.classList.add('on');
+  requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}));
+}
+
+// ===== #5 Training & Certification Tracker =====
+const CERT_CATS=['Vendor','Security','Network','Cloud','Project Management','Other'];
+const TRAIN_TYPES=['In-house','External','Online','Conference','Certification Exam'];
+function certExpiryBadge(expiresAt){
+  if(!expiresAt) return '<span class="cert-exp na">No Expiry</span>';
+  const days=daysBetween(expiresAt,dateKey(today));
+  if(days<0) return `<span class="cert-exp exp">หมดอายุ ${-days}d ที่แล้ว</span>`;
+  if(days<=90) return `<span class="cert-exp warn">หมดอายุใน ${days}d</span>`;
+  return `<span class="cert-exp ok">Valid · ${expiresAt}</span>`;
+}
+function renderTrainMetrics(){
+  const el=document.getElementById('trainMetrics'); if(!el) return;
+  const now=dateKey(today);
+  const expSoon=state.certifications.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)>=0&&daysBetween(c.expiresAt,now)<=90).length;
+  const expired=state.certifications.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)<0).length;
+  const ytdHours=state.trainingEvents.filter(e=>e.date&&e.date.startsWith(String(today.getFullYear()))).reduce((s,e)=>s+Number(e.hours||0),0);
+  el.innerHTML=[
+    metric('Total Certifications',state.certifications.length,'ใบรับรองทั้งหมด'),
+    metric('Expiring Soon',expSoon,'ภายใน 90 วัน',expSoon?'var(--amber)':''),
+    metric('Expired',expired,'หมดอายุแล้ว',expired?'var(--red)':''),
+    metric('Training Hours (YTD)',ytdHours,'ชั่วโมงอบรมปีนี้')
+  ].join('');
+}
+function openCertForm(id){
+  const c=id?state.certifications.find(x=>x.id===id):null;
+  document.getElementById('certFormTitle').textContent=id?'Edit Certification':'New Certification';
+  document.getElementById('certForm').innerHTML=`
+    <label class="field"><span>Member</span><select name="member">${state.teams.map(t=>`<option value="${esc(t.id)}" ${(c?.member||state.teams[0]?.id)===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>
+    <label class="field span2"><span>Certification name</span><input name="certName" required value="${esc(c?.certName||'')}"></label>
+    <label class="field"><span>Issuer</span><input name="issuer" value="${esc(c?.issuer||'')}"></label>
+    <label class="field"><span>Category</span><select name="category">${CERT_CATS.map(v=>`<option ${(c?.category||'Vendor')===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Issued date</span><input type="date" name="issuedAt" value="${esc(c?.issuedAt||'')}"></label>
+    <label class="field"><span>Expires date</span><input type="date" name="expiresAt" value="${esc(c?.expiresAt||'')}"></label>
+    <input type="hidden" name="_id" value="${esc(id||'')}">
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="cert">Cancel</button></div>`;
+  showFormPanel('certFormPanel'); bindCloseButtons();
+}
+function saveCert(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  const wasId=f._id; delete f._id;
+  if(wasId) state.certifications=state.certifications.map(c=>c.id===wasId?{...c,...f,id:wasId}:c);
+  else state.certifications.push({id:nextId('C',state.certifications),...f});
+  saveState(); document.getElementById('certFormPanel').classList.remove('on'); renderTraining();
+}
+function deleteCert(id){if(!confirm('Delete certification?'))return; state.certifications=state.certifications.filter(c=>c.id!==id); saveState(); renderTraining();}
+function openTrainEventForm(id){
+  const e2=id?state.trainingEvents.find(x=>x.id===id):null;
+  document.getElementById('trainEventFormTitle').textContent=id?'Edit Training':'New Training';
+  document.getElementById('trainEventForm').innerHTML=`
+    <label class="field"><span>Member</span><select name="member">${state.teams.map(t=>`<option value="${esc(t.id)}" ${(e2?.member||state.teams[0]?.id)===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>
+    <label class="field span2"><span>Title</span><input name="title" required value="${esc(e2?.title||'')}"></label>
+    <label class="field"><span>Type</span><select name="type">${TRAIN_TYPES.map(v=>`<option ${(e2?.type||'External')===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Provider</span><input name="provider" value="${esc(e2?.provider||'')}"></label>
+    <label class="field"><span>Date</span><input type="date" name="date" value="${esc(e2?.date||'')}"></label>
+    <label class="field"><span>Hours</span><input type="number" name="hours" min="0" value="${e2?.hours||0}"></label>
+    <label class="field span3"><span>Notes</span><textarea name="notes">${esc(e2?.notes||'')}</textarea></label>
+    <input type="hidden" name="_id" value="${esc(id||'')}">
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="trainEvent">Cancel</button></div>`;
+  showFormPanel('trainEventFormPanel'); bindCloseButtons();
+}
+function saveTrainEvent(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  const wasId=f._id; delete f._id;
+  f.hours=Number(f.hours||0);
+  if(wasId) state.trainingEvents=state.trainingEvents.map(x=>x.id===wasId?{...x,...f,id:wasId}:x);
+  else state.trainingEvents.push({id:nextId('TR',state.trainingEvents),...f});
+  saveState(); document.getElementById('trainEventFormPanel').classList.remove('on'); renderTraining();
+}
+function deleteTrainEvent(id){if(!confirm('Delete training?'))return; state.trainingEvents=state.trainingEvents.filter(x=>x.id!==id); saveState(); renderTraining();}
+function renderTraining(){
+  renderTrainMetrics();
+  const certEl=document.getElementById('certRows');
+  const certLbl=document.getElementById('certCountLabel');
+  const trainEl=document.getElementById('trainEventRows');
+  const trainLbl=document.getElementById('trainEventCountLabel');
+  if(certEl){
+    if(certLbl) certLbl.textContent=state.certifications.length+' certifications';
+    certEl.innerHTML=state.certifications.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td><button class="btn small" data-edit-cert="${esc(c.id)}">Edit</button> <button class="btn small danger" data-del-cert="${esc(c.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรอง','เพิ่มจากปุ่ม + Certification')+'</td></tr>';
+    certEl.querySelectorAll('[data-edit-cert]').forEach(b=>b.onclick=()=>openCertForm(b.dataset.editCert));
+    certEl.querySelectorAll('[data-del-cert]').forEach(b=>b.onclick=()=>deleteCert(b.dataset.delCert));
+  }
+  if(trainEl){
+    if(trainLbl) trainLbl.textContent=state.trainingEvents.length+' events';
+    trainEl.innerHTML=state.trainingEvents.map(ev=>`<tr><td>${esc(byId(ev.member).name)}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรม','เพิ่มจากปุ่ม + Training')+'</td></tr>';
+    trainEl.querySelectorAll('[data-edit-trainev]').forEach(b=>b.onclick=()=>openTrainEventForm(b.dataset.editTrainev));
+    trainEl.querySelectorAll('[data-del-trainev]').forEach(b=>b.onclick=()=>deleteTrainEvent(b.dataset.delTrainev));
+  }
+}
+
+// ===== #1 Project Event Notifications (client-side event log) =====
+const PROJECT_EVENT_LABELS={new_project:'โครงการใหม่',status_change:'เปลี่ยนสถานะ',bd_assign:'มอบหมาย BD',sales_assign:'มอบหมาย Sales',presales_assign:'มอบหมาย Presales'};
+function logProjectEvent(type, project, old){
+  if(!project) return;
+  state.projectEventLog = state.projectEventLog||[];
+  state.projectEventLog.push({
+    id:nextId('EV',state.projectEventLog), type, at:new Date().toISOString(),
+    projectId:project.id, projectName:project.name,
+    detail:type==='status_change'?`${old?.status||'?'} → ${project.status}`:
+           type==='bd_assign'?`BD: ${byId(project.bd).name}`:
+           type==='sales_assign'?`Sales: ${byId(project.sales).name}`:
+           type==='presales_assign'?`Presales: ${byId(project.presales).name}`:project.name
+  });
+  if(state.projectEventLog.length>100) state.projectEventLog=state.projectEventLog.slice(-100);
+  // Per-user inbox: notify relevant team members
+  if(type==='bd_assign'&&project.bd) logUserNotification(project.bd,'assign',`คุณถูก Assign เป็น BD ให้กับ "${project.name}"`,{projectId:project.id});
+  if(type==='sales_assign'&&project.sales) logUserNotification(project.sales,'assign',`คุณถูก Assign เป็น Sales ให้กับ "${project.name}"`,{projectId:project.id});
+  if(type==='presales_assign'&&project.presales) logUserNotification(project.presales,'assign',`คุณถูก Assign เป็น Presales ให้กับ "${project.name}"`,{projectId:project.id});
+  if(type==='status_change'){
+    const notifyIds=[project.bd,project.sales,project.presales].filter(Boolean);
+    const seen=new Set();
+    notifyIds.forEach(uid=>{if(!seen.has(uid)){seen.add(uid);logUserNotification(uid,'status',`"${project.name}" เปลี่ยนสถานะ: ${old?.status||'?'} → ${project.status}`,{projectId:project.id});}});
+  }
+  if(type==='new_project'){
+    const notifyIds=[project.bd,project.sales,project.presales].filter(Boolean);
+    const seen=new Set();
+    notifyIds.forEach(uid=>{if(!seen.has(uid)){seen.add(uid);logUserNotification(uid,'assign',`คุณถูก Assign ใน "${project.name}" (โครงการใหม่)`,{projectId:project.id});}});
+  }
+}
+function renderProjectEventLog(){
+  const host=document.getElementById('projectEventLog'); if(!host) return;
+  const log=(state.projectEventLog||[]).slice().reverse().slice(0,30);
+  if(!log.length){host.innerHTML='<div class="hint">ยังไม่มี Event</div>';return;}
+  const icons={new_project:'🆕',status_change:'🔄',bd_assign:'👤',sales_assign:'💼'};
+  host.innerHTML='<div class="ev-list">'+log.map(ev=>{
+    const d=new Date(ev.at);
+    const tStr=d.toLocaleString('th-TH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="ev-item"><span class="ev-ico" style="background:var(--panel-2)">${icons[ev.type]||'📌'}</span><div class="ev-body"><strong>${esc(ev.projectName)}</strong> <span class="tag ${ev.type==='status_change'?'quot':ev.type==='new_project'?'done':'phase-bd'}">${esc(PROJECT_EVENT_LABELS[ev.type]||ev.type)}</span><div class="mini">${esc(ev.detail)}</div></div><span style="color:var(--soft);font-size:10.5px;white-space:nowrap;margin-left:auto">${tStr}</span></div>`;
+  }).join('')+'</div>';
+}
+// ===== Bell: per-user notification inbox =====
+function logUserNotification(userId, type, message, opts){
+  if(!userId) return;
+  state.userNotifications = state.userNotifications||[];
+  state.userNotifications.push({id:nextId('UNF',state.userNotifications),userId,type,message,projectId:opts?.projectId||null,taskId:opts?.taskId||null,at:new Date().toISOString(),read:false});
+  if(state.userNotifications.length>200) state.userNotifications=state.userNotifications.slice(-200);
+  if(activeUser && activeUser.id===userId) updateNotifBadge();
+}
+function updateNotifBadge(){
+  const uid=activeUser?.id;
+  const count=uid?(state.userNotifications||[]).filter(n=>n.userId===uid&&!n.read).length:0;
+  const bell=document.getElementById('bellCount');
+  const nav=document.getElementById('notifNavBadge');
+  if(bell){bell.textContent=count>99?'99+':String(count);bell.style.display=count?'':'none';}
+  if(nav){nav.textContent=count>99?'99+':String(count);nav.style.display=count?'':'none';}
+  const btn=document.getElementById('bellBtn');
+  if(btn) btn.classList.toggle('has-unread',count>0);
+}
+function renderMyInbox(){
+  const host=document.getElementById('myInbox'); if(!host) return;
+  const uid=activeUser?.id;
+  if(!uid){host.innerHTML='<div class="hint">กรุณา login เพื่อดูการแจ้งเตือนส่วนตัว</div>';return;}
+  const all=(state.userNotifications||[]).filter(n=>n.userId===uid).slice().reverse().slice(0,50);
+  const unreadIds=all.filter(n=>!n.read).map(n=>n.id);
+  if(unreadIds.length){state.userNotifications=state.userNotifications.map(n=>unreadIds.includes(n.id)?{...n,read:true}:n);saveState();updateNotifBadge();}
+  const lbl=document.getElementById('myInboxLabel');
+  if(!all.length){host.innerHTML='<div class="hint" style="padding:12px 0">ไม่มีการแจ้งเตือนใหม่ — ระบบจะแจ้งเตือนเมื่อมีการ Assign งาน, เปลี่ยนสถานะ, หรืออัปเดตที่เกี่ยวข้องกับคุณ</div>';if(lbl) lbl.textContent='ยังไม่มีการแจ้งเตือน';return;}
+  const icons={assign:'👤',task_update:'✅',status:'🔄'};
+  host.innerHTML=all.map(n=>{const d=new Date(n.at);const tStr=d.toLocaleString('th-TH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});return `<div class="ev-item${n.read?'':' ev-new'}"><span class="ev-ico" style="background:var(--panel-2)">${icons[n.type]||'🔔'}</span><div class="ev-body" style="flex:1;min-width:0"><div style="font-size:12.5px;line-height:1.4">${esc(n.message)}</div></div><span style="color:var(--soft);font-size:10.5px;white-space:nowrap;margin-left:8px">${tStr}</span>${!n.read?'<span class="inbox-mark"></span>':''}</div>`;}).join('');
+  if(lbl) lbl.textContent=`${all.length} รายการ · เฉพาะ account ของคุณ`;
+}
 let todoSort={key:'due',dir:'asc'};
 const TODO_COLUMNS=[['id','ID'],['title','Task'],['project','Opportunity'],['phase','Phase'],['owner','Owner'],['status','Status'],['priority','Priority'],['due','Due'],['progress','Progress']];
 function todoSortValue(t,key){
@@ -2269,6 +2922,12 @@ function todoSortValue(t,key){
   }
 }
 function sortTodo(rows){
+  if(todoSort.key==='manual'&&state.taskManualOrder?.length){
+    return [...rows].sort((a,b)=>{
+      const ai=state.taskManualOrder.indexOf(a.id), bi=state.taskManualOrder.indexOf(b.id);
+      return (ai===-1?99999:ai)-(bi===-1?99999:bi);
+    });
+  }
   const dir=todoSort.dir==='desc'?-1:1;
   return [...rows].sort((a,b)=>{
     const av=todoSortValue(a,todoSort.key), bv=todoSortValue(b,todoSort.key);
@@ -2283,35 +2942,43 @@ function setTodoSort(key){
 function renderTodoTable(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const rows=sortTodo(filteredTasks()); // central database: all filtered tasks, not period-windowed
-  const head='<tr>'+TODO_COLUMNS.map(([key,label])=>{
+  const isManual=todoSort.key==='manual';
+  const head='<tr><th class="grip-col" aria-hidden="true"></th>'+TODO_COLUMNS.map(([key,label])=>{
     const active=todoSort.key===key, mark=active?(todoSort.dir==='asc'?'↑':'↓'):'';
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
   }).join('')+'</tr>';
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${rows.length} tasks · ฐานข้อมูลกลาง (sync จาก Projects) · เปลี่ยนสถานะได้ในตาราง</small></div><div class="table-wrap"><table class="tbl"><thead>${head}</thead><tbody>${rows.map(t=>`<tr><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="9">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ BD Lead ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
+  const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="10">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ BD Lead ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
+  body.querySelector('#clearManualSort')?.addEventListener('click',()=>{todoSort={key:'due',dir:'asc'};renderTodoTable();});
   bindTaskStatusSelects(body);
+  const tbody=body.querySelector('#todoTbody'); if(tbody) initTableDnd(tbody);
 }
 function renderTodoKanban(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod);
   const groups=state.taskStatuses.map(s=>s.name);
-  body.innerHTML=`<div class="kanban">${groups.map(g=>`<div class="lane ${statusClass(g)}"><h3>${esc(g)}</h3>${set.filter(x=>g==='Overdue'?(isOverdue(x)||x.status==='Overdue'):x.status===g&&!isOverdue(x)).map(taskCard).join('')||'<div class="task hint">No task</div>'}</div>`).join('')}</div>`;
+  body.innerHTML=`<div class="kanban">${groups.map(g=>`<div class="lane ${statusClass(g)}" data-lane-status="${esc(g)}"><h3>${esc(g)}</h3>${set.filter(x=>g==='Overdue'?(isOverdue(x)||x.status==='Overdue'):x.status===g&&!isOverdue(x)).map(taskCard).join('')||'<div class="task hint">No task</div>'}</div>`).join('')}</div>`;
+  initKanbanDnd(body);
 }
 function renderTodoProjects(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod);
   const byProject=new Map();
-  set.forEach(t=>{ if(!byProject.has(t.project)) byProject.set(t.project,[]); byProject.get(t.project).push(t); });
-  const projects=[...byProject.keys()].map(id=>projectOf({project:id})||{id,name:id,status:'',val:0})
+  set.forEach(t=>{ const key=t.project||'__internal__'; if(!byProject.has(key)) byProject.set(key,[]); byProject.get(key).push(t); });
+  const projects=[...byProject.keys()].filter(id=>id!=='__internal__').map(id=>projectOf({project:id})||{id,name:id,status:'',val:0})
     .sort((a,b)=>String(a.name).localeCompare(String(b.name)));
-  if(!projects.length){ body.innerHTML='<div class="card">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ปรับ scope หรือ BD Lead เพื่อดูงานของแต่ละ Opportunity')+'</div>'; return; }
-  body.innerHTML=projects.map(p=>{
+  const internalTasks=byProject.get('__internal__')||[];
+  if(!projects.length && !internalTasks.length){ body.innerHTML='<div class="card">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ปรับ scope หรือ BD Lead เพื่อดูงานของแต่ละ Opportunity')+'</div>'; return; }
+  const projHtml=projects.map(p=>{
     const tasks=byProject.get(p.id);
     const prog=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.progress||0),0)/tasks.length):0;
     const od=tasks.filter(isOverdue).length;
     return `<div class="card todo-proj"><div class="ch"><h2>${esc(p.name||p.id)}</h2>${p.status?statusTag(p.status):''}<div class="meta"><span>${tasks.length} tasks</span><span>${prog}% avg</span>${od?`<span class="tag overdue">${od} overdue</span>`:''}<span>${shortMoney(Number(p.val||0))}</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Phase</th><th>Owner</th><th>Status</th><th>Priority</th><th>Due</th><th>Progress</th></tr></thead><tbody>${tasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`;
   }).join('');
+  const intHtml=internalTasks.length?`<div class="card todo-proj"><div class="ch"><h2>Internal / Cross-function</h2><span class="tag internal">Internal</span><div class="meta"><span>${internalTasks.length} tasks</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Owner</th><th>Status</th><th>Due</th><th>Progress</th></tr></thead><tbody>${internalTasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`:'';
+  body.innerHTML=projHtml+intHtml;
 }
 function renderTodoPriority(){
   const body=document.getElementById('todoBody'); if(!body) return;
@@ -2337,7 +3004,7 @@ function renderTodoExec(){
   const openByOwner=grouped(set.filter(t=>t.status!=='Done'),t=>byId(t.owner).name);
   renderBars('todoExecTeam',Object.entries(openByOwner).map(([label,value],i)=>({label,value,color:CHART[i%CHART.length]})).sort((a,b)=>b.value-a.value));
 }
-const TODO_RENDERERS={table:renderTodoTable,kanban:renderTodoKanban,project:renderTodoProjects,priority:renderTodoPriority,exec:renderTodoExec};
+const TODO_RENDERERS={table:renderTodoTable,kanban:renderTodoKanban,project:renderTodoProjects,priority:renderTodoPriority,exec:renderTodoExec,queue:renderTodoQueue};
 function renderTodo(){
   renderTaskLeadFilter();
   document.querySelectorAll('.todo-view').forEach(b=>b.classList.toggle('on',b.dataset.todoView===todoView));
@@ -2373,7 +3040,7 @@ function setCalMetrics(dueLabel, scoped, all){
 function renderCalendarPage(){
   const sel=document.getElementById('calLeadFilter');
   if(sel){
-    const options='<option value="All">All BD Lead</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+    const options='<option value="All">All Owner</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
     if(sel.innerHTML!==options) sel.innerHTML=options;
     sel.value=calLead;
     sel.onchange=()=>{calLead=sel.value;renderCalendarPage();};
@@ -2419,7 +3086,7 @@ function renderCalendarMonth(tasks, monthDate){
   const dueCount=tasks.filter(t=>inWindow(t.due,new Date(y,m,1,0,0,0,0),new Date(y,m+1,0,23,59,59,999))).length;
   if(label) label.textContent=`${monthDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})} · ${dueCount} tasks due`;
 }
-function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(byId(t.owner).name)}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
+function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task" draggable="true" data-task-id="${esc(t.id)}"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(byId(t.owner).name)}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
 function openTaskForm(id){
   editing.task=id||null; const t=state.taskTemplates.find(x=>x.id===id)||{id:nextId('TT',state.taskTemplates),title:'',subtasks:[]};
   const taskTitle=document.getElementById('taskFormTitle'); if(taskTitle) taskTitle.textContent=id?'Edit Task':'New Task';
@@ -2428,7 +3095,7 @@ function openTaskForm(id){
     <label class="field span2"><span>Task template</span><input name="title" required value="${esc(t.title)}"></label>
     <label class="field span3"><span>Default sub tasks</span><textarea name="subtasksText" placeholder="Site survey&#10;Revise BOQ round 1&#10;Revise BOQ round 2">${esc((t.subtasks||[]).join('\n'))}</textarea><span class="hint">ใช้เป็น Data List ให้ Project เลือก ไม่ใช่ task จริงของโครงการ</span></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Template</button><button class="btn" type="button" data-close-form="task">Cancel</button></div>`;
-  document.getElementById('taskFormPanel').classList.add('on'); bindCloseButtons();
+  showFormPanel('taskFormPanel'); bindCloseButtons();
 }
 function saveTask(e){e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); f.subtasks=String(f.subtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean); delete f.subtasksText; if(editing.task){state.taskTemplates=state.taskTemplates.map(t=>t.id===editing.task?f:t)}else state.taskTemplates.push(f); editing.task=null; saveState(); document.getElementById('taskFormPanel').classList.remove('on'); renderAll(false)}
 function deleteTask(id){if(state.projects.some(p=>(p.taskTemplateIds||[]).includes(id))){alert('Cannot delete: this task template is used in projects.');return} if(!confirm('Delete task template '+id+'?'))return; state.taskTemplates=state.taskTemplates.filter(t=>t.id!==id); saveState(); renderAll(false)}
@@ -2504,7 +3171,7 @@ function kpiCardHtml(r){
 }
 function renderKpiOwnerFilter(){
   const el=document.getElementById('kpiOwnerFilter'); if(!el) return;
-  const opts='<option value="All">All BD</option>'+state.teams.filter(t=>t.role==='BD Lead').map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  const opts='<option value="All">All BD / Presales</option>'+state.teams.filter(t=>['BD Lead','Presales'].includes(t.role)).map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
   if(el.innerHTML!==opts) el.innerHTML=opts;
   el.value=kpiOwner; el.onchange=()=>{kpiOwner=el.value;renderKpi()};
 }
@@ -2554,6 +3221,7 @@ function renderKpi(){
   renderKpiActivities(acts);
 }
 function openKpiForm(id){
+  if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์แก้ไข KPI','error');return}
   editing.kpi=id||null;
   const a=state.kpiActivities.find(x=>x.id===id)||{id:nextId('KA',state.kpiActivities),type:'Proposal',title:'',owner:state.teams.find(t=>t.role==='BD Lead')?.id||'',project:'',dueDate:'',submittedAt:'',completeness:100,outcome:'',pass:''};
   const bd=state.teams.filter(t=>t.role==='BD Lead');
@@ -2569,10 +3237,11 @@ function openKpiForm(id){
     <label class="field"><span>Feedback (เฉพาะ Demo)</span><select name="outcome"><option value="">—</option>${['Positive','Neutral','Negative'].map(o=>`<option ${a.outcome===o?'selected':''}>${o}</option>`).join('')}</select></label>
     <label class="field"><span>Pass / Fail (เฉพาะ Demo)</span><select name="pass"><option value="">—</option>${['Pass','Fail'].map(o=>`<option ${a.pass===o?'selected':''}>${o}</option>`).join('')}</select></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Activity</button><button class="btn" type="button" data-close-form="kpi">Cancel</button></div>`;
-  document.getElementById('kpiFormPanel').classList.add('on'); bindCloseButtons();
+  showFormPanel('kpiFormPanel'); bindCloseButtons();
 }
 function saveKpiActivity(e){
   e.preventDefault();
+  if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์แก้ไข KPI','error');return}
   const f=Object.fromEntries(new FormData(e.target));
   f.completeness = f.completeness===''?'':Number(f.completeness);
   const wasEdit=editing.kpi;
@@ -2582,9 +3251,10 @@ function saveKpiActivity(e){
   logActivity(wasEdit?'แก้ไข KPI Activity':'เพิ่ม KPI Activity','kpi',f.title||f.id);
   document.getElementById('kpiFormPanel').classList.remove('on'); renderKpi();
 }
-function deleteKpiActivity(id){ if(!confirm('ลบ Activity '+id+'?'))return; state.kpiActivities=state.kpiActivities.filter(x=>x.id!==id); saveState(); renderKpi(); }
+function deleteKpiActivity(id){ if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์ลบ KPI','error');return} if(!confirm('ลบ Activity '+id+'?'))return; state.kpiActivities=state.kpiActivities.filter(x=>x.id!==id); saveState(); renderKpi(); }
 
 function renderSettings(){
+  if(!isAdmin()){document.querySelector('#v-settings .content').innerHTML='<div class="card"><div class="cb hint">Admin only: Settings ใช้ได้เฉพาะ Wongwaris</div></div>';return}
   renderProjectStatuses();
   renderTaskStatuses();
   renderSolutions();
@@ -2605,7 +3275,7 @@ function openSolutionForm(id){
     <label class="field"><span>Group</span><select name="group">${SYSTEM_GROUPS.map(g=>`<option ${item.group===g?'selected':''}>${g}</option>`).join('')}</select></label>
     <label class="field"><span>System</span><input name="system" required value="${esc(item.system)}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save System</button><button class="btn" type="button" data-close-form="solution">Cancel</button></div>`;
-  document.getElementById('solutionFormPanel').classList.add('on');
+  showFormPanel('solutionFormPanel');
   bindCloseButtons();
 }
 function saveSolution(e){
@@ -2646,7 +3316,7 @@ function openBrandForm(id){
     <label class="field"><span>Category</span><select name="category"><optgroup label="Brand Scope (แบรนด์ภายนอก)">${BRAND_SCOPE_CATS.map(c=>`<option ${item.category===c?'selected':''}>${c}</option>`).join('')}</optgroup><optgroup label="PIRAMID Scope (บริการ PIRAMID)">${PIRAMID_SCOPE.map(c=>`<option ${item.category===c?'selected':''}>${c}</option>`).join('')}</optgroup></select></label>
     <label class="field"><span>Brand / Item</span><input name="name" required value="${esc(item.name)}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Brand</button><button class="btn" type="button" data-close-form="brand">Cancel</button></div>`;
-  document.getElementById('brandFormPanel').classList.add('on');
+  showFormPanel('brandFormPanel');
   bindCloseButtons();
 }
 function saveBrand(e){
@@ -2689,7 +3359,7 @@ function openSizeForm(id){
     <label class="field"><span>Min value</span><input name="min" type="number" min="0" value="${r.min}"></label>
     <label class="field"><span>Max value</span><input name="max" type="number" min="0" value="${r.max}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Size Range</button><button class="btn" type="button" data-close-form="size">Cancel</button></div>`;
-  document.getElementById('sizeFormPanel').classList.add('on');
+  showFormPanel('sizeFormPanel');
   bindCloseButtons();
 }
 function saveSizeRange(e){
@@ -2722,7 +3392,7 @@ function openProjectStatusForm(id){
   editing.projectStatus=id||null;
   const s=state.projectStatuses.find(x=>x.id===id)||{id:nextId('PS',state.projectStatuses),name:''};
   document.getElementById('projectStatusForm').innerHTML=`<label class="field"><span>ID</span><input name="id" value="${esc(s.id)}" ${id?'readonly':''}></label><label class="field span2"><span>Status name</span><input name="name" required value="${esc(s.name)}"></label><div class="span3 toolbar"><button class="btn primary" type="submit">Save Project Status</button><button class="btn" type="button" data-close-form="projectStatus">Cancel</button></div>`;
-  document.getElementById('projectStatusFormPanel').classList.add('on'); bindCloseButtons();
+  showFormPanel('projectStatusFormPanel'); bindCloseButtons();
 }
 function saveProjectStatus(e){
   e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); const wasEdit=!!editing.projectStatus;
@@ -2744,7 +3414,7 @@ function openTaskStatusForm(id){
   editing.taskStatus=id||null;
   const s=state.taskStatuses.find(x=>x.id===id)||{id:nextId('TS',state.taskStatuses),name:'',description:''};
   document.getElementById('taskStatusForm').innerHTML=`<label class="field"><span>ID</span><input name="id" value="${esc(s.id)}" ${id?'readonly':''}></label><label class="field"><span>Status name</span><input name="name" required value="${esc(s.name)}"></label><label class="field"><span>Description</span><input name="description" value="${esc(s.description||'')}"></label><div class="span3 toolbar"><button class="btn primary" type="submit">Save Task Status</button><button class="btn" type="button" data-close-form="taskStatus">Cancel</button></div>`;
-  document.getElementById('taskStatusFormPanel').classList.add('on'); bindCloseButtons();
+  showFormPanel('taskStatusFormPanel'); bindCloseButtons();
 }
 function saveTaskStatus(e){
   e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); const wasEdit=!!editing.taskStatus;
@@ -2761,13 +3431,14 @@ function deleteTaskStatus(id){
 function renderTeam(){
   renderTeamTaskMetrics();
   const groups = [
-    {label:'Manager', items:state.teams.filter(t=>!['BD Lead','Sales'].includes(t.role))},
+    {label:'Manager', items:state.teams.filter(t=>!['BD Lead','Presales','Sales'].includes(t.role))},
     {label:'BD', items:state.teams.filter(t=>t.role==='BD Lead')},
+    {label:'Presales', items:state.teams.filter(t=>t.role==='Presales')},
     {label:'Sales', items:state.teams.filter(t=>t.role==='Sales')}
   ];
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
-    const owned=state.projects.filter(p=>p.bd===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>x.owner===t.id);
-    const locked = !activeUser;
+    const owned=state.projects.filter(p=>p.bd===t.id||p.presales===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>x.owner===t.id);
+    const locked = !isAdmin();
     return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="avatar" style="background:${t.color}">${esc(initials(t.name))}</div><div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
   updateLoginState();
@@ -2814,22 +3485,24 @@ function renderTeamTaskMetrics(){
 }
 function openTeamForm(id){
   if(!requireLogin()) return;
+  if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return}
   editing.team=id||null; const t=state.teams.find(x=>x.id===id)||{id:nextId('tm',state.teams),name:'',username:'',password:'',role:'Manager',level:'Manager',email:'',target:10000000,color:'#5b7cfa'};
   document.getElementById('teamFormTitle').textContent=id?'Edit Member':'New Member';
   document.getElementById('teamForm').innerHTML=`
     <label class="field"><span>ID</span><input name="id" value="${esc(t.id)}" ${id?'readonly':''}></label><label class="field span2"><span>Name</span><input name="name" required value="${esc(t.name)}"></label>
     <label class="field"><span>Username</span><input name="username" required value="${esc(t.username||firstName(t.name))}" placeholder="Auto: first name"></label>
     <label class="field"><span>Passcode</span><input name="password" class="masked-entry" type="text" autocomplete="off" required value="${esc(t.password||lastName(t.name))}" placeholder="Auto: surname"></label>
-    <label class="field"><span>Role</span><select name="role">${['Manager','BD Lead','Sales'].map(v=>`<option ${t.role===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Role</span><select name="role">${['Manager','BD Lead','Presales','Sales'].map(v=>`<option ${t.role===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Access Role</span><select name="accessRole">${['Admin','Member','Guest'].map(v=>`<option ${accessRole(t)===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Level</span><select name="level">${['Member','Manager','Executive'].map(v=>`<option ${t.level===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Email</span><input name="email" type="email" value="${esc(t.email)}"></label>
     <label class="field"><span>KPI Target</span><input name="target" type="number" value="${t.target}"></label>
     <label class="field"><span>Color</span><input name="color" type="color" value="${t.color}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Member</button><button class="btn" type="button" data-close-form="team">Cancel</button></div>`;
-  document.getElementById('teamFormPanel').classList.add('on'); bindCloseButtons();
+  showFormPanel('teamFormPanel'); bindCloseButtons();
 }
-function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=f.username||firstName(f.name); f.password=f.password||lastName(f.name); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
-function deleteTeam(id){if(!requireLogin()) return; if(state.projects.some(p=>p.bd===id||p.sales===id)||state.tasks.some(t=>t.owner===id)){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
+function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=String(f.username||firstName(f.name)).trim().toLowerCase(); f.password=String(f.password||lastName(f.name)).trim(); f.accessRole=f.username==='wongwaris'?'Admin':f.role==='Sales'?'Guest':(f.accessRole&&f.accessRole!=='Guest'?f.accessRole:'Member'); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
+function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>p.bd===id||p.presales===id||p.sales===id)||state.tasks.some(t=>t.owner===id)){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
 function requireLogin(){
   if(activeUser) return true;
   alert('Please sign in before editing.');
@@ -2846,6 +3519,7 @@ function renderRules(){
   document.querySelectorAll('[data-del-rule]').forEach(b=>b.onclick=()=>deleteRule(b.dataset.delRule));
 }
 function openRuleForm(id){
+  if(!isAdmin()){toast('Notification rules ใช้ได้เฉพาะ Admin','error');return}
   editing.rule=id||null; const r=state.rules.find(x=>x.id===id)||{id:nextId('R',state.rules),level:'Member',name:'Daily task summary',channel:'Email',time:'08:30, 17:30',recipients:'Assignee',recipientScope:'Individual',reportPeriod:'Daily',attachSnapshot:true,snapshotView:'TaskTracker',format:'PNG',enabled:true};
   document.getElementById('ruleFormTitle').textContent=id?'Edit Rule':'New Rule';
   document.getElementById('ruleForm').innerHTML=`
@@ -2861,10 +3535,10 @@ function openRuleForm(id){
     <label class="switch"><input type="checkbox" name="attachSnapshot" ${r.attachSnapshot?'checked':''}>Attach Snapshot</label>
     <label class="switch"><input type="checkbox" name="enabled" ${r.enabled?'checked':''}>Enabled</label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Rule</button><button class="btn" type="button" data-close-form="rule">Cancel</button></div>`;
-  document.getElementById('ruleFormPanel').classList.add('on'); bindCloseButtons();
+  showFormPanel('ruleFormPanel'); bindCloseButtons();
 }
-function saveRule(e){e.preventDefault(); const f=Object.fromEntries(new FormData(e.target)); f.enabled=!!f.enabled; f.attachSnapshot=!!f.attachSnapshot; const wasEdit=!!editing.rule; if(editing.rule) state.rules=state.rules.map(r=>r.id===editing.rule?f:r); else state.rules.push(f); saveState(); document.getElementById('ruleFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไข Notification Rule':'เพิ่ม Notification Rule','notify',f.name||f.id); renderRules(); previewRule(f.id)}
-function deleteRule(id){if(!confirm('Delete notification rule '+id+'?'))return; state.rules=state.rules.filter(r=>r.id!==id); saveState(); renderRules()}
+function saveRule(e){e.preventDefault(); if(!isAdmin()){toast('Notification rules ใช้ได้เฉพาะ Admin','error');return} const f=Object.fromEntries(new FormData(e.target)); f.enabled=!!f.enabled; f.attachSnapshot=!!f.attachSnapshot; const wasEdit=!!editing.rule; if(editing.rule) state.rules=state.rules.map(r=>r.id===editing.rule?f:r); else state.rules.push(f); saveState(); document.getElementById('ruleFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไข Notification Rule':'เพิ่ม Notification Rule','notify',f.name||f.id); renderRules(); previewRule(f.id)}
+function deleteRule(id){if(!isAdmin()){toast('Notification rules ใช้ได้เฉพาะ Admin','error');return} if(!confirm('Delete notification rule '+id+'?'))return; state.rules=state.rules.filter(r=>r.id!==id); saveState(); renderRules()}
 function triggerRule(id){const r=state.rules.find(x=>x.id===id); if(!r) return; previewRule(id); alert(`Manual trigger sent: ${r.name}\\nPeriod: ${r.reportPeriod||'Daily'}\\nSnapshot: ${r.attachSnapshot?'Attached '+(r.format||'PNG'):'Off'}\\nScope: ${r.recipientScope||'Group'}\\nRecipients: ${r.recipients}`)}
 function statusIcon(s){const key=isOverdue(s)?'overdue':String(s.status||s).toLowerCase(); const map={done:['done','✓'],doing:['doing','↻'],review:['review','!'],overdue:['overdue','!'],schedule:['schedule','●'],pending:['schedule','●']}; const [cls,txt]=map[key]||['schedule','●']; return `<span class="status-ico ${cls}">${txt}</span>`}
 function reportWindow(period){
@@ -2913,7 +3587,7 @@ function snapshotPreview(rule,tasks,summary,w){
   return `<div class="snapshot-frame"><div class="snapshot-head"><div><b>${esc(rule.snapshotView||'TaskTracker')} Snapshot</b><div class="mini">${esc(rule.reportPeriod||'Daily')} · ${esc(w.label)} · BD Team only · ${esc(rule.format||'PNG')}</div></div><span class="tag quot">${esc(rule.level)}</span></div><div class="grid g4" style="margin-bottom:12px">${metric('BD Tasks',summary.total,'in period')}${metric('Done',summary.done,completion+'% complete','var(--green)')}${metric('Doing',summary.doing,'active','var(--accent)')}${metric('Overdue',summary.overdue,'needs action','var(--red)')}</div><div class="status-list">${['Done','Doing','Review','Overdue','Schedule'].map(s=>`<div class="status-line">${statusIcon(s)}<b>${s}</b><span>${tasks.filter(t=>s==='Overdue'?isOverdue(t):t.status===s).length}</span></div>`).join('')}</div><div class="ch" style="padding:12px 0 8px;border-bottom:0"><h2>BD High Priority Watchlist</h2></div>${high.map(p=>`<div class="cal-item"><strong>${esc(p.name)}</strong><small>${esc(p.status)} · ${shortMoney(p.val)} · ${esc(byId(p.bd).name)}</small></div>`).join('')||'<div class="hint">No high priority BD project</div>'}</div>`;
 }
 async function emailFetch(path,opts={}){
-  const res=await fetch(EMAIL_API+path,{...opts,headers:{'Content-Type':'application/json','x-user-role':'admin',...(opts.headers||{})}});
+  const res=await fetch(EMAIL_API+path,{...opts,headers:{'Content-Type':'application/json','x-user-role':accessRole().toLowerCase(),...(opts.headers||{})}});
   const data=await res.json().catch(()=>({}));
   if(!res.ok) throw new Error(data.error||'Email API failed');
   return data;
@@ -2936,11 +3610,33 @@ function renderEmailAdmin(){
 }
 function renderEmailSettings(){
   const s=emailAdmin.settings||{};
-  document.getElementById('emailSettings').innerHTML=`<div class="bars">
-    <div class="bar-row"><span>Provider</span><div>${esc(s.provider||'smtp')}</div><b>${s.smtp_password_configured?'Secret OK':'No secret'}</b></div>
-    <div class="bar-row"><span>SMTP Host</span><div>${esc(s.smtp_host||'Not configured')}</div><b>${esc(s.smtp_port||'-')}</b></div>
-    <div class="bar-row"><span>From</span><div>${esc(s.smtp_from||'Default sender')}</div><b>${s.smtp_secure?'TLS':'Standard'}</b></div>
-  </div><div class="hint" style="margin-top:8px">SMTP secret is never exposed. Set SMTP_PASSWORD in Vercel Environment Variables.</div>`;
+  const disabled=isAdmin()?'':'disabled';
+  document.getElementById('emailSettings').innerHTML=`<form class="form-grid" id="emailSettingsForm">
+    <label class="field"><span>Provider</span><select name="provider" ${disabled}><option ${s.provider==='smtp'?'selected':''}>smtp</option></select></label>
+    <label class="field"><span>SMTP Host</span><input name="smtp_host" value="${esc(s.smtp_host||'smtp.gmail.com')}" ${disabled}></label>
+    <label class="field"><span>SMTP Port</span><input name="smtp_port" type="number" value="${esc(s.smtp_port||'587')}" ${disabled}></label>
+    <label class="field"><span>Secure</span><select name="smtp_secure" ${disabled}><option value="false" ${!s.smtp_secure?'selected':''}>STARTTLS / 587</option><option value="true" ${s.smtp_secure?'selected':''}>SSL / 465</option></select></label>
+    <label class="field span2"><span>SMTP User</span><input name="smtp_user" value="${esc(s.smtp_user||'wongwaris.boonchuay@gmail.com')}" ${disabled}></label>
+    <label class="field span3"><span>From</span><input name="smtp_from" value="${esc(s.smtp_from||'PIRAMID BD Management <wongwaris.boonchuay@gmail.com>')}" ${disabled}></label>
+    <label class="field span2"><span>Gmail App Password</span><input name="smtp_password" class="masked-entry" type="text" autocomplete="off" placeholder="${s.smtp_password_configured?'Configured - leave blank to keep current':'16-character Gmail App Password'}" ${disabled}></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit" ${disabled}>Save SMTP Settings</button><span class="hint">${s.smtp_password_configured?'Secret OK':'No secret'} · Source: ${esc(s.source||'env')}</span></div>
+    <div class="span3 hint">ใช้ Gmail App Password 16 ตัวเท่านั้น ไม่ใช่รหัสเข้า Gmail ปกติ · ระบบจะไม่แสดง password ย้อนกลับ และจะเข้ารหัสก่อนเก็บในฐานข้อมูล</div>
+  </form>`;
+  const form=document.getElementById('emailSettingsForm');
+  if(form) form.onsubmit=saveEmailSettings;
+}
+async function saveEmailSettings(e){
+  e.preventDefault();
+  if(!isAdmin()){toast('Email Settings ใช้ได้เฉพาะ Admin','error');return}
+  const f=Object.fromEntries(new FormData(e.target));
+  f.smtp_secure=String(f.smtp_secure)==='true';
+  f.changed_by=activeUser?.username||'admin';
+  try{
+    const data=await emailFetch('/settings',{method:'POST',body:JSON.stringify(f)});
+    emailAdmin.settings=data.settings;
+    renderEmailSettings();
+    toast('บันทึก SMTP Settings แล้ว','success');
+  }catch(err){toast(err.message,'error')}
 }
 function renderEmailTemplateForm(t={}){
   const tpl=t.id?t:{template_key:'',name:'',description:'',subject_template:'',html_body_template:'',text_body_template:'',variables:['user_name','task_name','project_name','due_date','status','platform_link'],is_active:true};
@@ -2975,7 +3671,16 @@ async function previewEmailTemplate(t,vars=sampleTemplateVars()){
   document.getElementById('notificationPreview').innerHTML=`<div class="email-box">Subject: ${esc(data.preview.subject)}\n\n${esc(data.preview.text_body)}</div><div class="snapshot-frame"><b>HTML Preview</b><div class="email-box" style="margin-top:10px">${data.preview.html_body}</div></div>`;
 }
 function renderEmailQueue(){
-  document.getElementById('emailQueueRows').innerHTML=emailAdmin.queue.map(q=>`<tr><td>${statusTag(q.status)}</td><td>${esc((q.to_emails||[]).join(', '))}</td><td>${esc(q.subject)}</td><td>${esc(q.scheduled_at||'-')}</td><td>${q.retry_count}/${q.max_retry}</td><td><button class="btn small" data-retry-email="${q.id}">Retry</button> <button class="btn small danger" data-cancel-email="${q.id}">Cancel</button></td></tr>`).join('')||'<tr><td colspan="6" class="hint">No queue</td></tr>';
+  const emailList=value=>{
+    if(!value) return [];
+    if(Array.isArray(value)) return value;
+    if(typeof value==='string'){
+      try{const parsed=JSON.parse(value); if(Array.isArray(parsed)) return parsed;}catch{}
+      return value.split(/[;,]/).map(x=>x.trim()).filter(Boolean);
+    }
+    return [value].filter(Boolean);
+  };
+  document.getElementById('emailQueueRows').innerHTML=emailAdmin.queue.map(q=>`<tr><td>${statusTag(q.status)}</td><td>${esc(emailList(q.to_emails).join(', '))}</td><td>${esc(q.subject)}</td><td>${esc(q.scheduled_at||'-')}</td><td>${q.retry_count}/${q.max_retry}</td><td><button class="btn small" data-retry-email="${q.id}">Retry</button> <button class="btn small danger" data-cancel-email="${q.id}">Cancel</button></td></tr>`).join('')||'<tr><td colspan="6" class="hint">No queue</td></tr>';
   document.querySelectorAll('[data-retry-email]').forEach(b=>b.onclick=async()=>{await emailFetch('/queue',{method:'POST',body:JSON.stringify({action:'retry',id:b.dataset.retryEmail})});await loadEmailAdmin()});
   document.querySelectorAll('[data-cancel-email]').forEach(b=>b.onclick=async()=>{await emailFetch('/queue',{method:'POST',body:JSON.stringify({action:'cancel',id:b.dataset.cancelEmail})});await loadEmailAdmin()});
 }
@@ -3034,7 +3739,7 @@ function exportCsv(type){
   const csv='﻿'+[headers.join(','),...rows.map(r=>r.map(cell).join(','))].join('\r\n');
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download=`piramid-${type}.csv`; a.click(); URL.revokeObjectURL(a.href);
 }
-const VIEW_RENDERERS={exec:renderDashboard,analytics:renderAnalytics,projects:renderProjects,tasks:renderTodo,calendar:renderCalendarPage,kpi:renderKpi,team:renderTeam,notify:renderRules,settings:renderSettings};
+const VIEW_RENDERERS={exec:renderDashboard,analytics:renderAnalytics,projects:renderProjects,tasks:renderTodo,calendar:renderCalendarPage,kpi:renderKpi,training:renderTraining,team:renderTeam,notify:renderRules,settings:renderSettings};
 const dirtyViews=new Set();
 function activeViewName(){const v=document.querySelector('.view.on'); return v?v.id.replace(/^v-/,''):null;}
 function renderView(name){const fn=VIEW_RENDERERS[name]; if(!fn) return; try{fn();}catch(e){console.warn('Render failed for view "'+name+'"',e);}}
@@ -3062,7 +3767,10 @@ function on(id,event,handler){const el=document.getElementById(id); if(el) el[ev
 function bindAppEvents(){
   // a11y: label icon-only close buttons
   document.querySelectorAll('[data-close-form]').forEach(b=>{if(!b.getAttribute('aria-label')) b.setAttribute('aria-label','Close form');});
-  document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));const view=document.getElementById('v-'+b.dataset.view); if(view) view.classList.add('on'); ensureViewRendered(b.dataset.view); sessionViewSeen[b.dataset.view]=Date.now(); updateNavDots(); if(b.dataset.view==='notify'){loadEmailAdmin(); renderActivityLog();}});
+  document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>{
+    if(b.dataset.view&&!canAccessView(b.dataset.view)){toast('คุณไม่มีสิทธิ์เข้าหน้านี้','error');return}
+    document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));const view=document.getElementById('v-'+b.dataset.view); if(view) view.classList.add('on'); ensureViewRendered(b.dataset.view); sessionViewSeen[b.dataset.view]=Date.now(); updateNavDots(); if(b.dataset.view==='notify'){loadEmailAdmin(); renderActivityLog(); renderProjectEventLog(); renderMyInbox();}
+  });
   document.querySelectorAll('[data-toggle-custom]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.toggleCustom+'Customizer')?.classList.toggle('on'));
   document.querySelectorAll('.task-scope').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-scope').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskScope=b.dataset.taskScope;renderTodo()});
   document.querySelectorAll('.task-period').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-period').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskPeriod=b.dataset.taskPeriod;renderTodo()});
@@ -3077,6 +3785,12 @@ function bindAppEvents(){
   on('solutionFormToggle','onclick',()=>openSolutionForm());
   on('kpiFormToggle','onclick',()=>openKpiForm());
   on('kpiForm','onsubmit',saveKpiActivity);
+  on('internalTaskFormToggle','onclick',()=>openInternalTaskForm());
+  on('internalTaskForm','onsubmit',saveInternalTask);
+  on('certFormToggle','onclick',()=>openCertForm());
+  on('certForm','onsubmit',saveCert);
+  on('trainEventFormToggle','onclick',()=>openTrainEventForm());
+  on('trainEventForm','onsubmit',saveTrainEvent);
   document.querySelectorAll('.kpi-period').forEach(b=>b.onclick=()=>{kpiPeriod=b.dataset.kpiPeriod;renderKpi()});
   on('kpiTargetBtn','onclick',()=>{kpiEditTargets=!kpiEditTargets;renderKpi()});
   on('brandFormToggle','onclick',()=>openBrandForm());
@@ -3105,10 +3819,23 @@ function bindAppEvents(){
   on('teamForm','onsubmit',saveTeam);
   on('ruleForm','onsubmit',saveRule);
   on('emailTemplateForm','onsubmit',saveEmailTemplate);
-  on('sendTestEmailBtn','onclick',async()=>{const to=document.getElementById('testEmailTo')?.value.trim(); if(!to){alert('Enter test recipient');return} await emailFetch('/send',{method:'POST',body:JSON.stringify({to,triggered_by_user:activeUser?.name||'admin'})}); await loadEmailAdmin(); alert('Test email queued and processed')});
+  on('sendTestEmailBtn','onclick',async()=>{const to=document.getElementById('testEmailTo')?.value.trim(); if(!to){alert('Enter test recipient');return} try{await emailFetch('/send',{method:'POST',body:JSON.stringify({to,send_now:true,triggered_by_user:activeUser?.name||'admin'})}); await loadEmailAdmin(); toast('Test email sent / queued successfully','success')}catch(err){await loadEmailAdmin(); toast(friendlyEmailError(err.message),'error')}});
   on('refreshEmailQueueBtn','onclick',loadEmailAdmin);
   on('refreshEmailLogsBtn','onclick',loadEmailAdmin);
   on('processEmailQueueBtn','onclick',async()=>{await emailFetch('/queue',{method:'POST',body:JSON.stringify({action:'process',limit:10})}); await loadEmailAdmin()});
+  on('bellBtn','onclick',()=>{
+    document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));
+    const nb=document.querySelector('.nav button[data-view="notify"]');if(nb) nb.classList.add('on');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+    const nv=document.getElementById('v-notify');if(nv) nv.classList.add('on');
+    ensureViewRendered('notify');sessionViewSeen['notify']=Date.now();updateNavDots();
+    loadEmailAdmin();renderActivityLog();renderProjectEventLog();renderMyInbox();
+  });
+  on('markAllReadBtn','onclick',()=>{
+    const uid=activeUser?.id;if(!uid) return;
+    state.userNotifications=(state.userNotifications||[]).map(n=>n.userId===uid?{...n,read:true}:n);
+    saveState();updateNotifBadge();renderMyInbox();
+  });
   on('execLockBtn','onclick',()=>toggleExecLock('exec'));
   on('execResetLayout','onclick',()=>resetExecLayout('exec'));
   on('execCheckpointBtn','onclick',()=>saveLayoutCheckpoint('exec'));
