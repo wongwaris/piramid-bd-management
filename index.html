@@ -147,6 +147,7 @@ html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 @media(max-width:640px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .f-wide{grid-column:span 2}}.field{display:flex;flex-direction:column;gap:6px}.field span{color:var(--soft);font-size:11px}.field input,.field select,.field textarea{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:var(--r);padding:8px 10px;outline:none}.field textarea{min-height:74px;resize:vertical}
 .masked-entry{-webkit-text-security:disc;text-security:disc}
 .grid{display:grid;gap:14px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.wide{grid-column:span 2}
+.team-cols{grid-template-columns:repeat(4,1fr);align-items:start}.team-cols .group-block{display:flex;flex-direction:column;gap:10px;min-width:0}.team-cols .group-block>.card{margin:0}
 .card,.metric{background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s,border-color .2s}
 .metric{padding:14px 15px;min-height:92px}.metric label{display:block;color:var(--muted);font-size:11.5px;font-weight:500;margin-bottom:8px;letter-spacing:.2px}.metric strong{display:block;font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1}.metric small{display:block;margin-top:7px;color:var(--soft)}
 .dash-grid>.widget.metric[data-widget="mValue"]{grid-column:span 4;background:var(--panel);background-image:var(--card-grad);box-shadow:var(--shadow);border-color:var(--line-2)}
@@ -533,7 +534,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
         <div class="grid g4" id="teamTaskMetrics"></div>
         <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
         <div class="panel-form card" id="teamFormPanel"><div class="ch"><h2 id="teamFormTitle">New Member</h2><button class="btn icon" data-close-form="team">x</button></div><div class="cb"><form class="form-grid" id="teamForm"></form></div></div>
-        <div class="grid g3" id="teamCards"></div>
+        <div class="grid g4 team-cols" id="teamCards"></div>
       </div>
     </section>
 
@@ -1097,7 +1098,12 @@ function normalizeState(data){
       accessRole
     };
   });
-  data.projects = (data.projects||[]).map(p=>({...p,systems:projectSystems(p),proposalOptions:normalizeProposalOptions(p),brands:projectBrands({...p,proposalOptions:normalizeProposalOptions(p)}),projectTaskDefs:p.projectTaskDefs||[]}));
+  data.projects = (data.projects||[]).map(p=>{
+    const proposalOptions=normalizeProposalOptions(p);
+    // Preserve user-selected Brand Scope checklist if present; only derive from proposalOptions when no explicit brands stored
+    const brands=Array.isArray(p.brands)&&p.brands.length?p.brands:projectBrands({...p,proposalOptions});
+    return {...p,systems:projectSystems(p),proposalOptions,brands,projectTaskDefs:p.projectTaskDefs||[]};
+  });
   data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]) }));
   data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
     reportPeriod:r.reportPeriod||periodFromRule(r),
@@ -1164,6 +1170,13 @@ function normalizeState(data){
 const money = n => n ? '฿'+Number(n).toLocaleString('th-TH') : '-';
 const shortMoney = n => n>=1000000 ? '฿'+(n/1000000).toFixed(n>=10000000?0:1)+'M' : money(n);
 const byId = id => state.teams.find(t=>t.id===id) || {name:'Unassigned',role:'-',color:'#657187',target:0,email:'-'};
+// Resolve a team filter / scope token to a human-readable label.
+// Accepts a team id, 'All', or 'role:<role>' — returns 'All' / 'Group BD' / member name.
+function ownerLabel(value){
+  if(!value||value==='All') return 'All';
+  if(typeof value==='string'&&value.startsWith('role:')) return `Group ${value.slice(5)}`;
+  return byId(value).name||value;
+}
 // Chart palette resolved from CSS tokens (single source of truth, works in SVG attrs)
 let CHART=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
 function loadChartColors(){const cs=getComputedStyle(document.documentElement); const c=[1,2,3,4,5,6,7].map(i=>(cs.getPropertyValue('--chart-'+i)||'').trim()).filter(Boolean); if(c.length===7) CHART=c;}
@@ -1295,6 +1308,10 @@ function proposalOptionItems(p,mode='all'){
   return opts.flatMap(o=>(o.items||[]).map(it=>({...it,optionId:o.id,optionName:o.name,optionType:o.type,optionStatus:o.status,optionSelected:o.selected||o.status==='Selected',optionValue:o.value,optionReason:o.reason,optionReview:o.review})));
 }
 function projectBrands(p){
+  // Prefer explicit user-selected Brand Scope checklist when available
+  if(Array.isArray(p.brands)&&p.brands.length&&p.brands.every(b=>b&&typeof b==='object'&&b.name)){
+    return p.brands.map(b=>({category:b.category||'Hardware',name:b.name,model:b.model||'',value:Number(b.value||0)}));
+  }
   if(Array.isArray(p.proposalOptions)&&p.proposalOptions.length){
     return proposalOptionItems(p).filter(it=>it.brand).map(it=>({category:it.category||'Hardware',name:it.brand,model:it.model,value:Number(it.total||0),optionName:it.optionName,optionStatus:it.optionStatus,optionSelected:it.optionSelected,reason:it.optionReason,review:it.optionReview}));
   }
@@ -1961,7 +1978,7 @@ function renderDashboard(){
   const hp=p.filter(x=>x.pri==='High').sort((a,b)=>b.val-a.val).slice(0,10);
   const hpEl=document.getElementById('highPriorityTable'); if(hpEl) hpEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Status</th><th>Value</th><th>BD Lead</th></tr></thead><tbody>'+(hp.map(x=>'<tr><td class="ellipsis">'+esc(x.name)+'</td><td>'+statusTag(x.status)+'</td><td>'+money(x.val)+'</td><td>'+esc(byId(x.bd).name)+'</td></tr>').join('')||'<tr><td colspan="4" class="hint">No data</td></tr>')+'</tbody></table></div>';
   const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,10);
-  const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(byId(x.owner).name)+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
+  const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(ownerNames(x).join(', ')||'-')+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
   renderTimelinessInto('timelinessBox', t);
   renderQuickAddWidget();
   renderCustomCards();
@@ -2217,7 +2234,7 @@ function renderProjects(){
     const revisions=relatedTasks.reduce((s,t)=>s+Number(t.revision||1),0);
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
     const crHtml=changeRequestsHtml(x);
-    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
+    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(ownerNames(t).join(', ')||'-')} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
     const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small" data-project-subtasks="${x.id}" title="จัดการงานย่อยของโครงการ">Sub Task${relatedTasks.length?` (${relatedTasks.filter(t=>t.status==='Done').length}/${relatedTasks.length})`:''}</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
@@ -3190,7 +3207,7 @@ function todoSortValue(t,key){
     case 'title': return t.title||'';
     case 'project': return projectOf(t)?.name||t.project||'';
     case 'phase': return PHASE_ORDER.indexOf(taskPhase(t));
-    case 'owner': return byId(t.owner).name||'';
+    case 'owner': return ownerNames(t).join(', ')||'';
     case 'status': return isOverdue(t)?'Overdue':(t.status||'');
     case 'priority': return taskPriorityScore(t);
     case 'due': return t.due||'9999-99-99';
@@ -3390,16 +3407,16 @@ function renderTodoProjects(){
     const tasks=byProject.get(p.id);
     const prog=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.progress||0),0)/tasks.length):0;
     const od=tasks.filter(isOverdue).length;
-    return `<div class="card todo-proj"><div class="ch"><h2>${esc(p.name||p.id)}</h2>${p.status?statusTag(p.status):''}<div class="meta"><span>${tasks.length} tasks</span><span>${prog}% avg</span>${od?`<span class="tag overdue">${od} overdue</span>`:''}<span>${shortMoney(Number(p.val||0))}</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Phase</th><th>Owner</th><th>Status</th><th>Priority</th><th>Due</th><th>Progress</th></tr></thead><tbody>${tasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`;
+    return `<div class="card todo-proj"><div class="ch"><h2>${esc(p.name||p.id)}</h2>${p.status?statusTag(p.status):''}<div class="meta"><span>${tasks.length} tasks</span><span>${prog}% avg</span>${od?`<span class="tag overdue">${od} overdue</span>`:''}<span>${shortMoney(Number(p.val||0))}</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Phase</th><th>Owner</th><th>Status</th><th>Priority</th><th>Due</th><th>Progress</th></tr></thead><tbody>${tasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${phaseTag(taskPhase(t))}</td><td>${esc(ownerNames(t).join(', ')||'-')}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`;
   }).join('');
-  const intHtml=internalTasks.length?`<div class="card todo-proj"><div class="ch"><h2>Internal / Cross-function</h2><span class="tag internal">Internal</span><div class="meta"><span>${internalTasks.length} tasks</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Owner</th><th>Status</th><th>Due</th><th>Progress</th></tr></thead><tbody>${internalTasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`:'';
+  const intHtml=internalTasks.length?`<div class="card todo-proj"><div class="ch"><h2>Internal / Cross-function</h2><span class="tag internal">Internal</span><div class="meta"><span>${internalTasks.length} tasks</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Owner</th><th>Status</th><th>Due</th><th>Progress</th></tr></thead><tbody>${internalTasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${esc(ownerNames(t).join(', ')||'-')}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`:'';
   body.innerHTML=projHtml+intHtml;
 }
 function renderTodoPriority(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod).filter(t=>t.status!=='Done')
     .sort((a,b)=>taskPriorityScore(b)-taskPriorityScore(a));
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Priority</h2><small>เรียงตามความสำคัญของโครงการ + งานที่เกินกำหนด/ใกล้ครบกำหนด</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Opportunity</th><th>Phase</th><th>Owner</th><th>Priority</th><th>Status</th><th>Due</th></tr></thead><tbody>${set.map((t,i)=>`<tr><td><span class="todo-rank">${i+1}</span></td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${priTag(taskPriority(t))}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${dueBadge(t)}</td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ไม่มีงานค้างให้จัดลำดับ','งานในช่วงที่เลือกเสร็จเรียบร้อยแล้ว')+'</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Priority</h2><small>เรียงตามความสำคัญของโครงการ + งานที่เกินกำหนด/ใกล้ครบกำหนด</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Opportunity</th><th>Phase</th><th>Owner</th><th>Priority</th><th>Status</th><th>Due</th></tr></thead><tbody>${set.map((t,i)=>`<tr><td><span class="todo-rank">${i+1}</span></td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(ownerNames(t).join(', ')||'-')}</td><td>${priTag(taskPriority(t))}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${dueBadge(t)}</td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ไม่มีงานค้างให้จัดลำดับ','งานในช่วงที่เลือกเสร็จเรียบร้อยแล้ว')+'</td></tr>'}</tbody></table></div></div>`;
 }
 function renderTodoExec(){
   const body=document.getElementById('todoBody'); if(!body) return;
@@ -3493,7 +3510,7 @@ function renderCalendarMonth(tasks, monthDate){
     const isToday=key===todayKey;
     const shown=items.slice(0,3);
     const more=items.length-shown.length;
-    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>`<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(ownerNames(t).join(', '))}</small></div>`).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
+    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>{const pj=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(pj?.name||(t.project?t.project:'Internal'))} · ${esc(ownerNames(t).join(', '))}</small></div>`}).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
   }
   const trail=(7-((startWd+daysInMonth)%7))%7;
   for(let i=0;i<trail;i++) cells+='<div class="cal-day empty" aria-hidden="true"></div>';
@@ -3501,7 +3518,7 @@ function renderCalendarMonth(tasks, monthDate){
   const dueCount=tasks.filter(t=>inWindow(t.due,new Date(y,m,1,0,0,0,0),new Date(y,m+1,0,23,59,59,999))).length;
   if(label) label.textContent=`${monthDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})} · ${dueCount} tasks due`;
 }
-function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task" draggable="true" data-task-id="${esc(t.id)}"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(byId(t.owner).name)}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
+function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task" draggable="true" data-task-id="${esc(t.id)}"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(ownerNames(t).join(', ')||'-')}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
 function openTaskForm(id){
   editing.task=id||null; const t=state.taskTemplates.find(x=>x.id===id)||{id:nextId('TT',state.taskTemplates),title:'',subtasks:[]};
   const taskTitle=document.getElementById('taskFormTitle'); if(taskTitle) taskTitle.textContent=id?'Edit Task':'New Task';
@@ -3598,7 +3615,7 @@ function renderKpiActivities(acts){
     const ot=onTime===null?'<span class="hint">—</span>':(onTime?'<span class="tag done">ทันเวลา</span>':`<span class="tag overdue">ช้า ${daysBetween(a.submittedAt,a.dueDate)}d</span>`);
     const out=a.outcome?`<span class="tag ${a.outcome==='Positive'?'done':a.outcome==='Negative'?'overdue':'doing'}">${esc(a.outcome)}</span>`:'';
     const passB=a.pass?`<span class="tag ${a.pass==='Pass'?'done':'overdue'}">${esc(a.pass)}</span>`:'';
-    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(byId(a.owner).name)}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
+    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(ownerLabel(a.owner))}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
   }).join('')||'<tr><td colspan="9">'+emptyState('ยังไม่มี Activity ในงวดนี้','กด + Add Activity เพื่อบันทึกงาน BD แล้ว KPI จะคำนวณให้อัตโนมัติ')+'</td></tr>';
   el.querySelectorAll('[data-edit-kpi]').forEach(b=>b.onclick=()=>openKpiForm(b.dataset.editKpi));
   el.querySelectorAll('[data-del-kpi]').forEach(b=>b.onclick=()=>deleteKpiActivity(b.dataset.delKpi));
@@ -3886,7 +3903,7 @@ function renderTeam(){
     {label:'Sales', items:state.teams.filter(t=>t.role==='Sales')}
   ];
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
-    const owned=state.projects.filter(p=>p.bd===t.id||p.presales===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>x.owner===t.id);
+    const owned=state.projects.filter(p=>p.bd===t.id||p.presales===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
     const locked = !isAdmin();
     return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="avatar" style="background:${t.color}">${esc(initials(t.name))}</div><div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
