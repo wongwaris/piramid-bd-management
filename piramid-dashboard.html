@@ -389,7 +389,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <button data-view="projects"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></span>Projects <span class="navdot"></span></button>
       <button data-view="tasks"><span class="ico"><svg viewBox="0 0 24 24"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>To-Do List <span class="navdot"></span></button>
       <button data-view="calendar"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Calendar <span class="navdot"></span></button>
-      <button data-view="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="5" width="3" height="13" rx="1"/></svg></span>BD KPI <span class="navdot"></span></button>
+      <button data-view="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="5" width="3" height="13" rx="1"/></svg></span>KPI Activity <span class="navdot"></span></button>
       <button data-view="training"><span class="ico"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c3 1.5 9 1.5 12 0v-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Training <span class="navdot"></span></button>
       <button data-view="team"><span class="ico"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Team <span class="navdot"></span></button>
       <div class="nav-label">System</div>
@@ -496,7 +496,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-kpi" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>BD KPI</div><h1>BD KPI Scorecard</h1><p>ประเมินผลงาน BD: ตรงเวลา · ครบถ้วน · คุณภาพ · ปริมาณ · Conversion — คำนวณจาก BD Activity</p></div><div class="actions"><button class="btn primary" id="kpiFormToggle">+ Add Activity</button><button class="btn" data-export="kpi">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>KPI ACTIVITY</div><h1>KPI Activity Scorecard</h1><p>ประเมินผลงานทีม: ตรงเวลา · ครบถ้วน · คุณภาพ · ปริมาณ · Conversion — คำนวณจาก Activity</p></div><div class="actions"><button class="btn primary" id="kpiFormToggle">+ Add Activity</button><button class="btn" id="kpiTypeFormToggle" data-admin-only>⚙ Activity Types</button><button class="btn" data-export="kpi">Export</button></div></div>
       <div class="content">
         <div class="toolbar" style="justify-content:flex-end">
           <button class="btn small kpi-period on" data-kpi-period="month">This Month</button>
@@ -504,7 +504,8 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <button class="btn small" id="kpiTargetBtn">🎯 ตั้งเป้า</button>
           <label class="field" style="min-width:210px"><span>BD Member</span><select id="kpiOwnerFilter"></select></label>
         </div>
-        <div class="panel-form card" id="kpiFormPanel"><div class="ch"><h2>BD Activity</h2><button class="btn icon" data-close-form="kpi">x</button></div><div class="cb"><form class="form-grid" id="kpiForm"></form></div></div>
+        <div class="panel-form card" id="kpiFormPanel"><div class="ch"><h2>KPI Activity</h2><button class="btn icon" data-close-form="kpi">x</button></div><div class="cb"><form class="form-grid" id="kpiForm"></form></div></div>
+        <div class="panel-form card" id="kpiTypeFormPanel"><div class="ch"><h2>Activity Types (Data List)</h2><button class="btn icon" data-close-form="kpiType" aria-label="Close">×</button></div><div class="cb" id="kpiTypeBody"></div></div>
         <div class="grid g4" id="kpiSummary"></div>
         <div id="kpiAlert"></div>
         <div id="kpiScorecard"></div>
@@ -1114,6 +1115,7 @@ function normalizeState(data){
   data.passwordResetRequests = data.passwordResetRequests || [];
   data.todoView = data.todoView || 'table';
   data.kpiActivities = data.kpiActivities?.length ? data.kpiActivities : structuredClone(DEFAULT_KPI_ACTIVITIES);
+  data.kpiTypes = Array.isArray(data.kpiTypes)&&data.kpiTypes.length ? data.kpiTypes : [...KPI_TYPES];
   data.kpiTargets = {...DEFAULT_KPI_TARGETS, ...(data.kpiTargets||{})};
   // #6 Internal tasks: tasks without a project are allowed
   // #4 BD Work Queue: ordered list of taskIds for personal queue
@@ -2545,7 +2547,7 @@ function openProjectSubTasks(projectId){
         return linked;
       });
       cascadeProjectDoneFromTasks(projectId);
-      saveState(); render(); renderProjects();
+      saveState(); render(); renderProjects(); refreshAfterTaskChange();
     });
     // Add new sub task
     document.getElementById('pstAddBtn').onclick=()=>{
@@ -2564,7 +2566,7 @@ function openProjectSubTasks(projectId){
         statusLog:[{status:'Schedule',at:nowIso}]
       });
       cascadeProjectDoneFromTasks(projectId);
-      saveState(); render(); renderProjects();
+      saveState(); render(); renderProjects(); refreshAfterTaskChange();
     };
     // Save all edits
     function saveRows(){
@@ -2602,7 +2604,7 @@ function openProjectSubTasks(projectId){
       logActivity('อัปเดต Sub Tasks','projects',proj.name);
       panel.classList.remove('on');
       renderProjects();
-      if(activeViewName()==='tasks') renderTodo();
+      refreshAfterTaskChange();
     };
     bindCloseButtons();
   }
@@ -3589,12 +3591,18 @@ function renderKpi(){
 function openKpiForm(id){
   if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์แก้ไข KPI','error');return}
   editing.kpi=id||null;
-  const a=state.kpiActivities.find(x=>x.id===id)||{id:nextId('KA',state.kpiActivities),type:'Proposal',title:'',owner:state.teams.find(t=>t.role==='BD Lead')?.id||'',project:'',dueDate:'',submittedAt:'',completeness:100,outcome:'',pass:''};
-  const bd=state.teams.filter(t=>t.role==='BD Lead');
+  const types=state.kpiTypes?.length?state.kpiTypes:[...KPI_TYPES];
+  const a=state.kpiActivities.find(x=>x.id===id)||{id:nextId('KA',state.kpiActivities),type:types[0]||'Proposal',title:'',owner:'',project:'',dueDate:'',submittedAt:'',completeness:100,outcome:'',pass:''};
+  const roles=uniq(state.teams.map(t=>t.role||'').filter(Boolean));
+  const ownerOpts=[
+    `<option value="All" ${a.owner==='All'?'selected':''}>All — ทั้งบริษัท</option>`,
+    `<optgroup label="ทั้งแผนก">${roles.map(r=>`<option value="role:${esc(r)}" ${a.owner===`role:${r}`?'selected':''}>ทุกคนใน ${esc(r)}</option>`).join('')}</optgroup>`,
+    `<optgroup label="รายบุคคล">${state.teams.map(t=>`<option value="${esc(t.id)}" ${a.owner===t.id?'selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</optgroup>`,
+  ].join('');
   document.getElementById('kpiForm').innerHTML=`
     <label class="field"><span>ID</span><input name="id" value="${esc(a.id)}" ${id?'readonly':''}></label>
-    <label class="field"><span>ประเภทงาน</span><select name="type">${KPI_TYPES.map(t=>`<option ${a.type===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
-    <label class="field"><span>เจ้าของ (BD)</span><select name="owner">${bd.map(t=>`<option value="${t.id}" ${a.owner===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>
+    <label class="field"><span>ประเภทงาน</span><select name="type">${types.map(t=>`<option ${a.type===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
+    <label class="field"><span>ผู้รับผิดชอบ / Lead</span><select name="owner">${ownerOpts}</select><span class="hint">เลือก All · แผนก · หรือรายบุคคล</span></label>
     <label class="field span3"><span>ชื่องาน</span><input name="title" required value="${esc(a.title)}"></label>
     <label class="field"><span>โครงการ (ถ้ามี)</span><select name="project"><option value="">—</option>${state.projects.map(p=>`<option value="${p.id}" ${a.project===p.id?'selected':''}>${esc(p.id+' '+p.name)}</option>`).join('')}</select></label>
     <label class="field"><span>วันกำหนดส่ง</span><input type="date" name="dueDate" value="${esc(a.dueDate||'')}"></label>
@@ -3618,6 +3626,34 @@ function saveKpiActivity(e){
   document.getElementById('kpiFormPanel').classList.remove('on'); renderKpi();
 }
 function deleteKpiActivity(id){ if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์ลบ KPI','error');return} if(!confirm('ลบ Activity '+id+'?'))return; state.kpiActivities=state.kpiActivities.filter(x=>x.id!==id); saveState(); renderKpi(); }
+function openKpiTypeEditor(){
+  if(!isAdmin()){toast('Admin only','error');return}
+  const body=document.getElementById('kpiTypeBody'); if(!body) return;
+  function render(){
+    const types=state.kpiTypes?.length?state.kpiTypes:[...KPI_TYPES];
+    body.innerHTML=`
+      <p class="hint" style="margin-bottom:10px">ประเภทงาน (Data List) ใช้เป็นตัวเลือกใน Add Activity · ${types.length} รายการ</p>
+      <div class="chips" id="kpiTypeChips" style="margin-bottom:10px">
+        ${types.map((t,i)=>`<span class="chip" style="padding:4px 4px 4px 10px">${esc(t)} <button class="btn small danger" style="height:22px;padding:0 6px;margin-left:4px" data-kpi-type-del="${i}" aria-label="Delete ${esc(t)}">×</button></span>`).join('')}
+      </div>
+      <div class="subtask-add-row"><input id="kpiTypeNew" type="text" placeholder="เพิ่มประเภทงานใหม่…" autocomplete="off"><button class="btn primary small" id="kpiTypeAdd">+ Add</button></div>
+      <div class="toolbar" style="margin-top:12px"><button class="btn" data-close-form="kpiType">Done</button></div>`;
+    body.querySelectorAll('[data-kpi-type-del]').forEach(b=>b.onclick=()=>{
+      state.kpiTypes.splice(Number(b.dataset.kpiTypeDel),1);
+      saveState(); render();
+    });
+    const addFn=()=>{
+      const inp=document.getElementById('kpiTypeNew'); const v=inp.value.trim(); if(!v) return;
+      state.kpiTypes=uniq([...(state.kpiTypes||[]),v]);
+      saveState(); render();
+    };
+    document.getElementById('kpiTypeAdd').onclick=addFn;
+    document.getElementById('kpiTypeNew').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addFn();}});
+    bindCloseButtons();
+  }
+  render();
+  showFormPanel('kpiTypeFormPanel');
+}
 
 function renderSettings(){
   if(!isAdmin()){document.querySelector('#v-settings .content').innerHTML='<div class="card"><div class="cb hint">Admin only: Settings ใช้ได้เฉพาะ Wongwaris</div></div>';return}
@@ -4170,6 +4206,7 @@ function bindAppEvents(){
   on('taskFormToggle','onclick',()=>openTaskForm());
   on('solutionFormToggle','onclick',()=>openSolutionForm());
   on('kpiFormToggle','onclick',()=>openKpiForm());
+  on('kpiTypeFormToggle','onclick',()=>openKpiTypeEditor());
   on('kpiForm','onsubmit',saveKpiActivity);
   on('internalTaskFormToggle','onclick',()=>openInternalTaskForm());
   on('todoNewProjectBtn','onclick',()=>navigateToView('projects',()=>openProjectForm()));
