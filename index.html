@@ -1667,8 +1667,8 @@ const BI_SOURCES={
     {key:'role',label:'Role',get:m=>[m.role]},
     {key:'level',label:'Level',get:m=>[m.level]}
   ],measures:[
-    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).length},
-    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).reduce((s,p)=>s+(p.val||0),0)},
+    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>p.bd===m.id||p.presales===m.id||p.sales===m.id).length},
+    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>p.bd===m.id||p.presales===m.id||p.sales===m.id).reduce((s,p)=>s+(p.val||0),0)},
     {key:'target',label:'Reference Value (฿)',agg:'sum',money:true,val:m=>m.target||0}
   ]}
 };
@@ -3504,7 +3504,7 @@ function pctOf(arr,pred,unit){
 function countKpi(arr,label){return {v:arr.length, sub:`${arr.length} ${label||''}`.trim()}}
 function winRateKpi(owner){
   let projs=state.projects.filter(p=>p.status==='Win'||p.status==='Lost');
-  if(owner!=='All') projs=projs.filter(p=>p.bd===owner);
+  if(owner!=='All') projs=projs.filter(p=>p.bd===owner||p.presales===owner||p.sales===owner);
   if(!projs.length) return {v:0,sub:'',na:true};
   const win=projs.filter(p=>p.status==='Win').length;
   return {v:Math.round(win/projs.length*100), sub:`${win}/${projs.length} ปิดดีล`};
