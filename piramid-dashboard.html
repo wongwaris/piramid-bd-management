@@ -441,6 +441,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>PROJECTS</div><h1>Project Management</h1><p>บริหารโครงการ มอบหมายทีม และมูลค่าตาม Brand / PIRAMID Scope</p></div><div class="actions"><button class="btn" data-reset-filters>↺ Reset Filter</button><button class="btn primary" id="projectFormToggle">+ New Project</button><button class="btn" data-export="projects">Export</button></div></div>
       <div class="content">
         <div class="panel-form card" id="projectFormPanel"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project">x</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div>
+        <div class="panel-form card" id="projectSubTaskFormPanel"><div class="ch"><h2 id="projectSubTaskTitle">Project Sub Tasks</h2><button class="btn icon" data-close-form="projectSubTask" aria-label="Close">×</button></div><div class="cb" id="projectSubTaskBody"></div></div>
         <div class="card"><div class="ch"><h2>Projects</h2><small id="projectCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead id="projectTableHead"></thead><tbody id="projectRows"></tbody></table></div></div>
       </div>
     </section>
@@ -2179,10 +2180,11 @@ function renderProjects(){
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
     const crHtml=changeRequestsHtml(x);
     const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
-    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
+    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small" data-project-subtasks="${x.id}" title="จัดการงานย่อยของโครงการ">Sub Task${relatedTasks.length?` (${relatedTasks.filter(t=>t.status==='Done').length}/${relatedTasks.length})`:''}</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
   document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
+  document.querySelectorAll('[data-project-subtasks]').forEach(b=>b.onclick=()=>openProjectSubTasks(b.dataset.projectSubtasks));
   document.querySelectorAll('[data-del-project]').forEach(b=>b.onclick=()=>deleteProject(b.dataset.delProject));
   document.querySelectorAll('[data-toggle-sub]').forEach(b=>b.onclick=()=>document.getElementById('sub-'+b.dataset.toggleSub)?.classList.toggle('on'));
   openSubs.forEach(id=>document.getElementById(id)?.classList.add('on'));
@@ -2500,11 +2502,139 @@ function applyTaskStatus(t, newStatus, nowIso){ // pure mutation; returns true i
   t.statusLog=[...(t.statusLog||[]),{status:newStatus,at:nowIso}].slice(-30);
   return true;
 }
+function openProjectSubTasks(projectId){
+  if(!requireLogin()) return;
+  if(!canEditModule('projects')&&!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข','error');return}
+  const proj=state.projects.find(p=>p.id===projectId); if(!proj) return;
+  const panel=document.getElementById('projectSubTaskFormPanel');
+  const body=document.getElementById('projectSubTaskBody');
+  const titleEl=document.getElementById('projectSubTaskTitle');
+  titleEl.textContent=`Sub Tasks — ${proj.name}`;
+  const teamOpts=ownerId=>state.teams.map(t=>`<option value="${esc(t.id)}"${t.id===ownerId?' selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('');
+  const statusOpts=cur=>state.taskStatuses.map(s=>`<option value="${esc(s.name)}"${s.name===cur?' selected':''}>${esc(s.name)}</option>`).join('');
+  const priOpts=cur=>['Low','Medium','High','Critical'].map(v=>`<option value="${v}"${v===cur?' selected':''}>${v}</option>`).join('');
+  function render(){
+    const rel=state.tasks.filter(t=>t.project===projectId);
+    const done=rel.filter(t=>t.status==='Done').length;
+    const overallPct=rel.length?Math.round(rel.reduce((s,t)=>s+Number(t.progress||0),0)/rel.length):0;
+    const summary=rel.length
+      ? `<div class="hint" style="margin-bottom:10px"><b>${done}/${rel.length}</b> sub tasks เสร็จ · เฉลี่ย <b>${overallPct}%</b> ${done===rel.length&&rel.length>0?'· ✓ โครงการเสร็จ 100% อัตโนมัติ':done>0?'· โครงการกำลังดำเนินการ':''}</div>`
+      : '<div class="hint" style="margin-bottom:10px">ยังไม่มี sub task · กดปุ่ม + Add Sub Task ด้านล่าง</div>';
+    body.innerHTML=`${summary}
+      <div class="ptd-editor" id="pstList">
+        ${rel.map((t,i)=>`
+          <div class="ptd-row" data-pst-row="${esc(t.id)}">
+            <label class="field"><span>Task Title</span><input data-pf="title" value="${esc(t.title)}" placeholder="ชื่องาน"></label>
+            <label class="field"><span>Owner</span><select data-pf="owner">${teamOpts(t.owner)}</select></label>
+            <label class="field"><span>Status</span><select data-pf="status">${statusOpts(t.status)}</select></label>
+            <label class="field"><span>Due</span><input data-pf="due" type="date" value="${esc(t.due||'')}"></label>
+            <label class="field"><span>Progress %</span><input data-pf="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
+            <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-pst-del="${esc(t.id)}" aria-label="Delete sub task">×</button></div>
+          </div>`).join('')}
+      </div>
+      <button class="btn small primary" type="button" id="pstAddBtn">+ Add Sub Task</button>
+      <div class="toolbar" style="margin-top:14px"><button class="btn primary" id="pstSaveBtn">Save All</button><button class="btn" data-close-form="projectSubTask">Close</button></div>`;
+    // Delete a sub task
+    body.querySelectorAll('[data-pst-del]').forEach(b=>b.onclick=()=>{
+      const id=b.dataset.pstDel;
+      if(!confirm('ลบ sub task นี้?')) return;
+      state.tasks=state.tasks.filter(x=>x.id!==id);
+      // remove from projectTaskDefs as well
+      proj.projectTaskDefs=(proj.projectTaskDefs||[]).filter(d=>{
+        const linked=state.tasks.find(x=>x.projectTaskDefId===d.id);
+        return linked;
+      });
+      cascadeProjectDoneFromTasks(projectId);
+      saveState(); render(); renderProjects();
+    });
+    // Add new sub task
+    document.getElementById('pstAddBtn').onclick=()=>{
+      saveRows(); // persist current edits first
+      const nowIso=new Date().toISOString();
+      const defId=`PTD-${Date.now()}`;
+      const newDef={id:defId,title:'New Sub Task',owner:proj.bd||state.teams[0]?.id||'',status:'Schedule',due:proj.due||'',priority:'Medium',progress:0};
+      proj.projectTaskDefs=[...(proj.projectTaskDefs||[]),newDef];
+      const newOwner=newDef.owner;
+      state.tasks.push({
+        id:nextId('T',state.tasks),project:projectId,projectTaskDefId:defId,
+        title:newDef.title,owner:newOwner,owners:newOwner?[newOwner]:[],
+        status:'Schedule',due:newDef.due||'',priority:'Medium',progress:0,
+        level:'Member',revision:1,subtasks:[],
+        createdAt:nowIso,statusChangedAt:nowIso,completedAt:null,
+        statusLog:[{status:'Schedule',at:nowIso}]
+      });
+      cascadeProjectDoneFromTasks(projectId);
+      saveState(); render(); renderProjects();
+    };
+    // Save all edits
+    function saveRows(){
+      const now=new Date().toISOString();
+      body.querySelectorAll('[data-pst-row]').forEach(row=>{
+        const id=row.dataset.pstRow;
+        const t=state.tasks.find(x=>x.id===id); if(!t) return;
+        const newTitle=row.querySelector('[data-pf="title"]').value.trim();
+        const newOwner=row.querySelector('[data-pf="owner"]').value;
+        const newStatus=row.querySelector('[data-pf="status"]').value;
+        const newDue=row.querySelector('[data-pf="due"]').value;
+        const newProgress=Number(row.querySelector('[data-pf="progress"]').value||0);
+        const statusChanged=t.status!==newStatus;
+        t.title=newTitle||t.title;
+        t.owner=newOwner; t.owners=newOwner?[newOwner]:[];
+        t.due=newDue||'';
+        t.progress=newStatus==='Done'?100:newProgress;
+        if(statusChanged){
+          t.status=newStatus; t.statusChangedAt=now;
+          if(newStatus==='Done'){t.completedAt=t.completedAt||now;t.progress=100;}
+          else{t.completedAt=null;if(Number(t.progress)>=100)t.progress=90;}
+          t.statusLog=[...(t.statusLog||[]),{status:newStatus,at:now}].slice(-30);
+        }
+        // mirror back to projectTaskDefs
+        if(t.projectTaskDefId){
+          const def=(proj.projectTaskDefs||[]).find(d=>d.id===t.projectTaskDefId);
+          if(def){def.title=t.title;def.owner=t.owner;def.status=t.status;def.due=t.due;def.priority=t.priority||'Medium';def.progress=t.progress;}
+        }
+      });
+    }
+    document.getElementById('pstSaveBtn').onclick=()=>{
+      saveRows();
+      cascadeProjectDoneFromTasks(projectId);
+      saveState();
+      logActivity('อัปเดต Sub Tasks','projects',proj.name);
+      panel.classList.remove('on');
+      renderProjects();
+      if(activeViewName()==='tasks') renderTodo();
+    };
+    bindCloseButtons();
+  }
+  render();
+  showFormPanel('projectSubTaskFormPanel');
+}
+function cascadeProjectDoneFromTasks(projectId){
+  if(!projectId) return;
+  const proj=state.projects.find(p=>p.id===projectId); if(!proj) return;
+  const rel=state.tasks.filter(t=>t.project===projectId);
+  if(!rel.length) return;
+  const allDone=rel.every(t=>t.status==='Done');
+  if(allDone){
+    if(proj.taskStatus!=='Done'||Number(proj.progress||0)<100){
+      proj.taskStatus='Done'; proj.progress=100;
+      logActivity('โครงการเสร็จ 100%','projects',`${proj.name} · ทุก Sub Task เสร็จแล้ว`);
+      toast(`โครงการ "${proj.name}" เสร็จครบทุก Sub Task → Done 100%`,'success');
+    }
+  } else if(proj.taskStatus==='Done'){
+    // un-done if a task is reopened
+    proj.taskStatus='Doing';
+    proj.progress=averageProjectProgress(projectId);
+  } else {
+    proj.progress=averageProjectProgress(projectId);
+  }
+}
 function setTaskStatus(taskId, newStatus){
   const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
   if(!applyTaskStatus(t, newStatus, new Date().toISOString())) return;
   // Notify task owner if someone else changed it
   if(activeUser) ownerIds(t).filter(id=>id!==activeUser.id).forEach(id=>logUserNotification(id,'task_update',`งาน "${t.title}" ถูกเปลี่ยนสถานะเป็น ${newStatus} โดย ${activeUser.name}`,{taskId}));
+  cascadeProjectDoneFromTasks(t.project);
   saveState();
   logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
   if(newStatus==='Done'){ const d=taskDelta(t); const tail=d==null?'':(d>0?` · ช้า ${d} วัน`:d<0?` · เร็ว ${-d} วัน`:' · ตรงเวลา'); toast(`${t.title} เสร็จแล้ว${tail}`, d>0?'info':'success'); }
@@ -3086,6 +3216,7 @@ function saveTodoTask(e){
   if(statusChanged){
     state.tasks[idx].statusLog=[...(prev.statusLog||[]),{status:f.status,at:now}].slice(-30);
   }
+  if(statusChanged||prev.progress!==Number(f.progress||0)) cascadeProjectDoneFromTasks(prev.project);
   // Sync sub tasks back to the project so they persist across syncProjectTasks rebuilds
   if(prev.project){
     const proj=state.projects.find(p=>p.id===prev.project);
