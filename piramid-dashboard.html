@@ -205,6 +205,9 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 #execGrid>.widget[data-widget="execStatus"]{grid-column:span 4;grid-row:span 10}
 #execGrid>.widget[data-widget="execBrand"]{grid-column:span 4;grid-row:span 10}
 #execGrid>.widget[data-widget="execTeam"]{grid-column:span 4;grid-row:span 10}
+#execGrid>.widget[data-widget="execPresalesTeam"]{grid-column:span 4;grid-row:span 10}
+#execGrid>.widget[data-widget="execPresalesWorkload"]{grid-column:span 5;grid-row:span 11}
+#execGrid>.widget[data-widget="execPresalesTasks"]{grid-column:span 3;grid-row:span 9}
 #execGrid>.widget[data-widget="execWorkload"]{grid-column:span 7;grid-row:span 11}
 #execGrid>.widget[data-widget="execSolutions"],#execGrid>.widget[data-widget="execTopSystems"],#execGrid>.widget[data-widget="execSegments"],#execGrid>.widget[data-widget="execTasks"]{grid-column:span 3;grid-row:span 9}
 #execGrid>.widget[data-widget="execHighPriority"]{grid-column:span 6;grid-row:span 10}
@@ -423,6 +426,9 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <div class="card widget" data-widget="execStatus"><div class="ch"><h2>Project Status</h2><small id="statusTotal"></small></div><div class="cb"><div class="bars" id="statusBars"></div></div></div>
           <div class="card widget" data-widget="execBrand"><div class="ch"><h2>Solutions Sales</h2><small>มูลค่าตามกลุ่มโซลูชัน/แบรนด์ · hover ดูมูลค่าและ %</small></div><div class="cb" id="brandDonut"></div></div>
           <div class="card widget" data-widget="execTeam"><div class="ch"><h2>Team Involvement</h2><small>มูลค่าโครงการที่แต่ละคนมีส่วนร่วม · hover ดูมูลค่า</small></div><div class="cb"><div class="bars" id="teamKpiBars"></div></div></div>
+          <div class="card widget" data-widget="execPresalesTeam"><div class="ch"><h2>Presales Involvement</h2><small>มูลค่าโครงการที่ Presales แต่ละคนรับผิดชอบ</small></div><div class="cb"><div class="bars" id="presalesTeamBars"></div></div></div>
+          <div class="card widget" data-widget="execPresalesWorkload"><div class="ch"><h2>Presales Workflow</h2><small>งาน Presales รายเดือนของปีนี้ vs ปีก่อน</small></div><div class="cb"><div id="presalesWorkloadChart"></div></div></div>
+          <div class="card widget" data-widget="execPresalesTasks"><div class="ch"><h2>Presales Task Health</h2><small>สถานะงาน Presales · open / done / overdue</small></div><div class="cb" id="presalesTaskDonut"></div></div>
           <div class="card widget" data-widget="execSolutions"><div class="ch"><h2>Solutions Mix</h2><small>4 กลุ่มโซลูชันหลัก · จำนวนโครงการ</small></div><div class="cb"><div class="vbars" id="solutionGroupBars"></div></div></div>
           <div class="card widget" data-widget="execTopSystems"><div class="ch"><h2>Top 5 Systems</h2><small>ระบบที่ทำบ่อยที่สุด</small></div><div class="cb"><div class="bars" id="topSystemBars"></div></div></div>
           <div class="card widget" data-widget="execSegments"><div class="ch"><h2>Value by Segment</h2><small>มูลค่าตาม Segment · hover ดูมูลค่าและ %</small></div><div class="cb" id="segmentDonut"></div></div>
@@ -765,10 +771,10 @@ const seed = {
   taskStatuses: DEFAULT_TASK_STATUSES,
   kpiActivities: DEFAULT_KPI_ACTIVITIES,
   kpiTargets: DEFAULT_KPI_TARGETS,
-  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execPresalesTeam:true,execPresalesWorkload:true,execPresalesTasks:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
 };
 const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
-const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd'];
+const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd'];
 const DEFAULT_EXEC_WIDGET_SIZE = {
   execSummary:{cols:12,rows:5},
   mTotal:{cols:3,rows:4},
@@ -783,6 +789,9 @@ const DEFAULT_EXEC_WIDGET_SIZE = {
   execStatus:{cols:4,rows:10},
   execBrand:{cols:4,rows:10},
   execTeam:{cols:4,rows:10},
+  execPresalesTeam:{cols:4,rows:10},
+  execPresalesWorkload:{cols:5,rows:11},
+  execPresalesTasks:{cols:3,rows:9},
   execWorkload:{cols:7,rows:11},
   execSolutions:{cols:3,rows:9},
   execTopSystems:{cols:3,rows:9},
@@ -1158,6 +1167,15 @@ function normalizeState(data){
   // Additive: inject execQuickAdd into existing layouts without resetting them
   if(!data.layoutOrder.includes('execQuickAdd')){ data.layoutOrder.push('execQuickAdd'); }
   if(!data.widgetSize.execQuickAdd){ data.widgetSize.execQuickAdd={cols:5,rows:8}; }
+  // Additive: inject Presales-focused widgets so existing users see them on next load without losing their custom layout
+  ['execPresalesTeam','execPresalesWorkload','execPresalesTasks'].forEach(key=>{
+    if(!data.layoutOrder.includes(key)){
+      const idx=data.layoutOrder.indexOf('execTeam');
+      if(idx>=0) data.layoutOrder.splice(idx+1,0,key); else data.layoutOrder.push(key);
+    }
+    if(!data.widgetSize[key]) data.widgetSize[key]=structuredClone(DEFAULT_EXEC_WIDGET_SIZE[key]);
+    if(data.layout[key]===undefined) data.layout[key]=true;
+  });
   if(data.layout.execQuickAdd===undefined){ data.layout.execQuickAdd=true; }
   if(data.anaLayoutVersion !== 2){
     data.anaOrder = [...DEFAULT_ANA_ORDER];
@@ -1471,9 +1489,9 @@ function initFilters(){
   return true;
 }
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execPresalesTeam:'Presales Involvement',execPresalesWorkload:'Presales Workflow',execPresalesTasks:'Presales Task Health',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
-  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd']);
+  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
   build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
   (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
@@ -1512,12 +1530,33 @@ function renderVBars(elId, items, opts={}){
   el.innerHTML=items.length?items.map(x=>{const val=opts.money?shortMoney(x.value):esc(x.value); return `<div class="vbar" title="${esc(x.label)}: ${esc(val)}"><b class="vval">${val}</b><div class="vfill" style="height:${pct(x.value,max)}%;background-color:${x.color||'var(--accent)'}"></div><span class="vlbl">${esc(x.label)}</span></div>`;}).join(''):'<div class="hint">No data</div>';
 }
 // Team Workload: dot plot of open tasks per month (12 months) + year-over-year comparison line.
+function renderPresalesWorkloadChart(){
+  const host=document.getElementById('presalesWorkloadChart'); if(!host) return;
+  const curYear=today.getFullYear();
+  const mode=(state.workloadCompare==='next')?'next':'prev';
+  const cmpYear=curYear+(mode==='next'?1:-1);
+  const isPresalesTask=t=>ownerIds(t).some(id=>/presales/i.test(byId(id).role||''));
+  const count=year=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due||!isPresalesTask(t))return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===year) a[d.getMonth()]++;}); return a;};
+  const cur=count(curYear), cmp=count(cmpYear), max=Math.max(1,...cur,...cmp);
+  const W=380,H=150,pl=26,pr=10,pt=10,pb=20,pw=W-pl-pr,ph=H-pt-pb;
+  const X=i=>pl+pw*i/11, Y=v=>pt+ph*(1-v/max);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let grid='';[0,.5,1].forEach(f=>{const yy=pt+ph*(1-f);grid+='<line x1="'+pl+'" y1="'+yy+'" x2="'+(W-pr)+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-4)+'" y="'+(yy+3)+'" text-anchor="end" font-size="9" fill="var(--soft)">'+Math.round(max*f)+'</text>';});
+  const xl=months.map((m,i)=>'<text x="'+X(i)+'" y="'+(H-9)+'" text-anchor="middle" font-size="8.5" fill="var(--soft)">'+m+'</text>').join('');
+  const cmpLine='<polyline fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3" points="'+cmp.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>'+cmp.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="2.5" fill="var(--amber)"><title>'+months[i]+' '+cmpYear+': '+v+' งาน Presales</title></circle>').join('');
+  const area='<defs><linearGradient id="pwlg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--chart-5)" stop-opacity=".28"/><stop offset="100%" stop-color="var(--chart-5)" stop-opacity="0"/></linearGradient></defs>'+
+    '<polygon fill="url(#pwlg)" points="'+pl+','+(pt+ph)+' '+cur.map((v,i)=>X(i)+','+Y(v)).join(' ')+' '+(W-pr)+','+(pt+ph)+'"/>'+
+    '<polyline fill="none" stroke="var(--chart-5)" stroke-width="2" points="'+cur.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>';
+  const curDots=cur.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="var(--chart-5)" stroke="var(--panel)" stroke-width="1.5"><title>'+months[i]+' '+curYear+': '+v+' งาน Presales</title></circle>').join('');
+  host.innerHTML='<svg class="wl-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+area+grid+xl+cmpLine+curDots+'</svg>'+
+    '<div class="wl-legend" style="display:flex;gap:16px;justify-content:center;font-size:11px;color:var(--muted)"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--chart-5);margin-right:5px"></i>Presales '+curYear+'</span><span><i style="display:inline-block;width:14px;height:3px;background:var(--amber);margin-right:5px;vertical-align:middle"></i>'+cmpYear+'</span></div>';
+}
 function renderWorkloadChart(){
   const host=document.getElementById('teamWorkloadChart'); if(!host) return;
   const curYear=today.getFullYear();
   const mode=(state.workloadCompare==='next')?'next':'prev';
   const sel=document.getElementById('wlCompare');
-  if(sel){ sel.value=mode; if(!sel.dataset.bound){sel.dataset.bound='1'; sel.addEventListener('change',()=>{state.workloadCompare=sel.value; saveState(); renderWorkloadChart();});} }
+  if(sel){ sel.value=mode; if(!sel.dataset.bound){sel.dataset.bound='1'; sel.addEventListener('change',()=>{state.workloadCompare=sel.value; saveState(); renderWorkloadChart(); renderPresalesWorkloadChart();});} }
   const cmpYear=curYear+(mode==='next'?1:-1);
   const count=year=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due)return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===year) a[d.getMonth()]++;}); return a;};
   const cur=count(curYear), cmp=count(cmpYear), max=Math.max(1,...cur,...cmp);
@@ -1940,13 +1979,17 @@ function renderDashboard(){
   document.getElementById('statusTotal').textContent=total+' projects';
   const palette=CHART;
   const stat=grouped(p,x=>x.status);
-  renderBars('statusBars',Object.entries(stat).map(([label,value],i)=>({label,value,color:palette[i%palette.length]})));
+  // Show every configured status (even with 0 projects) so executives see the full pipeline
+  const statusOrdered=state.projectStatuses.map(s=>s.name);
+  const extras=Object.keys(stat).filter(k=>!statusOrdered.includes(k));
+  const allStatusKeys=[...statusOrdered,...extras];
+  renderBars('statusBars',allStatusKeys.map((label,i)=>({label,value:stat[label]||0,color:palette[i%palette.length]})));
   const brands=brandStats(p).map(b=>({label:b.label,value:b.revenue})).filter(b=>b.value>0).sort((a,b)=>b.value-a.value).slice(0,7).map((b,i)=>({...b,color:palette[i%palette.length]}));
   renderDonut('brandDonut',brands,{money:true,centerValue:shortMoney(brands.reduce((s,x)=>s+x.value,0)),centerLabel:'sales'});
   const segItems=Object.entries(grouped(p,x=>x.seg,x=>x.val)).sort((a,b)=>b[1]-a[1]).map(([label,value],i)=>({label,value,color:palette[i%palette.length]}));
   renderDonut('segmentDonut',segItems,{money:true,centerValue:shortMoney(segItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
   // Team Involvement: show actual pipeline value each member is participating in (not % of a target)
-  const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>x.bd===tm.id||x.presales===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,6);
+  const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>x.bd===tm.id||x.presales===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,12);
   renderBars('teamKpiBars',teamKpi,{money:true});
   const selectedTeam=state.teams.find(tm=>tm.id===filters.team);
   const isRoleFilter=typeof filters.team==='string'&&filters.team.startsWith('role:');
@@ -1968,6 +2011,13 @@ function renderDashboard(){
   renderWorkloadChart();
   const thColors={Done:CHART[2],Doing:CHART[0],Review:CHART[1],Schedule:CHART[4],Overdue:CHART[3]};
   renderDonut('taskHealthDonut',Object.entries(grouped(t,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||CHART[5]})),{centerValue:t.length,centerLabel:'tasks'});
+  // Presales-only widgets: pipeline value per Presales member + Presales workflow chart + Presales task health
+  const presalesMembers=state.teams.filter(tm=>/presales/i.test(tm.role||''));
+  const presalesBars=presalesMembers.map(tm=>({label:tm.name,color:tm.color||CHART[4],value:p.filter(x=>x.presales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value);
+  renderBars('presalesTeamBars',presalesBars,{money:true});
+  const presalesTasks=t.filter(task=>ownerIds(task).some(id=>/presales/i.test(byId(id).role||'')));
+  renderDonut('presalesTaskDonut',Object.entries(grouped(presalesTasks,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||CHART[5]})),{centerValue:presalesTasks.length,centerLabel:'Presales'});
+  renderPresalesWorkloadChart();
   const groupColors={'IT and Communication':CHART[0],'Security Solutions':CHART[3],'IOT and Platform':CHART[6],'BMS and Energy':CHART[1]};
   const groupShort={'IT and Communication':'IT/Comm','Security Solutions':'Security','IOT and Platform':'IOT','BMS and Energy':'BMS'};
   const solCount={}; SYSTEM_GROUPS.forEach(g=>solCount[g]=0);
@@ -3301,14 +3351,14 @@ function saveTodoTask(e){
   saveState();
   document.getElementById('todoTaskFormPanel').classList.remove('on');
   logActivity('แก้ไขงาน','tasks',f.title);
-  renderTodoTable();
+  refreshAfterTaskChange();
 }
 function deleteTodoTask(id){
   if(!requireLogin()) return;
   const t=state.tasks.find(x=>x.id===id); if(!t) return;
   if(!confirm(`Delete task "${t.title}"?\n${t.project?'⚠ งานที่เชื่อมกับ Project จะถูกสร้างใหม่เมื่อบันทึก Project':''}`.trim())) return;
   state.tasks=state.tasks.filter(x=>x.id!==id);
-  saveState(); logActivity('ลบงาน','tasks',t.title); renderTodoTable();
+  saveState(); logActivity('ลบงาน','tasks',t.title); refreshAfterTaskChange();
 }
 function _syncSubtasksToProject(task, subtasks){
   if(!task.project) return;
