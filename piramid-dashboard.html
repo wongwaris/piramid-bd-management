@@ -514,8 +514,11 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-training" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TRAINING</div><h1>Training &amp; Certifications</h1><p>ติดตามการฝึกอบรม ใบรับรอง และการพัฒนาทักษะของทีม BD</p></div><div class="actions"><button class="btn primary" id="certFormToggle">+ Certification</button><button class="btn" id="trainEventFormToggle">+ Training</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TRAINING</div><h1>Training &amp; Certifications</h1><p>ติดตามการฝึกอบรม ใบรับรอง และการพัฒนาทักษะของทีม</p></div><div class="actions"><button class="btn primary" id="certFormToggle">+ Certification</button><button class="btn" id="trainEventFormToggle">+ Training</button></div></div>
       <div class="content">
+        <div class="toolbar" style="justify-content:flex-end">
+          <label class="field" style="min-width:240px"><span>Owner</span><select id="trainOwnerFilter"></select></label>
+        </div>
         <div class="grid g4" id="trainMetrics"></div>
         <div class="panel-form card" id="certFormPanel"><div class="ch"><h2 id="certFormTitle">New Certification</h2><button class="btn icon" data-close-form="cert" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="certForm"></form></div></div>
         <div class="panel-form card" id="trainEventFormPanel"><div class="ch"><h2 id="trainEventFormTitle">New Training Event</h2><button class="btn icon" data-close-form="trainEvent" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="trainEventForm"></form></div></div>
@@ -836,6 +839,7 @@ let taskLeadFilter = 'All';
 let todoView = (state && state.todoView) || 'table';
 let kpiPeriod = 'month';
 let kpiOwner = 'All';
+let trainOwner = 'All';
 let kpiEditTargets = false;
 let projectSort = {key:'id',dir:'asc'};
 let proposalEditorOptions = [];
@@ -3015,14 +3019,17 @@ function certExpiryBadge(expiresAt){
   if(days<=90) return `<span class="cert-exp warn">หมดอายุใน ${days}d</span>`;
   return `<span class="cert-exp ok">Valid · ${expiresAt}</span>`;
 }
+function trainOwnerFilteredCerts(){return state.certifications.filter(c=>memberMatchesTeamFilter(c.member,trainOwner))}
+function trainOwnerFilteredEvents(){return state.trainingEvents.filter(e=>memberMatchesTeamFilter(e.member,trainOwner))}
 function renderTrainMetrics(){
   const el=document.getElementById('trainMetrics'); if(!el) return;
   const now=dateKey(today);
-  const expSoon=state.certifications.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)>=0&&daysBetween(c.expiresAt,now)<=90).length;
-  const expired=state.certifications.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)<0).length;
-  const ytdHours=state.trainingEvents.filter(e=>e.date&&e.date.startsWith(String(today.getFullYear()))).reduce((s,e)=>s+Number(e.hours||0),0);
+  const certs=trainOwnerFilteredCerts(), events=trainOwnerFilteredEvents();
+  const expSoon=certs.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)>=0&&daysBetween(c.expiresAt,now)<=90).length;
+  const expired=certs.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)<0).length;
+  const ytdHours=events.filter(e=>e.date&&e.date.startsWith(String(today.getFullYear()))).reduce((s,e)=>s+Number(e.hours||0),0);
   el.innerHTML=[
-    metric('Total Certifications',state.certifications.length,'ใบรับรองทั้งหมด'),
+    metric('Total Certifications',certs.length,'ใบรับรองทั้งหมด'),
     metric('Expiring Soon',expSoon,'ภายใน 90 วัน',expSoon?'var(--amber)':''),
     metric('Expired',expired,'หมดอายุแล้ว',expired?'var(--red)':''),
     metric('Training Hours (YTD)',ytdHours,'ชั่วโมงอบรมปีนี้')
@@ -3077,20 +3084,28 @@ function saveTrainEvent(e){
 }
 function deleteTrainEvent(id){if(!confirm('Delete training?'))return; state.trainingEvents=state.trainingEvents.filter(x=>x.id!==id); saveState(); renderTraining();}
 function renderTraining(){
+  const sel=document.getElementById('trainOwnerFilter');
+  if(sel){
+    const opts=teamFilterOptionsHtml(trainOwner,'All Owner');
+    if(sel.innerHTML!==opts) sel.innerHTML=opts;
+    sel.value=trainOwner;
+    sel.onchange=()=>{trainOwner=sel.value;renderTraining();};
+  }
   renderTrainMetrics();
+  const certs=trainOwnerFilteredCerts(), events=trainOwnerFilteredEvents();
   const certEl=document.getElementById('certRows');
   const certLbl=document.getElementById('certCountLabel');
   const trainEl=document.getElementById('trainEventRows');
   const trainLbl=document.getElementById('trainEventCountLabel');
   if(certEl){
-    if(certLbl) certLbl.textContent=state.certifications.length+' certifications';
-    certEl.innerHTML=state.certifications.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td><button class="btn small" data-edit-cert="${esc(c.id)}">Edit</button> <button class="btn small danger" data-del-cert="${esc(c.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรอง','เพิ่มจากปุ่ม + Certification')+'</td></tr>';
+    if(certLbl) certLbl.textContent=`${certs.length} of ${state.certifications.length} certifications`;
+    certEl.innerHTML=certs.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td><button class="btn small" data-edit-cert="${esc(c.id)}">Edit</button> <button class="btn small danger" data-del-cert="${esc(c.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรองตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Certification')+'</td></tr>';
     certEl.querySelectorAll('[data-edit-cert]').forEach(b=>b.onclick=()=>openCertForm(b.dataset.editCert));
     certEl.querySelectorAll('[data-del-cert]').forEach(b=>b.onclick=()=>deleteCert(b.dataset.delCert));
   }
   if(trainEl){
-    if(trainLbl) trainLbl.textContent=state.trainingEvents.length+' events';
-    trainEl.innerHTML=state.trainingEvents.map(ev=>`<tr><td>${esc(byId(ev.member).name)}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรม','เพิ่มจากปุ่ม + Training')+'</td></tr>';
+    if(trainLbl) trainLbl.textContent=`${events.length} of ${state.trainingEvents.length} events`;
+    trainEl.innerHTML=events.map(ev=>`<tr><td>${esc(byId(ev.member).name)}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรมตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Training')+'</td></tr>';
     trainEl.querySelectorAll('[data-edit-trainev]').forEach(b=>b.onclick=()=>openTrainEventForm(b.dataset.editTrainev));
     trainEl.querySelectorAll('[data-del-trainev]').forEach(b=>b.onclick=()=>deleteTrainEvent(b.dataset.delTrainev));
   }
