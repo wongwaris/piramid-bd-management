@@ -281,7 +281,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .todo-switcher{gap:6px;border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:2px}
 .todo-proj{margin-bottom:14px}.todo-proj .ch{gap:14px}.todo-proj .ch .meta{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--soft);font-size:11.5px;white-space:nowrap}
 .todo-rank{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--panel-2);color:var(--muted);font-size:11px;font-weight:700}
-.todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}
+.todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}.subtask-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.subtask-row{display:flex;align-items:center;gap:6px}.subtask-row input[type=text]{flex:1;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel-2);color:var(--text);font-size:12px}.subtask-add-row{display:flex;gap:6px;margin-top:4px}.subtask-add-row input{flex:1;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel-2);color:var(--text);font-size:12px}
 .status-cell{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .task-status-select{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px;font-weight:600;background:var(--panel-2);color:var(--text);cursor:pointer;min-height:28px;max-width:140px}
 .task-status-select:hover{border-color:var(--line-2)}
@@ -450,6 +450,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="content">
         <div class="panel-form card" id="internalTaskFormPanel"><div class="ch"><h2>New Internal Task</h2><button class="btn icon" data-close-form="internalTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="internalTaskForm"></form></div></div>
         <div class="panel-form card" id="todoTaskFormPanel"><div class="ch"><h2 id="todoTaskFormTitle">Edit Task</h2><button class="btn icon" data-close-form="todoTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="todoTaskForm"></form></div></div>
+        <div class="panel-form card" id="todoSubtaskFormPanel"><div class="ch"><h2 id="todoSubtaskTitle">Sub Tasks</h2><button class="btn icon" data-close-form="todoSubtask" aria-label="Close">×</button></div><div class="cb" id="todoSubtaskBody"></div></div>
         <div class="toolbar todo-switcher" role="tablist" aria-label="To-do view mode">
           <button class="btn small todo-view on" data-todo-view="table" role="tab">Master Table</button>
           <button class="btn small todo-view" data-todo-view="kanban" role="tab">Kanban Stage</button>
@@ -3035,6 +3036,63 @@ function deleteTodoTask(id){
   state.tasks=state.tasks.filter(x=>x.id!==id);
   saveState(); logActivity('ลบงาน','tasks',t.title); renderTodoTable();
 }
+function _syncSubtasksToProject(task, subtasks){
+  if(!task.project) return;
+  const proj=state.projects.find(p=>p.id===task.project); if(!proj) return;
+  const templateSubtasks=(state.taskTemplates.find(tt=>tt.id===task.templateId)?.subtasks)||[];
+  const projectSpecific=subtasks.filter(s=>!templateSubtasks.includes(s));
+  const others=state.tasks.filter(t=>t.id!==task.id&&t.project===task.project).flatMap(t=>t.subtasks||[]).filter(s=>!templateSubtasks.includes(s));
+  proj.projectSubtasks=uniq([...projectSpecific,...others]);
+}
+function manageSubTasks(taskId){
+  if(!requireLogin()) return;
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  const panel=document.getElementById('todoSubtaskFormPanel');
+  const body=document.getElementById('todoSubtaskBody');
+  const titleEl=document.getElementById('todoSubtaskTitle');
+  if(!panel||!body) return;
+  titleEl.textContent=`Sub Tasks — ${t.title}`;
+  const proj=t.project?state.projects.find(p=>p.id===t.project):null;
+  function render(){
+    const task=state.tasks.find(x=>x.id===taskId)||t;
+    const items=task.subtasks||[];
+    body.innerHTML=`
+      <p class="hint" style="margin-bottom:8px">${proj?`Project: <strong>${esc(proj.name)}</strong> · `:''}${items.length} sub task · แก้ไข/ลบ ด้านล่าง หรือพิมพ์เพิ่มใหม่</p>
+      <div class="subtask-list" id="stList">
+        ${items.map((s,i)=>`<div class="subtask-row"><input type="text" value="${esc(s)}" data-st-idx="${i}" aria-label="Sub task ${i+1}"><button class="btn small danger" data-st-del="${i}" aria-label="Delete sub task">×</button></div>`).join('')}
+      </div>
+      <div class="subtask-add-row"><input id="stNewInput" type="text" placeholder="เพิ่ม sub task ใหม่…" autocomplete="off"><button class="btn primary small" id="stAddBtn">+ Add</button></div>
+      <div class="toolbar" style="margin-top:12px"><button class="btn primary" id="stSaveBtn">Save</button><button class="btn" data-close-form="todoSubtask">Cancel</button></div>`;
+    // delete a row
+    body.querySelectorAll('[data-st-del]').forEach(b=>b.onclick=()=>{
+      const task2=state.tasks.find(x=>x.id===taskId); if(!task2) return;
+      task2.subtasks=(task2.subtasks||[]).filter((_,j)=>j!==Number(b.dataset.stDel));
+      _syncSubtasksToProject(task2,task2.subtasks); saveState(); render();
+    });
+    // add new row
+    const addFn=()=>{
+      const inp=document.getElementById('stNewInput'); if(!inp) return;
+      const val=inp.value.trim(); if(!val) return;
+      const task2=state.tasks.find(x=>x.id===taskId); if(!task2) return;
+      task2.subtasks=uniq([...(task2.subtasks||[]),val]);
+      _syncSubtasksToProject(task2,task2.subtasks); saveState(); render();
+    };
+    document.getElementById('stAddBtn')?.addEventListener('click',addFn);
+    document.getElementById('stNewInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addFn();}});
+    // save edits to existing rows
+    document.getElementById('stSaveBtn')?.addEventListener('click',()=>{
+      const task2=state.tasks.find(x=>x.id===taskId); if(!task2) return;
+      const updated=[...body.querySelectorAll('[data-st-idx]')].map(inp=>inp.value.trim()).filter(Boolean);
+      task2.subtasks=updated;
+      _syncSubtasksToProject(task2,updated); saveState();
+      logActivity('อัปเดต Sub Tasks','tasks',task2.title);
+      panel.classList.remove('on'); renderTodoTable();
+    });
+    bindCloseButtons();
+  }
+  render();
+  showFormPanel('todoSubtaskFormPanel');
+}
 function renderTodoTable(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const rows=sortTodo(filteredTasks()); // central database: all filtered tasks, not period-windowed
@@ -3044,13 +3102,14 @@ function renderTodoTable(){
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
   }).join('')+'<th>Actions</th></tr>';
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
-  const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
+  const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small" data-manage-subtasks="${esc(t.id)}" aria-label="Manage sub tasks" title="จัดการ Sub Tasks">Sub Tasks${(t.subtasks?.length)?` (${t.subtasks.length})`:''}</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
   const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
   body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
   body.querySelector('#clearManualSort')?.addEventListener('click',()=>{todoSort={key:'due',dir:'asc'};renderTodoTable();});
   body.querySelectorAll('[data-edit-todo]').forEach(b=>b.onclick=()=>openTodoTaskForm(b.dataset.editTodo));
   body.querySelectorAll('[data-del-todo]').forEach(b=>b.onclick=()=>deleteTodoTask(b.dataset.delTodo));
+  body.querySelectorAll('[data-manage-subtasks]').forEach(b=>b.onclick=()=>manageSubTasks(b.dataset.manageSubtasks));
   bindTaskStatusSelects(body);
   const tbody=body.querySelector('#todoTbody'); if(tbody) initTableDnd(tbody);
 }
