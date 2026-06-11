@@ -305,7 +305,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 #v-settings .panel-form.on{margin-bottom:var(--space-md)}.checklist{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:8px;display:grid;gap:6px}.checklist label{display:flex;gap:7px;align-items:flex-start;color:var(--muted);font-size:12px}.checklist input{width:auto;accent-color:var(--accent);margin-top:2px}.brow{display:flex;align-items:center;gap:8px}.brow .bchk{flex:1;display:flex;gap:7px;align-items:center;color:var(--muted);font-size:12px;cursor:pointer}.brow .bval{width:104px;flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;margin-top:0}.bscope{width:7px;height:7px;border-radius:50%;flex:0 0 auto}.bscope.bs{background:#8fa4ff}.bscope.ps{background:var(--accent-2)}.battery{width:98px;height:18px;border:1px solid var(--line-2);border-radius:4px;padding:2px;position:relative;background:var(--surface)}.battery:after{content:"";position:absolute;right:-5px;top:5px;width:4px;height:6px;background:var(--line-2);border-radius:0 2px 2px 0}.battery-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));min-width:3px}.battery-text{font-size:10px;color:var(--text);margin-top:3px}
 .pbar{display:flex;align-items:center;gap:10px;min-width:130px}.pbar-track{flex:1;min-width:56px;max-width:130px;height:7px;background:rgba(255,255,255,.09);border-radius:20px;overflow:hidden}.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--progress-from),var(--progress-to))}.pbar b{font-size:12.5px;font-weight:700;min-width:36px;color:var(--text)}
 [data-theme="light"] .pbar-track{background:rgba(15,23,42,.08)}.subrow{display:none}.subrow.on{display:table-row}.subpanel{background:var(--surface);border-radius:8px;padding:10px}.toggle-link{color:#8fa4ff;cursor:pointer;font-weight:700}
-.option-editor{display:flex;flex-direction:column;gap:12px}.option-card{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}.option-head{display:grid;grid-template-columns:1.2fr .8fr .9fr .8fr .7fr .9fr auto;gap:8px;align-items:end}.option-items{display:flex;flex-direction:column;gap:8px}.option-item{display:grid;grid-template-columns:1fr 1fr 1fr .45fr .75fr .75fr 1fr 1fr auto;gap:8px;align-items:end}.option-review{display:grid;grid-template-columns:1fr;gap:8px}.option-card .field span{font-size:10px}.option-card input,.option-card select,.option-card textarea{font-size:12px}.option-actions{display:flex;gap:8px;flex-wrap:wrap}.option-summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.ptd-editor{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}.ptd-row{display:grid;grid-template-columns:2fr 1.3fr 1.1fr 1fr 1fr auto;gap:6px;align-items:end;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px}.ptd-row .field span{font-size:10px;color:var(--muted)}.ptd-row input,.ptd-row select{font-size:12px}.option-editor{display:flex;flex-direction:column;gap:12px}.option-card{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}.option-head{display:grid;grid-template-columns:1.2fr .8fr .9fr .8fr .7fr .9fr auto;gap:8px;align-items:end}.option-items{display:flex;flex-direction:column;gap:8px}.option-item{display:grid;grid-template-columns:1fr 1fr 1fr .45fr .75fr .75fr 1fr 1fr auto;gap:8px;align-items:end}.option-review{display:grid;grid-template-columns:1fr;gap:8px}.option-card .field span{font-size:10px}.option-card input,.option-card select,.option-card textarea{font-size:12px}.option-actions{display:flex;gap:8px;flex-wrap:wrap}.option-summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
 @media(max-width:1180px){.g5,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3,.g2,.settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-column:auto}.kanban{grid-template-columns:repeat(2,minmax(300px,1fr))}.calendar{grid-template-columns:repeat(3,minmax(180px,1fr))}.email-preview{grid-template-columns:1fr}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-grid .span3{grid-column:span 2}}
 @media(max-width:900px){.topbar{height:auto;min-height:62px;align-items:flex-start;flex-direction:column;padding:14px 16px;gap:10px}.topbar .actions{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:thin}.topbar .actions .btn{flex:0 0 auto}.title{width:100%;min-width:0}.title p{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.content{padding:16px}.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.filters .f-wide{grid-column:span 3}.dash-grid{grid-auto-rows:minmax(28px,auto)}.table-wrap{max-width:100%;-webkit-overflow-scrolling:touch}.tbl{min-width:760px}.bar-row{grid-template-columns:minmax(90px,1fr) minmax(90px,1.4fr) minmax(56px,auto)}.donut-flex,.split{grid-template-columns:1fr}.donut-svgbox,.donut{max-width:132px}.settings-grid{grid-template-columns:1fr}.ch{align-items:flex-start;flex-direction:column}.ch .btn{align-self:flex-start}}
 @media(max-width:900px){.option-head{grid-template-columns:repeat(2,minmax(0,1fr))}.option-item{grid-template-columns:repeat(2,minmax(0,1fr))}.option-item .btn{align-self:end}}
@@ -837,6 +837,7 @@ let kpiOwner = 'All';
 let kpiEditTargets = false;
 let projectSort = {key:'id',dir:'asc'};
 let proposalEditorOptions = [];
+let ptdEditorDefs = []; // project task defs working buffer
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 let idleTimer = null;
 
@@ -1090,7 +1091,7 @@ function normalizeState(data){
       accessRole
     };
   });
-  data.projects = (data.projects||[]).map(p=>({...p,systems:projectSystems(p),proposalOptions:normalizeProposalOptions(p),brands:projectBrands({...p,proposalOptions:normalizeProposalOptions(p)})}));
+  data.projects = (data.projects||[]).map(p=>({...p,systems:projectSystems(p),proposalOptions:normalizeProposalOptions(p),brands:projectBrands({...p,proposalOptions:normalizeProposalOptions(p)}),projectTaskDefs:p.projectTaskDefs||[]}));
   data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]) }));
   data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
     reportPeriod:r.reportPeriod||periodFromRule(r),
@@ -2080,6 +2081,48 @@ function bindProposalOptionsEditor(){
   host.querySelectorAll('[data-remove-option-item]').forEach(b=>b.onclick=()=>{syncProposalOptionFromInputs(); const [i,j]=b.dataset.removeOptionItem.split('|').map(Number); proposalEditorOptions[i]?.items?.splice(j,1); renderProposalOptionsEditor();});
   const add=document.getElementById('addProposalOptionBtn'); if(add) add.onclick=()=>{syncProposalOptionFromInputs(); proposalEditorOptions.push({id:`OPT-${proposalEditorOptions.length+1}`,name:`Option ${proposalEditorOptions.length+1} Alternative`,type:'Alternative',status:'Proposed',value:0,revision:1,submittedAt:'',selected:false,reason:'',review:'',items:[]}); renderProposalOptionsEditor();};
 }
+// ===== Project Task Defs Editor =====
+function syncPtdFromInputs(){
+  ptdEditorDefs.forEach((d,i)=>{
+    const row=document.querySelector(`[data-ptd-row="${i}"]`); if(!row) return;
+    d.title=row.querySelector('[data-ptdf="title"]')?.value||d.title;
+    d.owner=row.querySelector('[data-ptdf="owner"]')?.value||d.owner;
+    d.status=row.querySelector('[data-ptdf="status"]')?.value||d.status;
+    d.due=row.querySelector('[data-ptdf="due"]')?.value||'';
+    d.priority=row.querySelector('[data-ptdf="priority"]')?.value||d.priority;
+    d.progress=Number(row.querySelector('[data-ptdf="progress"]')?.value||0);
+  });
+  const h=document.getElementById('projectTaskDefsJson'); if(h) h.value=JSON.stringify(ptdEditorDefs);
+}
+function renderPtdEditor(){
+  const host=document.getElementById('projectTaskDefsEditor'); if(!host) return;
+  const teamOpts=state.teams.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} (${esc(t.role||'')})</option>`).join('');
+  const statusOpts=state.taskStatuses.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+  const priOpts=['Low','Medium','High','Critical'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  host.innerHTML=`<div class="ptd-editor">${ptdEditorDefs.map((d,i)=>`
+    <div class="ptd-row" data-ptd-row="${i}">
+      <label class="field"><span>Task Title</span><input data-ptdf="title" value="${esc(d.title)}" placeholder="ชื่องาน"></label>
+      <label class="field"><span>Owner</span><select data-ptdf="owner">${state.teams.map(t=>`<option value="${esc(t.id)}"${d.owner===t.id?' selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</select></label>
+      <label class="field"><span>Status</span><select data-ptdf="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}"${d.status===s.name?' selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
+      <label class="field"><span>Due Date</span><input data-ptdf="due" type="date" value="${esc(d.due||'')}"></label>
+      <label class="field"><span>Priority</span><select data-ptdf="priority">${['Low','Medium','High','Critical'].map(v=>`<option value="${v}"${d.priority===v?' selected':''}>${v}</option>`).join('')}</select></label>
+      <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-ptd-del="${i}" aria-label="Delete sub task">×</button></div>
+    </div>`).join('')}</div>
+  <button class="btn small primary" type="button" id="addPtdBtn">+ Add Sub Task</button>
+  <input type="hidden" id="projectTaskDefsJson" name="projectTaskDefsJson">`;
+  bindPtdEditor(); syncPtdFromInputs();
+}
+function bindPtdEditor(){
+  const host=document.getElementById('projectTaskDefsEditor'); if(!host) return;
+  host.querySelectorAll('input,select').forEach(el=>el.oninput=el.onchange=()=>syncPtdFromInputs());
+  host.querySelectorAll('[data-ptd-del]').forEach(b=>b.onclick=()=>{syncPtdFromInputs(); ptdEditorDefs.splice(Number(b.dataset.ptdDel),1); renderPtdEditor();});
+  const add=document.getElementById('addPtdBtn');
+  if(add) add.onclick=()=>{
+    syncPtdFromInputs();
+    ptdEditorDefs.push({id:`PTD-${Date.now()}`,title:'',owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',status:'Schedule',due:'',priority:'Medium',progress:0});
+    renderPtdEditor();
+  };
+}
 const PROJECT_SORT_COLUMNS = [
   ['id','ID'],['name','Project'],['seg','Segment'],['systems','System Groups'],['brands','Brand Scope'],['tasks','Sub Tasks'],['progress','Progress'],['status','Status'],['pri','Priority'],['size','Size'],['val','Value'],['bd','BD Lead'],['presales','Presales'],['sales','Sales']
 ];
@@ -2153,6 +2196,7 @@ function openProjectForm(id){
   if(!canEditModule('projects')){toast('สิทธิ์ Guest/Visitor ดูข้อมูลได้อย่างเดียว','error');return}
   editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,presales:state.teams.find(t=>t.role==='Presales')?.id||'',sales:state.teams.find(t=>t.role==='Sales')?.id};
   proposalEditorOptions=structuredClone(normalizeProposalOptions(p));
+  ptdEditorDefs=structuredClone(p.projectTaskDefs||[]);
   const relatedTasks=state.tasks.filter(t=>t.project===p.id);
   const selectedTemplateIds=p.taskTemplateIds || relatedTasks.map(t=>t.templateId).filter(Boolean);
   const projectSubtasks=p.projectSubtasks || uniq(relatedTasks.flatMap(t=>t.subtasks||[]));
@@ -2165,7 +2209,8 @@ function openProjectForm(id){
     <label class="field span2"><span>Brand scope</span>${brandCatalogOptions(projectBrands(p))}<span class="hint">Checklist จาก Brand Scope ใน Settings</span></label>
     <div class="span3"><div class="ch" style="padding:0 0 8px;border-bottom:0"><div class="ch-t"><h2>Proposal Options / Alternative BOQ</h2><small>เก็บ Option, Brand, Model, ราคา, Selected และเหตุผลที่ไม่เลือก เพื่อใช้วิเคราะห์ Brand Propose</small></div></div><div id="proposalOptionsEditor"></div></div>
     <label class="field span2"><span>Task templates</span>${taskTemplateOptions(selectedTemplateIds)}<span class="hint">Template มาจาก Settings และจะสร้าง task ให้ project นี้</span></label>
-    <label class="field span2"><span>Project sub tasks</span><textarea name="projectSubtasksText" placeholder="Revise BOQ round 1&#10;Revise BOQ round 2">${esc(projectSubtasks.join('\n'))}</textarea><span class="hint">เพิ่ม sub task เฉพาะโครงการนี้ได้ที่หน้า Project</span></label>
+    <label class="field span2"><span>Project sub tasks (checklist)</span><textarea name="projectSubtasksText" placeholder="Revise BOQ round 1&#10;Revise BOQ round 2">${esc(projectSubtasks.join('\n'))}</textarea><span class="hint">checklist string สำหรับแนบกับ task template</span></label>
+    <div class="span3"><div class="ch" style="padding:0 0 8px;border-bottom:0"><div class="ch-t"><h2>Project Sub Tasks <span class="hint">— งาน Assign ให้แต่ละคน สร้าง Task จริงใน To-Do List</span></h2><small>เพิ่มงานย่อยของโครงการ · กำหนด Owner, Status, Due Date · sync กับ To-Do List อัตโนมัติ</small></div></div><div id="projectTaskDefsEditor"></div></div>
     <label class="field"><span>Project Status<span class="req">*</span></span><select name="status">${projectStatusOptions(p.status)}</select></label>
     <label class="field"><span>Task Status</span><select name="taskStatus" id="projectTaskStatus">${taskStatusOptions(p.taskStatus||inferProjectTaskStatus(p.id))}</select></label>
     <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(p.due||'')}"></label>
@@ -2179,6 +2224,7 @@ function openProjectForm(id){
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Project</button><button class="btn" type="button" data-close-form="project">Cancel</button><span class="hint">เมื่อ Assign team ค่า dashboard, KPI, task และ notification จะเชื่อมตามทันที</span></div>`;
   showFormPanel('projectFormPanel');
   renderProposalOptionsEditor();
+  renderPtdEditor();
   const statusSelect=document.getElementById('projectTaskStatus'), progressInput=document.getElementById('projectProgress');
   if(statusSelect&&progressInput){statusSelect.onchange=()=>{if(statusSelect.value==='Done'){progressInput.value=100;progressInput.readOnly=true}else{progressInput.readOnly=false}}}
   bindCloseButtons();
@@ -2193,7 +2239,9 @@ function saveProject(e){
   const bvals={}; document.querySelectorAll('#projectForm [data-bval]').forEach(inp=>{bvals[inp.dataset.bval]=Number(inp.value||0);});
   f.brands=checkedValues('brandsSelect').map(v=>{const [category,name]=v.split('|');return {category,name,value:bvals[v]||0}});
   syncProposalOptionFromInputs();
+  syncPtdFromInputs();
   try{f.proposalOptions=JSON.parse(document.getElementById('proposalOptionsJson')?.value||'[]')}catch{f.proposalOptions=[]}
+  try{f.projectTaskDefs=JSON.parse(document.getElementById('projectTaskDefsJson')?.value||'[]')}catch{f.projectTaskDefs=[]}
   f.proposalOptions=normalizeProposalOptions({proposalOptions:f.proposalOptions,val:f.val,brands:f.brands,status:f.status});
   const selectedQuote=f.proposalOptions.filter(o=>o.selected||o.status==='Selected').reduce((s,o)=>s+Number(o.value||0),0);
   if(selectedQuote>0) f.val=selectedQuote;
@@ -2202,7 +2250,7 @@ function saveProject(e){
   f.size=sizeForValue(f.val);
   f.sys=f.systems.map(s=>s.name).join(', ');
   f.brand=projectBrandNames(f).join(', ');
-  delete f.systemsSelect; delete f.brandsSelect; delete f.taskTemplatesSelect; delete f.projectSubtasksText; delete f.proposalOptionsJson;
+  delete f.systemsSelect; delete f.brandsSelect; delete f.taskTemplatesSelect; delete f.projectSubtasksText; delete f.proposalOptionsJson; delete f.projectTaskDefsJson;
   const nowIso=new Date().toISOString();
   if(editing.project){
     const old=state.projects.find(p=>p.id===editing.project)||{};
@@ -2261,6 +2309,35 @@ function syncProjectTasks(project){
       statusChangedAt:changed?nowIso:(existing?.statusChangedAt||nowIso),
       completedAt:newStatus==='Done'?(existing?.completedAt||nowIso):null,
       statusLog:(()=>{const log=(existing?.statusLog||[]).slice(); if(changed) log.push({status:newStatus,at:nowIso}); return log.slice(-30);})()
+    };
+    if(existing) state.tasks=state.tasks.map(t=>t.id===existing.id?taskData:t);
+    else state.tasks.push(taskData);
+  });
+  // Project Task Defs — create/update/remove real task records
+  const defIds=(project.projectTaskDefs||[]).map(d=>d.id);
+  state.tasks=state.tasks.filter(t=>t.project!==project.id||!t.projectTaskDefId||defIds.includes(t.projectTaskDefId));
+  (project.projectTaskDefs||[]).forEach(def=>{
+    if(!def.title?.trim()) return;
+    const existing=state.tasks.find(t=>t.project===project.id&&t.projectTaskDefId===def.id);
+    const nowIso=new Date().toISOString();
+    const taskData={
+      id:existing?.id||nextId('T',state.tasks),
+      project:project.id,
+      projectTaskDefId:def.id,
+      title:def.title.trim(),
+      owner:def.owner||existing?.owner||project.bd,
+      owners:def.owner?[def.owner]:(existing?.owners||[project.bd].filter(Boolean)),
+      status:existing?.status||def.status||'Schedule',
+      due:def.due||existing?.due||'',
+      priority:def.priority||existing?.priority||'Medium',
+      progress:existing?.progress??(def.status==='Done'?100:def.progress||0),
+      level:existing?.level||'Member',
+      revision:existing?.revision||1,
+      subtasks:existing?.subtasks||[],
+      createdAt:existing?.createdAt||nowIso,
+      statusChangedAt:existing?.statusChangedAt||nowIso,
+      completedAt:(existing?.status||def.status)==='Done'?(existing?.completedAt||nowIso):null,
+      statusLog:existing?.statusLog||[{status:def.status||'Schedule',at:nowIso}]
     };
     if(existing) state.tasks=state.tasks.map(t=>t.id===existing.id?taskData:t);
     else state.tasks.push(taskData);
@@ -3730,7 +3807,26 @@ function previewRule(id){
     `Overdue: ${r.level==='Member'?scoped.filter(isOverdue).length:summary.overdue}`,
     ``,
     r.level==='Member'?'Your BD task list:':r.level==='Manager'?'BD team task highlights:':'Executive BD highlights:',
-    ...(scoped.slice(0,6).map((t,i)=>`${i+1}. ${t.status} - ${t.title}\n   Project: ${state.projects.find(p=>p.id===t.project)?.name||t.project}\n   Owner: ${byId(t.owner).name} · Due: ${t.due} · Progress: ${t.progress||0}%`)),
+    ...(()=>{
+      // Group tasks by project; show Main Project → sub task breakdown
+      const byProj={};
+      scoped.slice(0,12).forEach(t=>{
+        const pname=state.projects.find(p=>p.id===t.project)?.name||(t.project?`Project ${t.project}`:'Internal');
+        if(!byProj[pname]) byProj[pname]=[];
+        byProj[pname].push(t);
+      });
+      const lines=[];
+      Object.entries(byProj).forEach(([pname,tasks],pi)=>{
+        lines.push(`${pi+1}. ${pname}`);
+        tasks.forEach((t,si)=>{
+          const owners=ownerNames(t).join(', ')||'-';
+          const badge=isOverdue(t)?'⚠ Overdue':t.status==='Done'?'✓ Done':'→ '+t.status;
+          lines.push(`   ${si+1}.${si+1} ${t.title}`);
+          lines.push(`       ${badge} · Owner: ${owners} · Due: ${t.due||'-'} · ${t.progress||0}%`);
+        });
+      });
+      return lines;
+    })(),
     scoped.length?'':'No tasks for this period.',
     ``,
     r.attachSnapshot?`Attached Snapshot: ${r.snapshotView||'TaskTracker'} (${r.format||'PNG'})`:'Snapshot: Off'
