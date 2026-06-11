@@ -446,7 +446,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-tasks" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 6 รูปแบบ</p></div><div class="actions"><button class="btn primary" id="internalTaskFormToggle">+ Internal Task</button><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 6 รูปแบบ</p></div><div class="actions"><button class="btn primary" id="internalTaskFormToggle">+ Internal Task</button><button class="btn" id="todoNewProjectBtn" data-edit-module="projects">+ New Project</button><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
       <div class="content">
         <div class="panel-form card" id="internalTaskFormPanel"><div class="ch"><h2>New Internal Task</h2><button class="btn icon" data-close-form="internalTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="internalTaskForm"></form></div></div>
         <div class="panel-form card" id="todoTaskFormPanel"><div class="ch"><h2 id="todoTaskFormTitle">Edit Task</h2><button class="btn icon" data-close-form="todoTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="todoTaskForm"></form></div></div>
@@ -2976,7 +2976,8 @@ function openTodoTaskForm(id){
     <label class="field"><span>Priority</span><select name="priority">${priOpts}</select></label>
     <label class="field"><span>Due Date</span><input name="due" type="date" value="${esc(t.due||'')}"></label>
     <label class="field"><span>Progress (%)</span><input name="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
-    <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="todoTask">Cancel</button>${t.project?'<span class="hint">งานที่เชื่อมกับ Project จะถูก sync ใหม่เมื่อบันทึก Project</span>':''}</div>`;
+    <label class="field span3"><span>Sub Tasks <span class="hint">— 1 รายการต่อบรรทัด · sync กับ Project อัตโนมัติ</span></span><textarea name="subtasksText" rows="4" placeholder="Site survey&#10;Revise BOQ round 1&#10;Revise BOQ round 2">${esc((t.subtasks||[]).join('\n'))}</textarea></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="todoTask">Cancel</button>${t.project?`<span class="hint">Project: ${esc(state.projects.find(p=>p.id===t.project)?.name||t.project)} · Sub Tasks จะ sync กลับ Project</span>`:''}</div>`;
   document.getElementById('todoTaskForm').onsubmit=saveTodoTask;
   showFormPanel('todoTaskFormPanel'); bindCloseButtons();
 }
@@ -2989,6 +2990,7 @@ function saveTodoTask(e){
   const now=new Date().toISOString();
   const prev=state.tasks[idx];
   const statusChanged=prev.status!==f.status;
+  const subtasks=String(f.subtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean);
   state.tasks[idx]={
     ...prev,
     title:f.title,
@@ -2998,12 +3000,28 @@ function saveTodoTask(e){
     priority:f.priority,
     due:f.due||prev.due||'',
     progress:Number(f.progress||0),
+    subtasks,
     ...(statusChanged?{statusChangedAt:now}:{}),
     ...(f.status==='Done'&&prev.status!=='Done'?{completedAt:now,progress:100}:{}),
     ...(f.status!=='Done'&&prev.status==='Done'?{completedAt:null}:{}),
   };
   if(statusChanged){
     state.tasks[idx].statusLog=[...(prev.statusLog||[]),{status:f.status,at:now}].slice(-30);
+  }
+  // Sync sub tasks back to the project so they persist across syncProjectTasks rebuilds
+  if(prev.project){
+    const proj=state.projects.find(p=>p.id===prev.project);
+    if(proj){
+      const templateSubtasks=(state.taskTemplates.find(tt=>tt.id===prev.templateId)?.subtasks)||[];
+      // projectSubtasks = subtasks that are project-specific (not from template)
+      const projectSpecific=subtasks.filter(s=>!templateSubtasks.includes(s));
+      // merge with existing project subtasks from other tasks of the same project
+      const otherTaskSubtasks=state.tasks
+        .filter(t=>t.id!==prev.id&&t.project===prev.project)
+        .flatMap(t=>t.subtasks||[])
+        .filter(s=>!templateSubtasks.includes(s));
+      proj.projectSubtasks=uniq([...projectSpecific,...otherTaskSubtasks]);
+    }
   }
   saveState();
   document.getElementById('todoTaskFormPanel').classList.remove('on');
@@ -3824,6 +3842,7 @@ const VIEW_RENDERERS={exec:renderDashboard,analytics:renderAnalytics,projects:re
 const dirtyViews=new Set();
 function activeViewName(){const v=document.querySelector('.view.on'); return v?v.id.replace(/^v-/,''):null;}
 function renderView(name){const fn=VIEW_RENDERERS[name]; if(!fn) return; try{fn();}catch(e){console.warn('Render failed for view "'+name+'"',e);}}
+function navigateToView(name,afterCb){const btn=document.querySelector(`.nav button[data-view="${name}"]`); if(btn){btn.click();if(afterCb) setTimeout(afterCb,60);}}
 // Show a deferred view on demand: render it only if data changed since it was last drawn.
 function ensureViewRendered(name){ if(dirtyViews.has(name)){ dirtyViews.delete(name); renderView(name); } }
 function renderAll(rebuildFilters=false){
@@ -3867,6 +3886,7 @@ function bindAppEvents(){
   on('kpiFormToggle','onclick',()=>openKpiForm());
   on('kpiForm','onsubmit',saveKpiActivity);
   on('internalTaskFormToggle','onclick',()=>openInternalTaskForm());
+  on('todoNewProjectBtn','onclick',()=>navigateToView('projects',()=>openProjectForm()));
   on('internalTaskForm','onsubmit',saveInternalTask);
   on('certFormToggle','onclick',()=>openCertForm());
   on('certForm','onsubmit',saveCert);
