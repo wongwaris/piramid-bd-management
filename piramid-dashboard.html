@@ -1347,7 +1347,14 @@ function initFilters(){
   const fill=(id,vals)=>document.getElementById(id).innerHTML=['All',...vals].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
   fill('f-seg',uniq(state.projects.map(p=>p.seg)));
   fill('f-status',uniq(state.projects.map(p=>p.status)));
-  document.getElementById('f-team').innerHTML='<option value="All">All</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  (()=>{
+    const bdMembers=state.teams.filter(t=>/\bbd\b/i.test(t.role||''));
+    const presalesMembers=state.teams.filter(t=>/presales/i.test(t.role||''));
+    let html='<option value="All">All</option>';
+    if(bdMembers.length){html+=`<optgroup label="BD">`+bdMembers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')+'</optgroup>';}
+    if(presalesMembers.length){html+=`<optgroup label="Presales">`+presalesMembers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')+'</optgroup>';}
+    document.getElementById('f-team').innerHTML=html;
+  })();
   fill('f-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
   document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   const qInput=document.getElementById('f-q');
