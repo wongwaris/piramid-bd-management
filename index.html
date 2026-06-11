@@ -449,6 +449,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 6 รูปแบบ</p></div><div class="actions"><button class="btn primary" id="internalTaskFormToggle">+ Internal Task</button><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
       <div class="content">
         <div class="panel-form card" id="internalTaskFormPanel"><div class="ch"><h2>New Internal Task</h2><button class="btn icon" data-close-form="internalTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="internalTaskForm"></form></div></div>
+        <div class="panel-form card" id="todoTaskFormPanel"><div class="ch"><h2 id="todoTaskFormTitle">Edit Task</h2><button class="btn icon" data-close-form="todoTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="todoTaskForm"></form></div></div>
         <div class="toolbar todo-switcher" role="tablist" aria-label="To-do view mode">
           <button class="btn small todo-view on" data-todo-view="table" role="tab">Master Table</button>
           <button class="btn small todo-view" data-todo-view="kanban" role="tab">Kanban Stage</button>
@@ -458,6 +459,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <button class="btn small todo-view" data-todo-view="queue" role="tab">BD Queue</button>
         </div>
         <div class="toolbar todo-filters" style="justify-content:flex-end">
+          <button class="btn small task-scope" data-task-scope="all">Total Task</button>
           <button class="btn small task-scope" data-task-scope="today">Today</button>
           <button class="btn small task-scope on" data-task-scope="week">This Week</button>
           <button class="btn small task-scope" data-task-scope="overdue">Overdue</button>
@@ -2291,6 +2293,7 @@ function windowDays(period){const w=taskWindow(period);const days=[];for(let d=n
 function taskPeriodSet(tasks,scope,period,previous=false){
   const w=taskWindow(period,previous);
   const scoped = tasks.filter(t=>{
+    if(scope==='all') return true;
     if(scope==='today') return t.due===dateKey(shiftDate(today,previous?-1:0));
     if(scope==='overdue') return isOverdue(t) && inWindow(t.due,w.start,w.end);
     if(scope==='waiting') return ['Schedule','Review','Pending','Waiting Update'].includes(t.status) && inWindow(t.due,w.start,w.end);
@@ -2938,6 +2941,60 @@ function setTodoSort(key){
   todoSort = todoSort.key===key ? {key,dir:todoSort.dir==='asc'?'desc':'asc'} : {key,dir:'asc'};
   renderTodoTable();
 }
+function openTodoTaskForm(id){
+  if(!requireLogin()) return;
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  const titleEl=document.getElementById('todoTaskFormTitle');
+  if(titleEl) titleEl.textContent=`Edit Task — ${t.id}`;
+  const ownerOpts=state.teams.map(m=>`<option value="${esc(m.id)}" ${t.owner===m.id?'selected':''}>${esc(m.name)} (${esc(m.role)})</option>`).join('');
+  const statusOpts=state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${t.status===s.name?'selected':''}>${esc(s.name)}</option>`).join('');
+  const priOpts=['Low','Medium','High','Critical'].map(v=>`<option value="${v}" ${(t.priority||'Low')===v?'selected':''}>${v}</option>`).join('');
+  document.getElementById('todoTaskForm').innerHTML=`
+    <input type="hidden" name="id" value="${esc(t.id)}">
+    <label class="field span2"><span>Task Title</span><input name="title" required value="${esc(t.title)}"></label>
+    <label class="field"><span>Owner</span><select name="owner">${ownerOpts}</select></label>
+    <label class="field"><span>Status</span><select name="status">${statusOpts}</select></label>
+    <label class="field"><span>Priority</span><select name="priority">${priOpts}</select></label>
+    <label class="field"><span>Due Date</span><input name="due" type="date" value="${esc(t.due||'')}"></label>
+    <label class="field"><span>Progress (%)</span><input name="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="todoTask">Cancel</button>${t.project?'<span class="hint">งานที่เชื่อมกับ Project จะถูก sync ใหม่เมื่อบันทึก Project</span>':''}</div>`;
+  document.getElementById('todoTaskForm').onsubmit=saveTodoTask;
+  showFormPanel('todoTaskFormPanel'); bindCloseButtons();
+}
+function saveTodoTask(e){
+  e.preventDefault();
+  const f=Object.fromEntries(new FormData(e.target));
+  const idx=state.tasks.findIndex(t=>t.id===f.id); if(idx===-1) return;
+  const now=new Date().toISOString();
+  const prev=state.tasks[idx];
+  const statusChanged=prev.status!==f.status;
+  state.tasks[idx]={
+    ...prev,
+    title:f.title,
+    owner:f.owner,
+    status:f.status,
+    priority:f.priority,
+    due:f.due||prev.due||'',
+    progress:Number(f.progress||0),
+    ...(statusChanged?{statusChangedAt:now}:{}),
+    ...(f.status==='Done'&&prev.status!=='Done'?{completedAt:now,progress:100}:{}),
+    ...(f.status!=='Done'&&prev.status==='Done'?{completedAt:null}:{}),
+  };
+  if(statusChanged){
+    state.tasks[idx].statusLog=[...(prev.statusLog||[]),{status:f.status,at:now}].slice(-30);
+  }
+  saveState();
+  document.getElementById('todoTaskFormPanel').classList.remove('on');
+  logActivity('แก้ไขงาน','tasks',f.title);
+  renderTodoTable();
+}
+function deleteTodoTask(id){
+  if(!requireLogin()) return;
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  if(!confirm(`Delete task "${t.title}"?\n${t.project?'⚠ งานที่เชื่อมกับ Project จะถูกสร้างใหม่เมื่อบันทึก Project':''}`.trim())) return;
+  state.tasks=state.tasks.filter(x=>x.id!==id);
+  saveState(); logActivity('ลบงาน','tasks',t.title); renderTodoTable();
+}
 function renderTodoTable(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const rows=sortTodo(filteredTasks()); // central database: all filtered tasks, not period-windowed
@@ -2945,12 +3002,15 @@ function renderTodoTable(){
   const head='<tr><th class="grip-col" aria-hidden="true"></th>'+TODO_COLUMNS.map(([key,label])=>{
     const active=todoSort.key===key, mark=active?(todoSort.dir==='asc'?'↑':'↓'):'';
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
-  }).join('')+'</tr>';
+  }).join('')+'<th>Actions</th></tr>';
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
+  const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
   const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="10">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ BD Lead ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
   body.querySelector('#clearManualSort')?.addEventListener('click',()=>{todoSort={key:'due',dir:'asc'};renderTodoTable();});
+  body.querySelectorAll('[data-edit-todo]').forEach(b=>b.onclick=()=>openTodoTaskForm(b.dataset.editTodo));
+  body.querySelectorAll('[data-del-todo]').forEach(b=>b.onclick=()=>deleteTodoTask(b.dataset.delTodo));
   bindTaskStatusSelects(body);
   const tbody=body.querySelector('#todoTbody'); if(tbody) initTableDnd(tbody);
 }
@@ -3015,7 +3075,7 @@ function renderTodo(){
   const overdue=metricValue(currentSet,'overdue'), overduePrev=metricValue(previousSet,'overdue');
   const done=metricValue(currentSet,'completed'), donePrev=metricValue(previousSet,'completed');
   const completion=due?Math.round(done/due*100):0, completionPrev=duePrev?Math.round(donePrev/duePrev*100):0;
-  const dueLabel = taskScope==='today' ? 'Due Today' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
+  const dueLabel = taskScope==='all' ? 'Total Tasks' : taskScope==='today' ? 'Due Today' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
   const mEl=document.getElementById('taskMetrics');
   if(mEl) mEl.innerHTML=[
     metric('Open Tasks',open,trendText(open,openPrev)),
