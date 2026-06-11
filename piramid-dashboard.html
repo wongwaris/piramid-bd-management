@@ -1359,8 +1359,11 @@ function brandStats(projects){
   const map={};
   projects.forEach(p=>{
     const proposedProjects=new Set(), selectedProjects=new Set();
+    // First: pull rich data from Proposal Options editor when available
+    let usedOptions=false;
     proposalOptionItems(p).forEach(it=>{
       if(!it.brand) return;
+      usedOptions=true;
       if(!map[it.brand]) map[it.brand]={label:it.brand,value:0,revenue:0,proposedOptions:0,selectedOptions:0,alternativeOptions:0,notSelectedOptions:0,reasons:{}};
       map[it.brand].proposedOptions += 1;
       proposedProjects.add(it.brand);
@@ -1373,6 +1376,23 @@ function brandStats(projects){
         map[it.brand].notSelectedOptions += 1;
         const r=it.optionReason||it.optionReview||'No review';
         map[it.brand].reasons[r]=(map[it.brand].reasons[r]||0)+1;
+      }
+    });
+    // Fallback / supplement: simple Brand Scope checklist (with brandValueMap auto-distribution when ฿ values are blank)
+    brandValueMap(p).forEach(b=>{
+      if(!b.name) return;
+      if(!map[b.name]) map[b.name]={label:b.name,value:0,revenue:0,proposedOptions:0,selectedOptions:0,alternativeOptions:0,notSelectedOptions:0,reasons:{}};
+      const m=map[b.name];
+      // Avoid double counting when proposal options already added this brand for this project
+      if(!proposedProjects.has(b.name)){
+        m.proposedOptions += 1;
+        m.selectedOptions += 1;
+        proposedProjects.add(b.name);
+        selectedProjects.add(b.name);
+      }
+      // Add revenue if the proposal options didn't already supply it for this brand
+      if(!usedOptions||!Number(m.revenue)){
+        m.revenue += Number(b.v||0);
       }
     });
     proposedProjects.forEach(name=>{map[name].value += 1});
