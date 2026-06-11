@@ -1177,6 +1177,42 @@ function mergeNotificationRules(rules){
 function isBdTeamMember(id){return /bd/i.test(byId(id).role||'')}
 function ownerIds(t){return (t.owners?.length?t.owners:[t.owner]).filter(Boolean)}
 function ownerNames(t){return ownerIds(t).map(id=>byId(id).name||id)}
+// Team filter helpers: a filter value of 'All' matches everything,
+// 'role:<role>' matches any member whose role contains that token (e.g. 'role:BD' matches 'BD Lead'),
+// otherwise it's a specific member id.
+function memberMatchesTeamFilter(memberId,filterValue){
+  if(!filterValue||filterValue==='All') return true;
+  if(typeof filterValue==='string'&&filterValue.startsWith('role:')){
+    const role=filterValue.slice(5).toLowerCase();
+    const m=state.teams.find(t=>t.id===memberId);
+    return !!m && String(m.role||'').toLowerCase().includes(role);
+  }
+  return memberId===filterValue;
+}
+function projectMatchesTeamFilter(p,filterValue){
+  if(!filterValue||filterValue==='All') return true;
+  return [p.bd,p.presales,p.sales].some(id=>id&&memberMatchesTeamFilter(id,filterValue));
+}
+function taskMatchesTeamFilter(t,filterValue){
+  if(!filterValue||filterValue==='All') return true;
+  return ownerIds(t).some(id=>memberMatchesTeamFilter(id,filterValue));
+}
+// Standard team filter dropdown: All + Group BD + Group Presales + per-member optgroups
+function teamFilterOptionsHtml(currentValue,allLabel='All'){
+  const bd=state.teams.filter(t=>/\bbd\b/i.test(t.role||''));
+  const ps=state.teams.filter(t=>/presales/i.test(t.role||''));
+  const others=state.teams.filter(t=>!/\bbd\b|presales/i.test(t.role||''));
+  const sel=v=>v===currentValue?' selected':'';
+  let h=`<option value="All"${sel('All')}>${esc(allLabel)}</option>`;
+  h+=`<optgroup label="Groups">`;
+  if(bd.length) h+=`<option value="role:BD"${sel('role:BD')}>Group BD (${bd.length})</option>`;
+  if(ps.length) h+=`<option value="role:Presales"${sel('role:Presales')}>Group Presales (${ps.length})</option>`;
+  h+=`</optgroup>`;
+  if(bd.length) h+=`<optgroup label="BD">${bd.map(t=>`<option value="${esc(t.id)}"${sel(t.id)}>${esc(t.name)}</option>`).join('')}</optgroup>`;
+  if(ps.length) h+=`<optgroup label="Presales">${ps.map(t=>`<option value="${esc(t.id)}"${sel(t.id)}>${esc(t.name)}</option>`).join('')}</optgroup>`;
+  if(others.length) h+=`<optgroup label="Others">${others.map(t=>`<option value="${esc(t.id)}"${sel(t.id)}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</optgroup>`;
+  return h;
+}
 function bdTasks(tasks=state.tasks){return tasks.filter(t=>ownerIds(t).some(id=>isBdTeamMember(id)))}
 function bdProjects(projects=state.projects){return projects.filter(p=>isBdTeamMember(p.bd))}
 function mergeBrandCatalog(projects){
@@ -1316,7 +1352,7 @@ function filteredProjects(){
     return (!filters.q || projectName.includes(filters.q.toLowerCase())) &&
       (filters.seg==='All'||p.seg===filters.seg) &&
       (filters.status==='All'||p.status===filters.status) &&
-      (filters.team==='All'||p.bd===filters.team||p.presales===filters.team||p.sales===filters.team) &&
+      projectMatchesTeamFilter(p,filters.team) &&
       (filters.brand==='All'||projectBrandNames(p).includes(filters.brand));
   });
 }
@@ -1326,7 +1362,7 @@ function filteredTasks(leadOverride){
   // Internal tasks (no project) pass the project filter; otherwise task must belong to a filtered project
   return state.tasks.filter(t=>{
     const passProject = !t.project || ids.has(t.project);
-    return passProject && (filters.team==='All'||ownerIds(t).includes(filters.team)) && (lead==='All'||ownerIds(t).includes(lead));
+    return passProject && taskMatchesTeamFilter(t,filters.team) && taskMatchesTeamFilter(t,lead);
   });
 }
 function pct(v,max){return max?Math.max(3,Math.round(v/max*100)):0}
@@ -1354,14 +1390,7 @@ function initFilters(){
   const fill=(id,vals)=>document.getElementById(id).innerHTML=['All',...vals].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
   fill('f-seg',uniq(state.projects.map(p=>p.seg)));
   fill('f-status',uniq(state.projects.map(p=>p.status)));
-  (()=>{
-    const bdMembers=state.teams.filter(t=>/\bbd\b/i.test(t.role||''));
-    const presalesMembers=state.teams.filter(t=>/presales/i.test(t.role||''));
-    let html='<option value="All">All</option>';
-    if(bdMembers.length){html+=`<optgroup label="BD">`+bdMembers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')+'</optgroup>';}
-    if(presalesMembers.length){html+=`<optgroup label="Presales">`+presalesMembers.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')+'</optgroup>';}
-    document.getElementById('f-team').innerHTML=html;
-  })();
+  document.getElementById('f-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
   fill('f-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
   document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   const qInput=document.getElementById('f-q');
@@ -1899,9 +1928,12 @@ function renderDashboard(){
   const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>x.bd===tm.id||x.presales===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,6);
   renderBars('teamKpiBars',teamKpi,{money:true});
   const selectedTeam=state.teams.find(tm=>tm.id===filters.team);
+  const isRoleFilter=typeof filters.team==='string'&&filters.team.startsWith('role:');
   const teamValue=p.reduce((s,x)=>s+x.val,0);
   const kpiFocus=selectedTeam
     ? {label:selectedTeam.name,value:shortMoney(p.reduce((s,x)=>s+(x.bd===selectedTeam.id||x.presales===selectedTeam.id||x.sales===selectedTeam.id?x.val:0),0))}
+    : isRoleFilter
+    ? {label:`Group ${filters.team.slice(5)}`,value:shortMoney(p.reduce((s,x)=>s+(projectMatchesTeamFilter(x,filters.team)?x.val:0),0))}
     : {label:'Team Involvement',value:shortMoney(teamValue)};
   const summary=document.getElementById('execSummaryPanel');
   if(summary) summary.innerHTML=`<div class="executive-brief">
@@ -2415,7 +2447,7 @@ function trendText(current,last,lowerIsBetter=false){
 }
 function renderTaskLeadFilter(){
   const el=document.getElementById('taskLeadFilter'); if(!el) return;
-  const options='<option value="All">All Owner</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
+  const options=teamFilterOptionsHtml(taskLeadFilter,'All Owner');
   if(el.innerHTML!==options) el.innerHTML=options;
   el.value=taskLeadFilter;
   el.onchange=()=>{taskLeadFilter=el.value;renderTodo()};
@@ -3408,7 +3440,7 @@ function setCalMetrics(dueLabel, scoped, all){
 function renderCalendarPage(){
   const sel=document.getElementById('calLeadFilter');
   if(sel){
-    const options='<option value="All">All Owner</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
+    const options=teamFilterOptionsHtml(calLead,'All Owner');
     if(sel.innerHTML!==options) sel.innerHTML=options;
     sel.value=calLead;
     sel.onchange=()=>{calLead=sel.value;renderCalendarPage();};
@@ -3482,7 +3514,7 @@ function kpiRefDate(a){return a.submittedAt||a.dueDate||a.createdAt||''}
 function kpiActivitiesIn(period, owner, offset=0){
   const w=kpiWindow(period,offset);
   return state.kpiActivities.filter(a=>{
-    if(owner!=='All' && a.owner!==owner) return false;
+    if(!memberMatchesTeamFilter(a.owner,owner)) return false;
     const r=kpiRefDate(a); if(!r) return false;
     const dt=new Date(r+'T12:00:00'); return dt>=w.start && dt<=w.end;
   });
@@ -3506,7 +3538,7 @@ function pctOf(arr,pred,unit){
 function countKpi(arr,label){return {v:arr.length, sub:`${arr.length} ${label||''}`.trim()}}
 function winRateKpi(owner){
   let projs=state.projects.filter(p=>p.status==='Win'||p.status==='Lost');
-  if(owner!=='All') projs=projs.filter(p=>p.bd===owner||p.presales===owner||p.sales===owner);
+  if(owner!=='All') projs=projs.filter(p=>projectMatchesTeamFilter(p,owner));
   if(!projs.length) return {v:0,sub:'',na:true};
   const win=projs.filter(p=>p.status==='Win').length;
   return {v:Math.round(win/projs.length*100), sub:`${win}/${projs.length} ปิดดีล`};
@@ -3539,7 +3571,7 @@ function kpiCardHtml(r){
 }
 function renderKpiOwnerFilter(){
   const el=document.getElementById('kpiOwnerFilter'); if(!el) return;
-  const opts='<option value="All">All BD / Presales</option>'+state.teams.filter(t=>['BD Lead','Presales'].includes(t.role)).map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
+  const opts=teamFilterOptionsHtml(kpiOwner,'All Owner');
   if(el.innerHTML!==opts) el.innerHTML=opts;
   el.value=kpiOwner; el.onchange=()=>{kpiOwner=el.value;renderKpi()};
 }
