@@ -209,6 +209,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 #execGrid>.widget[data-widget="execPresalesWorkload"]{grid-column:span 5;grid-row:span 11}
 #execGrid>.widget[data-widget="execPresalesTasks"]{grid-column:span 3;grid-row:span 9}
 #execGrid>.widget[data-widget="execActiveByOwner"]{grid-column:span 6;grid-row:span 10}
+#execGrid>.widget[data-widget="execBuildingType"]{grid-column:span 4;grid-row:span 9}
 #execGrid>.widget[data-widget="execWorkload"]{grid-column:span 7;grid-row:span 11}
 #execGrid>.widget[data-widget="execSolutions"],#execGrid>.widget[data-widget="execTopSystems"],#execGrid>.widget[data-widget="execSegments"],#execGrid>.widget[data-widget="execTasks"]{grid-column:span 3;grid-row:span 9}
 #execGrid>.widget[data-widget="execHighPriority"]{grid-column:span 6;grid-row:span 10}
@@ -438,6 +439,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <div class="card widget" data-widget="execHighPriority"><div class="ch"><h2>High Priority Projects</h2><small>โครงการสำคัญ Top 10</small></div><div class="cb"><div id="highPriorityTable"></div></div></div>
           <div class="card widget" data-widget="execTaskAlert"><div class="ch"><h2>Tasks: Doing / Overdue</h2><small>งานที่ต้องเร่ง · ครบทุกคนในทีม</small></div><div class="cb"><div id="taskAlertTable"></div></div></div>
           <div class="card widget" data-widget="execActiveByOwner"><div class="ch"><h2>Active Tasks by Owner</h2><small>งาน open (Doing/Review/Schedule/Overdue) ต่อสมาชิก</small></div><div class="cb"><div class="bars" id="activeByOwnerBars"></div></div></div>
+          <div class="card widget" data-widget="execBuildingType"><div class="ch"><h2>Building Type</h2><small>โครงการสร้างใหม่ vs ปรับปรุงตึกเดิม · มูลค่า</small></div><div class="cb" id="buildingTypeDonut"></div></div>
           <div class="card widget" data-widget="execTimeliness"><div class="ch"><h2>Delivery Timeliness</h2><small>งานย่อยส่งทันกำหนดแค่ไหน</small></div><div class="cb"><div id="timelinessBox"></div></div></div>
           <div class="card widget" data-widget="execQuickAdd"><div class="ch"><h2>Quick Add Project</h2><small>เพิ่มโครงการใหม่เร็ว ๆ</small></div><div class="cb" id="quickAddBox"></div></div>
         </div>
@@ -774,10 +776,10 @@ const seed = {
   taskStatuses: DEFAULT_TASK_STATUSES,
   kpiActivities: DEFAULT_KPI_ACTIVITIES,
   kpiTargets: DEFAULT_KPI_TARGETS,
-  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execPresalesTeam:true,execPresalesWorkload:true,execPresalesTasks:true,execActiveByOwner:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execPresalesTeam:true,execPresalesWorkload:true,execPresalesTasks:true,execActiveByOwner:true,execBuildingType:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
 };
 const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
-const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execActiveByOwner','execTimeliness','execQuickAdd'];
+const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execQuickAdd'];
 const DEFAULT_EXEC_WIDGET_SIZE = {
   execSummary:{cols:12,rows:5},
   mTotal:{cols:3,rows:4},
@@ -796,6 +798,7 @@ const DEFAULT_EXEC_WIDGET_SIZE = {
   execPresalesWorkload:{cols:5,rows:11},
   execPresalesTasks:{cols:3,rows:9},
   execActiveByOwner:{cols:6,rows:10},
+  execBuildingType:{cols:4,rows:9},
   execWorkload:{cols:7,rows:11},
   execSolutions:{cols:3,rows:9},
   execTopSystems:{cols:3,rows:9},
@@ -829,7 +832,7 @@ const BRAND_SCOPE_CATS = ['Hardware','Software','License'];
 const BRAND_CATEGORIES = [...BRAND_SCOPE_CATS,...PIRAMID_SCOPE];
 function scopeOfCategory(cat){return PIRAMID_SCOPE.includes(cat)?'PIRAMID Scope':'Brand Scope';}
 let state = loadState();
-const FILTER_DEFAULTS = {q:'',seg:'All',status:'All',team:'All',brand:'All',period:'',pri:'All',compareCustom:{start:'',end:''}};
+const FILTER_DEFAULTS = {q:'',seg:'All',status:'All',team:'All',brand:'All',period:'',pri:'All',building:'All',compareCustom:{start:'',end:''}};
 let filters = {...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
 function resetFilters(){ filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}}; initFilters(); initProjectFilters(); renderAll(false); }
 function resetTaskFilters(){
@@ -1116,6 +1119,8 @@ function normalizeState(data){
     if(p.seg==='Enterprise') p.seg='Commercial';
     // New field: Buddy BD (สำรอง/ช่วยงาน)
     if(p.bdBuddy==null) p.bdBuddy='';
+    // New field: Building Type — distinguishes 'New Build' (สร้างใหม่) vs 'Existing' (ปรับปรุง)
+    if(p.buildingType==null) p.buildingType='';
     const proposalOptions=normalizeProposalOptions(p);
     // Preserve user-selected Brand Scope checklist if present; only derive from proposalOptions when no explicit brands stored
     const brands=Array.isArray(p.brands)&&p.brands.length?p.brands:projectBrands({...p,proposalOptions});
@@ -1176,7 +1181,7 @@ function normalizeState(data){
   if(!data.layoutOrder.includes('execQuickAdd')){ data.layoutOrder.push('execQuickAdd'); }
   if(!data.widgetSize.execQuickAdd){ data.widgetSize.execQuickAdd={cols:5,rows:8}; }
   // Additive: inject Presales-focused widgets so existing users see them on next load without losing their custom layout
-  ['execPresalesTeam','execPresalesWorkload','execPresalesTasks','execActiveByOwner'].forEach(key=>{
+  ['execPresalesTeam','execPresalesWorkload','execPresalesTasks','execActiveByOwner','execBuildingType'].forEach(key=>{
     if(!data.layoutOrder.includes(key)){
       const idx=data.layoutOrder.indexOf('execTeam');
       if(idx>=0) data.layoutOrder.splice(idx+1,0,key); else data.layoutOrder.push(key);
@@ -1424,7 +1429,8 @@ function filteredProjects(){
       (filters.status==='All'||p.status===filters.status) &&
       projectMatchesTeamFilter(p,filters.team) &&
       (filters.brand==='All'||projectBrandNames(p).includes(filters.brand)) &&
-      (filters.pri==='All'||!filters.pri||p.pri===filters.pri);
+      (filters.pri==='All'||!filters.pri||p.pri===filters.pri) &&
+      (filters.building==='All'||!filters.building||(p.buildingType||'')===filters.building);
   });
 }
 function filteredTasks(leadOverride){
@@ -1456,6 +1462,7 @@ function initFilters(){
     <label class="field"><span>Compare</span><select id="f-period"></select></label>
     <label class="field" id="f-compareRangeWrap" style="display:none"><span>ช่วงเวลา (เดือน)</span><div style="display:flex;gap:6px;align-items:center"><input id="f-cmpStart" type="month" style="flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)"><span style="color:var(--soft);font-size:11px">→</span><input id="f-cmpEnd" type="month" style="flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)"></div></label>
     <label class="field"><span>Segment</span><select id="f-seg"></select></label>
+    <label class="field"><span>Building</span><select id="f-building"></select></label>
     <label class="field"><span>Status</span><select id="f-status"></select></label>
     <label class="field"><span>Team</span><select id="f-team"></select></label>
     <label class="field"><span>Brand</span><select id="f-brand"></select></label>`;
@@ -1469,6 +1476,7 @@ function initFilters(){
   fill('f-status',[...statusCatalog,...extraStatuses]);
   document.getElementById('f-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
   fill('f-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
+  fill('f-building',['New Build','Existing']);
   document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี'],['custom','ช่วงเวลากำหนดเอง']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   // Custom range inputs sync with filters.compareCustom; show only when period === 'custom'
   const cmpWrap=document.getElementById('f-compareRangeWrap');
@@ -1488,7 +1496,7 @@ function initFilters(){
   const qInput=document.getElementById('f-q');
   qInput.setAttribute('autocomplete','off');
   const DEFAULT_FILTERS=FILTER_DEFAULTS;
-  const syncInputs=()=>['q','seg','status','team','brand','period'].forEach(k=>{const el=document.getElementById('f-'+k); if(el) el.value=filters[k]});
+  const syncInputs=()=>['q','seg','status','team','brand','period','building'].forEach(k=>{const el=document.getElementById('f-'+k); if(el) el.value=filters[k]});
   const applyProjectFilters=(p)=>{
     if(!p) return false;
     const selectedBrands=proposalOptionItems(p,'selected').map(it=>it.brand).filter(Boolean);
@@ -1531,7 +1539,7 @@ function initFilters(){
     else if(e.key==='Enter'){if(applyExactProjectFilter()){e.preventDefault(); closeSuggest(); renderAll(false);}}
     else if(e.key==='Escape'){closeSuggest();}
   });
-  ['q','seg','status','team','brand','period'].forEach(k=>{
+  ['q','seg','status','team','brand','period','building'].forEach(k=>{
     const el=document.getElementById('f-'+k); if(!el) return; el.value=filters[k];
     el.oninput=el.onchange=()=>{
       filters[k]=el.value;
@@ -1548,6 +1556,7 @@ function initProjectFilters(){
   host.innerHTML = `
     <label class="field f-wide"><span>Search Project</span><input id="pf-q" placeholder="Search project name only"></label>
     <label class="field"><span>Priority</span><select id="pf-pri"></select></label>
+    <label class="field"><span>Building Type</span><select id="pf-building"></select></label>
     <label class="field"><span>Segment</span><select id="pf-seg"></select></label>
     <label class="field"><span>Status</span><select id="pf-status"></select></label>
     <label class="field"><span>Team</span><select id="pf-team"></select></label>
@@ -1562,9 +1571,10 @@ function initProjectFilters(){
   document.getElementById('pf-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
   fill('pf-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
   document.getElementById('pf-pri').innerHTML=['All','High','Medium','Low'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  document.getElementById('pf-building').innerHTML=['All','New Build','Existing'].map(v=>`<option value="${v}">${v}</option>`).join('');
   document.getElementById('pf-q').setAttribute('autocomplete','off');
   // Map filter input keys → state.filters keys
-  const map={q:'q',pri:'pri',seg:'seg',status:'status',team:'team',brand:'brand'};
+  const map={q:'q',pri:'pri',building:'building',seg:'seg',status:'status',team:'team',brand:'brand'};
   Object.entries(map).forEach(([uiKey,stateKey])=>{
     const el=document.getElementById('pf-'+uiKey); if(!el) return;
     el.value=filters[stateKey];
@@ -1573,9 +1583,9 @@ function initProjectFilters(){
   return true;
 }
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execPresalesTeam:'Presales Involvement',execPresalesWorkload:'Presales Workflow',execPresalesTasks:'Presales Task Health',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execActiveByOwner:'Active Tasks by Owner',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execPresalesTeam:'Presales Involvement',execPresalesWorkload:'Presales Workflow',execPresalesTasks:'Presales Task Health',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execActiveByOwner:'Active Tasks by Owner',execBuildingType:'Building Type',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
-  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execActiveByOwner','execTimeliness','execQuickAdd']);
+  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execQuickAdd']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
   build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
   (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
@@ -2142,6 +2152,12 @@ function renderDashboard(){
   const activeMembers=state.teams.filter(tm=>/bd|presales/i.test(tm.role||''));
   const activeBars=activeMembers.map(tm=>({label:tm.name+(/presales/i.test(tm.role||'')?' · PS':' · BD'),color:tm.color||CHART[0],value:t.filter(task=>task.status!=='Done'&&ownerIds(task).includes(tm.id)).length})).sort((a,b)=>b.value-a.value);
   renderBars('activeByOwnerBars',activeBars);
+  // Building Type donut — value contribution of New Build vs Existing (with ไม่ระบุ bucket)
+  const btMap={'New Build':{val:0,count:0},'Existing':{val:0,count:0},'ไม่ระบุ':{val:0,count:0}};
+  p.forEach(x=>{const k=x.buildingType==='New Build'?'New Build':x.buildingType==='Existing'?'Existing':'ไม่ระบุ'; btMap[k].val+=x.val||0; btMap[k].count++;});
+  const btColors={'New Build':CHART[0],'Existing':CHART[3],'ไม่ระบุ':CHART[5]};
+  const btItems=Object.entries(btMap).filter(([,v])=>v.count>0).map(([label,v])=>({label:`${label} (${v.count})`,value:v.val,color:btColors[label]}));
+  renderDonut('buildingTypeDonut',btItems,{money:true,centerValue:shortMoney(btItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
   renderQuickAddWidget();
   renderCustomCards();
   applyExecOrder(); ensureGuides('exec'); initExecDrag(); initExecResize(); initExecAlign(); applyExecSizes(); applyExecAlign(); applyExecEdit();
@@ -2425,6 +2441,7 @@ function openProjectForm(id){
     <label class="field"><span>ID</span><input name="id" value="${esc(p.id)}" ${id?'readonly':''}></label>
     <label class="field span2"><span>Project name<span class="req">*</span></span><input name="name" value="${esc(p.name)}"></label>
     <label class="field"><span>Segment</span><select name="seg">${['Commercial','Hospitality','Government','Retail'].map(v=>`<option ${p.seg===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Building Type <span class="hint">(วิเคราะห์ปรับปรุง/สร้างใหม่)</span></span><select name="buildingType"><option value="">— ไม่ระบุ —</option>${['New Build','Existing'].map(v=>`<option value="${v}" ${p.buildingType===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field span2"><span>System groups / systems</span>${solutionOptions(projectSystems(p))}<span class="hint">Checklist จาก Data List ใน Settings</span></label>
     <label class="field span2"><span>Brand scope</span>${brandCatalogOptions(projectBrands(p))}<span class="hint">Checklist จาก Brand Scope ใน Settings</span></label>
     <div class="span3"><div class="ch" style="padding:0 0 8px;border-bottom:0"><div class="ch-t"><h2>Proposal Options / Alternative BOQ</h2><small>เก็บ Option, Brand, Model, ราคา, Selected และเหตุผลที่ไม่เลือก เพื่อใช้วิเคราะห์ Brand Propose</small></div></div><div id="proposalOptionsEditor"></div></div>
