@@ -451,6 +451,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="content">
         <div class="panel-form card" id="projectFormPanel"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project">x</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div>
         <div class="panel-form card" id="projectSubTaskFormPanel"><div class="ch"><h2 id="projectSubTaskTitle">Project Sub Tasks</h2><button class="btn icon" data-close-form="projectSubTask" aria-label="Close">×</button></div><div class="cb" id="projectSubTaskBody"></div></div>
+        <div class="card"><div class="cb"><div class="filters" id="projectFilters"></div></div></div>
         <div class="card"><div class="ch"><h2>Projects</h2><small id="projectCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead id="projectTableHead"></thead><tbody id="projectRows"></tbody></table></div></div>
       </div>
     </section>
@@ -828,11 +829,11 @@ const BRAND_SCOPE_CATS = ['Hardware','Software','License'];
 const BRAND_CATEGORIES = [...BRAND_SCOPE_CATS,...PIRAMID_SCOPE];
 function scopeOfCategory(cat){return PIRAMID_SCOPE.includes(cat)?'PIRAMID Scope':'Brand Scope';}
 let state = loadState();
-const FILTER_DEFAULTS = {q:'',seg:'All',status:'All',team:'All',brand:'All',period:''};
-let filters = {...FILTER_DEFAULTS};
-function resetFilters(){ filters={...FILTER_DEFAULTS}; initFilters(); renderAll(false); }
+const FILTER_DEFAULTS = {q:'',seg:'All',status:'All',team:'All',brand:'All',period:'',pri:'All',compareCustom:{start:'',end:''}};
+let filters = {...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
+function resetFilters(){ filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}}; initFilters(); initProjectFilters(); renderAll(false); }
 function resetTaskFilters(){
-  filters={...FILTER_DEFAULTS};
+  filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
   taskScope='week';
   taskPeriod='week';
   taskLeadFilter='All';
@@ -1113,6 +1114,8 @@ function normalizeState(data){
   data.projects = (data.projects||[]).map(p=>{
     // Migrate legacy segment label 'Enterprise' -> 'Commercial'
     if(p.seg==='Enterprise') p.seg='Commercial';
+    // New field: Buddy BD (สำรอง/ช่วยงาน)
+    if(p.bdBuddy==null) p.bdBuddy='';
     const proposalOptions=normalizeProposalOptions(p);
     // Preserve user-selected Brand Scope checklist if present; only derive from proposalOptions when no explicit brands stored
     const brands=Array.isArray(p.brands)&&p.brands.length?p.brands:projectBrands({...p,proposalOptions});
@@ -1217,6 +1220,9 @@ function mergeNotificationRules(rules){
 function isBdTeamMember(id){return /bd/i.test(byId(id).role||'')}
 function ownerIds(t){return (t.owners?.length?t.owners:[t.owner]).filter(Boolean)}
 function ownerNames(t){return ownerIds(t).map(id=>byId(id).name||id)}
+// All team members involved in a project: BD Lead, Buddy BD (สำรอง), Presales, Sales
+function projectMemberIds(p){return [p.bd,p.bdBuddy,p.presales,p.sales].filter(Boolean)}
+function projectInvolves(p,memberId){return projectMemberIds(p).includes(memberId)}
 // Team filter helpers: a filter value of 'All' matches everything,
 // 'role:<role>' matches any member whose role contains that token (e.g. 'role:BD' matches 'BD Lead'),
 // otherwise it's a specific member id.
@@ -1231,7 +1237,7 @@ function memberMatchesTeamFilter(memberId,filterValue){
 }
 function projectMatchesTeamFilter(p,filterValue){
   if(!filterValue||filterValue==='All') return true;
-  return [p.bd,p.presales,p.sales].some(id=>id&&memberMatchesTeamFilter(id,filterValue));
+  return projectMemberIds(p).some(id=>memberMatchesTeamFilter(id,filterValue));
 }
 function taskMatchesTeamFilter(t,filterValue){
   if(!filterValue||filterValue==='All') return true;
@@ -1417,7 +1423,8 @@ function filteredProjects(){
       (filters.seg==='All'||p.seg===filters.seg) &&
       (filters.status==='All'||p.status===filters.status) &&
       projectMatchesTeamFilter(p,filters.team) &&
-      (filters.brand==='All'||projectBrandNames(p).includes(filters.brand));
+      (filters.brand==='All'||projectBrandNames(p).includes(filters.brand)) &&
+      (filters.pri==='All'||!filters.pri||p.pri===filters.pri);
   });
 }
 function filteredTasks(leadOverride){
@@ -1447,6 +1454,7 @@ function initFilters(){
   host.innerHTML = `
     <label class="field f-wide"><span>Search Project</span><input id="f-q" placeholder="Search project name only"></label>
     <label class="field"><span>Compare</span><select id="f-period"></select></label>
+    <label class="field" id="f-compareRangeWrap" style="display:none"><span>ช่วงเวลา (เดือน)</span><div style="display:flex;gap:6px;align-items:center"><input id="f-cmpStart" type="month" style="flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)"><span style="color:var(--soft);font-size:11px">→</span><input id="f-cmpEnd" type="month" style="flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)"></div></label>
     <label class="field"><span>Segment</span><select id="f-seg"></select></label>
     <label class="field"><span>Status</span><select id="f-status"></select></label>
     <label class="field"><span>Team</span><select id="f-team"></select></label>
@@ -1461,7 +1469,22 @@ function initFilters(){
   fill('f-status',[...statusCatalog,...extraStatuses]);
   document.getElementById('f-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
   fill('f-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
-  document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี'],['custom','ช่วงเวลากำหนดเอง']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  // Custom range inputs sync with filters.compareCustom; show only when period === 'custom'
+  const cmpWrap=document.getElementById('f-compareRangeWrap');
+  const cmpStartEl=document.getElementById('f-cmpStart');
+  const cmpEndEl=document.getElementById('f-cmpEnd');
+  filters.compareCustom = filters.compareCustom || {start:'',end:''};
+  const refreshCmpUi=()=>{
+    if(cmpWrap) cmpWrap.style.display = filters.period==='custom' ? '' : 'none';
+    if(cmpStartEl) cmpStartEl.value = filters.compareCustom.start||'';
+    if(cmpEndEl) cmpEndEl.value = filters.compareCustom.end||'';
+  };
+  if(cmpStartEl) cmpStartEl.onchange=()=>{ filters.compareCustom={...filters.compareCustom,start:cmpStartEl.value}; renderAll(false); };
+  if(cmpEndEl) cmpEndEl.onchange=()=>{ filters.compareCustom={...filters.compareCustom,end:cmpEndEl.value}; renderAll(false); };
+  refreshCmpUi();
+  // Re-toggle the range inputs whenever the Compare dropdown changes
+  document.getElementById('f-period').addEventListener('change',()=>{ setTimeout(refreshCmpUi,0); });
   const qInput=document.getElementById('f-q');
   qInput.setAttribute('autocomplete','off');
   const DEFAULT_FILTERS=FILTER_DEFAULTS;
@@ -1515,6 +1538,37 @@ function initFilters(){
       if(k==='q') renderSuggest();
       renderAll(false);
     };
+  });
+  return true;
+}
+// Projects page filter row — shares the global `filters` state with Executive, swapping Compare for Priority
+function initProjectFilters(){
+  const host=document.getElementById('projectFilters');
+  if(!host) return false;
+  host.innerHTML = `
+    <label class="field f-wide"><span>Search Project</span><input id="pf-q" placeholder="Search project name only"></label>
+    <label class="field"><span>Priority</span><select id="pf-pri"></select></label>
+    <label class="field"><span>Segment</span><select id="pf-seg"></select></label>
+    <label class="field"><span>Status</span><select id="pf-status"></select></label>
+    <label class="field"><span>Team</span><select id="pf-team"></select></label>
+    <label class="field"><span>Brand</span><select id="pf-brand"></select></label>`;
+  const fill=(id,vals)=>document.getElementById(id).innerHTML=['All',...vals].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  const segCatalog=['Commercial','Hospitality','Government','Retail'];
+  const extraSegs=uniq(state.projects.map(p=>p.seg)).filter(s=>s&&!segCatalog.includes(s));
+  fill('pf-seg',[...segCatalog,...extraSegs]);
+  const statusCatalog=state.projectStatuses.map(s=>s.name);
+  const extraStatuses=uniq(state.projects.map(p=>p.status)).filter(s=>s&&!statusCatalog.includes(s));
+  fill('pf-status',[...statusCatalog,...extraStatuses]);
+  document.getElementById('pf-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
+  fill('pf-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
+  document.getElementById('pf-pri').innerHTML=['All','High','Medium','Low'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  document.getElementById('pf-q').setAttribute('autocomplete','off');
+  // Map filter input keys → state.filters keys
+  const map={q:'q',pri:'pri',seg:'seg',status:'status',team:'team',brand:'brand'};
+  Object.entries(map).forEach(([uiKey,stateKey])=>{
+    const el=document.getElementById('pf-'+uiKey); if(!el) return;
+    el.value=filters[stateKey];
+    el.oninput=el.onchange=()=>{ filters[stateKey]=el.value; renderProjects(); };
   });
   return true;
 }
@@ -1788,8 +1842,8 @@ const BI_SOURCES={
     {key:'role',label:'Role',get:m=>[m.role]},
     {key:'level',label:'Level',get:m=>[m.level]}
   ],measures:[
-    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>p.bd===m.id||p.presales===m.id||p.sales===m.id).length},
-    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>p.bd===m.id||p.presales===m.id||p.sales===m.id).reduce((s,p)=>s+(p.val||0),0)},
+    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>projectInvolves(p,m.id)).length},
+    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>projectInvolves(p,m.id)).reduce((s,p)=>s+(p.val||0),0)},
     {key:'target',label:'Reference Value (฿)',agg:'sum',money:true,val:m=>m.target||0}
   ]}
 };
@@ -1941,6 +1995,22 @@ function renderDonut(host, items, opts={}){
 }
 
 // ===== Period comparison helpers =====
+// Custom compare window helper: when filters.period==='custom' and start+end are set,
+// returns current = [start, end+1month), previous = same length immediately before. Otherwise null.
+function customCompareWindows(){
+  if(filters.period!=='custom') return null;
+  const cc=filters.compareCustom||{};
+  if(!cc.start||!cc.end) return null;
+  const [sy,sm]=cc.start.split('-').map(Number);
+  const [ey,em]=cc.end.split('-').map(Number);
+  if(!sy||!sm||!ey||!em) return null;
+  const a0=new Date(sy, sm-1, 1, 0,0,0,0);
+  const a1=new Date(ey, em, 1, 0,0,0,0); // first day AFTER end month → exclusive upper bound
+  if(a1<=a0) return null;
+  const span=a1.getTime()-a0.getTime();
+  const am1=new Date(a0.getTime()-span);
+  return {a0,a1,am1};
+}
 function periodStart(d, gran, offset){
   const x=new Date(d); x.setHours(0,0,0,0);
   if(gran==='week'){const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+offset*7); return x;}
@@ -1952,22 +2022,30 @@ function inRange(iso,a,b){if(!iso)return false; const t=new Date(iso); return !i
 const PERIOD_SUFFIX={week:'สัปดาห์นี้',month:'เดือนนี้',quarter:'ไตรมาสนี้',year:'ปีนี้'};
 function periodTrend(elId, items, field, valFn, gran, goodUp, fmt){
   const el=document.getElementById(elId); if(!el) return;
-  const a0=periodStart(today,gran,0), a1=periodStart(today,gran,1), am1=periodStart(today,gran,-1);
+  const ccw=customCompareWindows();
+  const a0= ccw?ccw.a0:periodStart(today,gran,0);
+  const a1= ccw?ccw.a1:periodStart(today,gran,1);
+  const am1=ccw?ccw.am1:periodStart(today,gran,-1);
   let cur=0,prev=0;
   (items||[]).forEach(it=>{const d=it[field]; const v=valFn?(Number(valFn(it))||0):1; if(inRange(d,a0,a1))cur+=v; else if(inRange(d,am1,a0))prev+=v;});
   const diff=cur-prev, ar=diff>0?'▲':diff<0?'▼':'—', good=diff===0?'flat':((diff>0)===goodUp?'up':'down');
   el.className='metric-trend '+good;
-  el.textContent=ar+' '+(fmt?fmt(cur):cur)+' '+(PERIOD_SUFFIX[gran]||'');
+  const suffix = ccw ? 'ช่วงที่เลือก' : (PERIOD_SUFFIX[gran]||'');
+  el.textContent=ar+' '+(fmt?fmt(cur):cur)+' '+suffix;
 }
 function periodTrendPct(elId, projects, gran){
   const el=document.getElementById(elId); if(!el) return;
-  const a0=periodStart(today,gran,0), a1=periodStart(today,gran,1), am1=periodStart(today,gran,-1);
+  const ccw=customCompareWindows();
+  const a0= ccw?ccw.a0:periodStart(today,gran,0);
+  const a1= ccw?ccw.a1:periodStart(today,gran,1);
+  const am1=ccw?ccw.am1:periodStart(today,gran,-1);
   let cw=0,ct=0,pw=0,pt=0;
   (projects||[]).forEach(x=>{const d=x.createdAt, v=x.val||0; if(inRange(d,a0,a1)){ct+=v; if(x.status==='Win')cw+=v;} else if(inRange(d,am1,a0)){pt+=v; if(x.status==='Win')pw+=v;}});
   const cur=ct?Math.round(cw/ct*100):0, prev=pt?Math.round(pw/pt*100):0, diff=cur-prev;
   const ar=diff>0?'▲':diff<0?'▼':'—', good=diff===0?'flat':(diff>0?'up':'down');
   el.className='metric-trend '+good;
-  el.textContent=ar+' '+cur+'% '+(PERIOD_SUFFIX[gran]||'');
+  const suffix = ccw ? 'ช่วงที่เลือก' : (PERIOD_SUFFIX[gran]||'');
+  el.textContent=ar+' '+cur+'% '+suffix;
 }
 function renderDashboard(){
   const p=filteredProjects(), t=filteredTasks();
@@ -2019,13 +2097,13 @@ function renderDashboard(){
   const segItems=Object.entries(grouped(p,x=>x.seg,x=>x.val)).sort((a,b)=>b[1]-a[1]).map(([label,value],i)=>({label,value,color:palette[i%palette.length]}));
   renderDonut('segmentDonut',segItems,{money:true,centerValue:shortMoney(segItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
   // Team Involvement: show actual pipeline value each member is participating in (not % of a target)
-  const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>x.bd===tm.id||x.presales===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,12);
+  const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>projectInvolves(x,tm.id)).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,12);
   renderBars('teamKpiBars',teamKpi,{money:true});
   const selectedTeam=state.teams.find(tm=>tm.id===filters.team);
   const isRoleFilter=typeof filters.team==='string'&&filters.team.startsWith('role:');
   const teamValue=p.reduce((s,x)=>s+x.val,0);
   const kpiFocus=selectedTeam
-    ? {label:selectedTeam.name,value:shortMoney(p.reduce((s,x)=>s+(x.bd===selectedTeam.id||x.presales===selectedTeam.id||x.sales===selectedTeam.id?x.val:0),0))}
+    ? {label:selectedTeam.name,value:shortMoney(p.reduce((s,x)=>s+(projectInvolves(x,selectedTeam.id)?x.val:0),0))}
     : isRoleFilter
     ? {label:`Group ${filters.team.slice(5)}`,value:shortMoney(p.reduce((s,x)=>s+(projectMatchesTeamFilter(x,filters.team)?x.val:0),0))}
     : {label:'Team Involvement',value:shortMoney(teamValue)};
@@ -2308,6 +2386,7 @@ function sortProjects(rows){
   });
 }
 function renderProjects(){
+  initProjectFilters();
   const p=sortProjects(filteredProjects());
   renderProjectHead();
   const openSubs=[...document.querySelectorAll('#projectRows .subrow.on')].map(r=>r.id);
@@ -2319,7 +2398,7 @@ function renderProjects(){
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
     const crHtml=changeRequestsHtml(x);
     const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(ownerNames(t).join(', ')||'-')} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
-    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small" data-project-subtasks="${x.id}" title="จัดการงานย่อยของโครงการ">Sub Task${relatedTasks.length?` (${relatedTasks.filter(t=>t.status==='Done').length}/${relatedTasks.length})`:''}</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
+    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}${x.bdBuddy?`<span class="mini">+ Buddy: ${esc(byId(x.bdBuddy).name)}</span>`:''}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small" data-project-subtasks="${x.id}" title="จัดการงานย่อยของโครงการ">Sub Task${relatedTasks.length?` (${relatedTasks.filter(t=>t.status==='Done').length}/${relatedTasks.length})`:''}</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
   document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
@@ -2359,6 +2438,7 @@ function openProjectForm(id){
     <label class="field"><span>Progress %</span><input id="projectProgress" name="progress" type="number" min="0" max="100" value="${Number(p.progress ?? averageProjectProgress(p.id))||0}" ${(p.taskStatus||inferProjectTaskStatus(p.id))==='Done'?'readonly':''}></label>
     <label class="field"><span>Value</span><input name="val" type="number" min="0" value="${p.val}"></label>
     <label class="field"><span>BD Lead<span class="req">*</span></span><select name="bd">${teamOptions(p.bd,'BD Lead')}</select></label>
+    <label class="field"><span>Buddy BD <span class="hint">(สำรอง/ช่วยงาน)</span></span><select name="bdBuddy"><option value="">— ไม่มี —</option>${teamOptions(p.bdBuddy,'BD Lead')}</select></label>
     <label class="field"><span>Presales</span><select name="presales"><option value="">— ไม่มี —</option>${teamOptions(p.presales,'Presales')}</select></label>
     <label class="field"><span>Sales</span><select name="sales">${teamOptions(p.sales,'Sales')}</select></label>
     <div class="span3 workflow-hint"><span class="wf-step">Sales</span><span class="wf-arrow">→</span><span class="wf-step">BD</span><span class="wf-arrow">→</span><span class="wf-step">Presales</span><span class="wf-arrow">→</span><span class="wf-step">Manager</span><span class="wf-arrow">→</span><span class="wf-step">Sales</span><span style="margin-left:8px;color:var(--soft)">หรือ Sales → Presales → Manager → Sales (ถ้ามีข้อมูลพร้อมแล้ว)</span></div>
@@ -3987,7 +4067,7 @@ function renderTeam(){
     {label:'Sales', items:state.teams.filter(t=>t.role==='Sales')}
   ];
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
-    const owned=state.projects.filter(p=>p.bd===t.id||p.presales===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
+    const owned=state.projects.filter(p=>projectInvolves(p,t.id)), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
     const locked = !isAdmin();
     return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="avatar" style="background:${t.color}">${esc(initials(t.name))}</div><div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
@@ -4052,7 +4132,7 @@ function openTeamForm(id){
   showFormPanel('teamFormPanel'); bindCloseButtons();
 }
 function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=String(f.username||firstName(f.name)).trim().toLowerCase(); f.password=String(f.password||lastName(f.name)).trim(); f.accessRole=f.username==='wongwaris'?'Admin':f.role==='Sales'?'Guest':(f.accessRole&&f.accessRole!=='Guest'?f.accessRole:'Member'); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
-function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>p.bd===id||p.presales===id||p.sales===id)||state.tasks.some(t=>t.owner===id)){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
+function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>projectInvolves(p,id))||state.tasks.some(t=>ownerIds(t).includes(id))){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
 function requireLogin(){
   if(activeUser) return true;
   alert('Please sign in before editing.');
