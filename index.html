@@ -338,7 +338,15 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .profile-section-title:first-child{border-top:0;padding-top:0}
 .profile-avatar-preview{display:flex;align-items:center;gap:14px}
 .profile-avatar-preview .avatar{width:54px;height:54px;font-size:18px}
-.profile-modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}.owners-check-grid{display:flex;flex-wrap:wrap;gap:6px 14px;padding:5px 0}.owners-check-grid label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap}.owner-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.owner-chip{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:12px;padding:1px 7px;font-size:10.5px;background:var(--surface);color:var(--text)}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
+.profile-modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}
+/* Generic full-page modal — repurposes .panel-form so existing .on toggling + bindCloseButtons keep working */
+.panel-form.app-modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;z-index:9999;padding:20px;overflow-y:auto;background:rgba(6,11,24,.62);backdrop-filter:blur(4px);border:0;border-radius:0;box-shadow:none;background-image:none}
+.panel-form.app-modal.on{display:flex;animation:profileFadeIn .18s ease-out}
+.app-modal-card{background:var(--panel);background-image:var(--card-grad);border:1px solid var(--line-2);border-radius:14px;width:min(1080px,100%);max-height:calc(100vh - 40px);overflow:auto;box-shadow:var(--shadow-hover);display:flex;flex-direction:column;margin:auto 0}
+.app-modal-card>.ch{position:sticky;top:0;background:var(--panel);z-index:2;border-bottom:1px solid var(--line);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.app-modal-card>.ch h2{margin:0}
+.app-modal-card>.cb{padding:18px 20px}
+html.app-modal-open{overflow:hidden}.owners-check-grid{display:flex;flex-wrap:wrap;gap:6px 14px;padding:5px 0}.owners-check-grid label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap}.owner-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.owner-chip{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:12px;padding:1px 7px;font-size:10.5px;background:var(--surface);color:var(--text)}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
 .chips{display:flex;gap:5px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:20px;padding:2px 7px;color:var(--muted);background:var(--surface);font-size:10.5px;white-space:nowrap}.mini{display:block;color:var(--soft);font-size:10.5px;margin-top:3px}.detail-stack{display:flex;flex-direction:column;gap:4px;min-width:190px}.login-box{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.lock{filter:saturate(.75);opacity:.72}.login-state{color:var(--soft);font-size:11.5px}.login-state.ok{color:var(--green)}.login-state.bad{color:var(--red)}.group-title{margin:6px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.7px}.group-block{display:flex;flex-direction:column;gap:10px}.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:var(--space-md)}
 #v-settings .content{gap:var(--space-lg)}
 .set-group{display:flex;flex-direction:column;gap:var(--space-md)}
@@ -490,7 +498,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     <section id="v-projects" class="view">
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>PROJECTS</div><h1>Project Management</h1><p>บริหารโครงการ มอบหมายทีม และมูลค่าตาม Brand / PIRAMID Scope</p></div><div class="actions"><button class="btn" data-reset-filters>↺ Reset Filter</button><button class="btn primary" id="projectFormToggle">+ New Project</button><button class="btn" data-export="projects">Export</button></div></div>
       <div class="content">
-        <div class="panel-form card" id="projectFormPanel"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project">x</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div>
+        <div class="panel-form app-modal" id="projectFormPanel" role="dialog" aria-modal="true" aria-labelledby="projectFormTitle"><div class="app-modal-card"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project" aria-label="Close">×</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div></div>
         <div class="panel-form card" id="projectSubTaskFormPanel"><div class="ch"><h2 id="projectSubTaskTitle">Project Sub Tasks</h2><button class="btn icon" data-close-form="projectSubTask" aria-label="Close">×</button></div><div class="cb" id="projectSubTaskBody"></div></div>
         <div class="card"><div class="cb"><div class="filters" id="projectFilters"></div></div></div>
         <div class="card"><div class="ch"><h2>Projects</h2><small id="projectCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead id="projectTableHead"></thead><tbody id="projectRows"></tbody></table></div></div>
@@ -2564,7 +2572,7 @@ function saveProject(e){
   }
   syncProjectTasks(f);
   const wasEdit=!!editing.project;
-  saveState(); editing.project=null; document.getElementById('projectFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขโครงการ':'เพิ่มโครงการ','projects',f.name||f.id); renderAll(true);
+  saveState(); editing.project=null; closeFormPanel('projectFormPanel'); logActivity(wasEdit?'แก้ไขโครงการ':'เพิ่มโครงการ','projects',f.name||f.id); renderAll(true);
 }
 function deleteProject(id){if(!canEditModule('projects')){toast('คุณไม่มีสิทธิ์ลบ Project','error');return} if(!confirm('Delete project '+id+'?'))return; const nm=(state.projects.find(p=>p.id===id)||{}).name||id; state.projects=state.projects.filter(p=>p.id!==id); state.tasks=state.tasks.filter(t=>t.project!==id); saveState(); logActivity('ลบโครงการ','projects',nm); renderAll(true)}
 function syncProjectTasks(project){
@@ -3248,12 +3256,35 @@ function initQueueDnd(body){
   });
 }
 
-// ===== Scroll-to-form helper =====
+// ===== Scroll-to-form helper / modal opener =====
 function showFormPanel(id){
   const el=document.getElementById(id); if(!el) return;
   el.classList.add('on');
-  requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}));
+  if(el.classList.contains('app-modal')){
+    // Modal: lock body scroll, focus first interactive control, wire backdrop close once
+    document.documentElement.classList.add('app-modal-open');
+    if(!el.dataset.modalBound){
+      el.dataset.modalBound='1';
+      el.addEventListener('click',(e)=>{ if(e.target===el) closeFormPanel(id); });
+    }
+    setTimeout(()=>{ el.querySelector('input:not([type=hidden]):not([readonly]),select,textarea')?.focus(); el.scrollTop=0; },40);
+  } else {
+    requestAnimationFrame(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}));
+  }
 }
+function closeFormPanel(id){
+  const el=document.getElementById(id); if(!el) return;
+  el.classList.remove('on');
+  if(el.classList.contains('app-modal')&&!document.querySelector('.panel-form.app-modal.on')){
+    document.documentElement.classList.remove('app-modal-open');
+  }
+}
+// ESC to close any open modal panel
+document.addEventListener('keydown',(e)=>{
+  if(e.key!=='Escape') return;
+  const open=document.querySelector('.panel-form.app-modal.on');
+  if(open) closeFormPanel(open.id);
+});
 
 // ===== #5 Training & Certification Tracker =====
 const CERT_CATS=['Vendor','Security','Network','Cloud','Project Management','Other'];
@@ -4478,7 +4509,7 @@ async function savePreference(userId){
 
 function nextId(prefix,arr){const nums=arr.map(x=>Number(String(x.id).replace(/\D/g,''))).filter(Boolean);return prefix+'-'+String((Math.max(0,...nums)+1)).padStart(3,'0')}
 function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
-function bindCloseButtons(){document.querySelectorAll('[data-close-form]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.closeForm+'FormPanel').classList.remove('on'))}
+function bindCloseButtons(){document.querySelectorAll('[data-close-form]').forEach(b=>b.onclick=()=>closeFormPanel(b.dataset.closeForm+'FormPanel'))}
 function exportCsv(type){
   const teamName=id=>{const t=byId(id); return t&&t.name?t.name:(id||'');};
   let headers=[], rows=[];
