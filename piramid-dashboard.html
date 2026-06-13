@@ -42,6 +42,19 @@
   --grid-bg:radial-gradient(circle at 1px 1px,rgba(15,23,42,.04) 1px,transparent 0)
 }
 [data-theme="light"] .nav button.on{background-image:linear-gradient(135deg,rgba(37,99,235,.14),rgba(8,145,178,.1));color:var(--accent);box-shadow:inset 0 0 0 1px rgba(37,99,235,.3)}
+/* Light theme: keep sidebar dark for visual contrast with light content area */
+[data-theme="light"] .sidebar{background:#141925;border-right-color:#2b3447;color:#eef2f8;--text:#eef2f8;--muted:#9aa6b8;--soft:#697587;--line:#2b3447;--line-2:#3e4860;--panel:#1a2030;--panel-2:#222a3d;--surface:#141925}
+[data-theme="light"] .sidebar .brand{border-bottom-color:var(--line);color:var(--text)}
+[data-theme="light"] .sidebar .nav-label{color:var(--soft)}
+[data-theme="light"] .sidebar .nav button{color:var(--muted);background:transparent}
+[data-theme="light"] .sidebar .nav button:hover{color:var(--text);background:rgba(255,255,255,.04)}
+[data-theme="light"] .sidebar .nav button.on{background-image:linear-gradient(135deg,rgba(96,136,255,.22),rgba(22,198,178,.12));color:#a7c0ff;box-shadow:inset 0 0 0 1px rgba(96,136,255,.4)}
+[data-theme="light"] .sidebar .user{border-top:1px solid var(--line);color:var(--text)}
+[data-theme="light"] .sidebar .user .hint{color:var(--muted)}
+[data-theme="light"] .sidebar .btn{background:var(--panel-2);border-color:var(--line);color:var(--text)}
+[data-theme="light"] .sidebar .btn:hover{background:var(--panel)}
+[data-theme="light"] .sidebar .btn.danger{background:transparent;color:#f87171;border-color:rgba(248,113,113,.4)}
+[data-theme="light"] .sidebar .btn.danger:hover{background:rgba(248,113,113,.12)}
 [data-theme="light"] .topbar[data-dash]{background-image:linear-gradient(180deg,rgba(37,99,235,.04),transparent)}
 [data-theme="light"] .topbar[data-dash="ana"]{background-image:linear-gradient(180deg,rgba(124,58,237,.05),transparent)}
 [data-theme="light"] .track{background:rgba(15,23,42,.06)}
@@ -116,6 +129,18 @@ html.theme-anim,html.theme-anim *{transition:background-color .3s ease,color .3s
 }
 .env-badge{margin-left:auto;align-self:flex-start;font-size:9px;font-weight:800;letter-spacing:1px;padding:2px 7px;border-radius:5px;background:var(--amber);color:#1a1200}
 html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
+.migration-banner-overlay{position:fixed;inset:0;background:rgba(6,11,24,.72);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;animation:migBannerIn .22s ease-out}
+@keyframes migBannerIn{from{opacity:0}to{opacity:1}}
+.migration-banner-card{background:var(--panel);background-image:var(--card-grad);border:1px solid var(--line-2);border-radius:18px;padding:34px 36px;max-width:560px;width:100%;text-align:center;box-shadow:var(--shadow-hover)}
+.migration-banner-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:2.2px;color:#1a1200;background:var(--amber);padding:4px 12px;border-radius:999px;margin-bottom:14px}
+.migration-banner-card h1{margin:0 0 8px;font-size:30px;color:var(--text)}
+.migration-banner-sub{margin:0 0 10px;color:var(--text);font-size:15px;line-height:1.55}
+.migration-banner-hint{margin:0 0 22px;color:var(--soft);font-size:12.5px;line-height:1.55}
+.migration-banner-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center}
+.migration-banner-cta{padding:0 22px;height:42px;font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.migration-banner-dismiss{font-size:12px;color:var(--muted)}
+.migration-banner-dismiss:hover{color:var(--text)}
+@media(max-width:560px){.migration-banner-card{padding:26px 22px}.migration-banner-card h1{font-size:24px}}
 .brand strong{display:block;font-size:15px}.brand span{display:block;color:var(--soft);font-size:10.5px;text-transform:uppercase;letter-spacing:.8px}
 .nav{padding:10px 10px;overflow:auto}.nav-label{padding:12px 10px 5px;color:var(--soft);font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase}
 .nav button{width:100%;display:flex;align-items:center;gap:11px;padding:9px 12px;margin:2px 0;border-radius:9px;background:transparent;color:var(--muted);cursor:pointer;text-align:left;font-weight:500;transition:background .15s,color .15s}
@@ -127,7 +152,7 @@ html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 .nav button.on .ico{filter:none;opacity:1}
 .badge{margin-left:auto;min-width:20px;padding:1px 7px;border-radius:20px;background:rgba(255,90,103,.14);color:var(--red);font-size:10px;font-weight:700;text-align:center}
 .navdot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:transparent;flex:0 0 auto}
-.navdot.on{background:var(--green);box-shadow:0 0 8px rgba(45,211,111,.7)}
+.navdot.on{background:var(--green)}
 .act-row{display:flex;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 .act-time{color:var(--soft);font-size:11px;min-width:120px}
 .act-body{flex:1}.act-body b{color:var(--text)} .act-body .act-view{color:var(--soft);font-size:11px;margin-left:6px}
@@ -147,6 +172,7 @@ html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 @media(max-width:640px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .f-wide{grid-column:span 2}}.field{display:flex;flex-direction:column;gap:6px}.field span{color:var(--soft);font-size:11px}.field input,.field select,.field textarea{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:var(--r);padding:8px 10px;outline:none}.field textarea{min-height:74px;resize:vertical}
 .masked-entry{-webkit-text-security:disc;text-security:disc}
 .grid{display:grid;gap:14px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.wide{grid-column:span 2}
+.team-cols{grid-template-columns:repeat(4,1fr);align-items:start}.team-cols .group-block{display:flex;flex-direction:column;gap:10px;min-width:0}.team-cols .group-block>.card{margin:0}
 .card,.metric{background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s,border-color .2s}
 .metric{padding:14px 15px;min-height:92px}.metric label{display:block;color:var(--muted);font-size:11.5px;font-weight:500;margin-bottom:8px;letter-spacing:.2px}.metric strong{display:block;font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1}.metric small{display:block;margin-top:7px;color:var(--soft)}
 .dash-grid>.widget.metric[data-widget="mValue"]{grid-column:span 4;background:var(--panel);background-image:var(--card-grad);box-shadow:var(--shadow);border-color:var(--line-2)}
@@ -204,6 +230,11 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 #execGrid>.widget[data-widget="execStatus"]{grid-column:span 4;grid-row:span 10}
 #execGrid>.widget[data-widget="execBrand"]{grid-column:span 4;grid-row:span 10}
 #execGrid>.widget[data-widget="execTeam"]{grid-column:span 4;grid-row:span 10}
+#execGrid>.widget[data-widget="execPresalesTeam"]{grid-column:span 4;grid-row:span 10}
+#execGrid>.widget[data-widget="execPresalesWorkload"]{grid-column:span 5;grid-row:span 11}
+#execGrid>.widget[data-widget="execPresalesTasks"]{grid-column:span 3;grid-row:span 9}
+#execGrid>.widget[data-widget="execActiveByOwner"]{grid-column:span 6;grid-row:span 10}
+#execGrid>.widget[data-widget="execBuildingType"]{grid-column:span 4;grid-row:span 9}
 #execGrid>.widget[data-widget="execWorkload"]{grid-column:span 7;grid-row:span 11}
 #execGrid>.widget[data-widget="execSolutions"],#execGrid>.widget[data-widget="execTopSystems"],#execGrid>.widget[data-widget="execSegments"],#execGrid>.widget[data-widget="execTasks"]{grid-column:span 3;grid-row:span 9}
 #execGrid>.widget[data-widget="execHighPriority"]{grid-column:span 6;grid-row:span 10}
@@ -281,7 +312,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .todo-switcher{gap:6px;border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:2px}
 .todo-proj{margin-bottom:14px}.todo-proj .ch{gap:14px}.todo-proj .ch .meta{margin-left:auto;display:flex;align-items:center;gap:14px;color:var(--soft);font-size:11.5px;white-space:nowrap}
 .todo-rank{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--panel-2);color:var(--muted);font-size:11px;font-weight:700}
-.todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}
+.todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}.subtask-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.subtask-row{display:flex;align-items:center;gap:6px}.subtask-row input[type=text]{flex:1;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel-2);color:var(--text);font-size:12px}.subtask-add-row{display:flex;gap:6px;margin-top:4px}.subtask-add-row input{flex:1;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel-2);color:var(--text);font-size:12px}
 .status-cell{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .task-status-select{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px;font-weight:600;background:var(--panel-2);color:var(--text);cursor:pointer;min-height:28px;max-width:140px}
 .task-status-select:hover{border-color:var(--line-2)}
@@ -294,7 +325,20 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .cal-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.cal-month-grid .cal-day{min-height:104px}.cal-month-grid .cal-day.empty{background:transparent;border-color:transparent;box-shadow:none;min-height:0}.cal-more{color:var(--soft);font-size:10.5px;margin-top:1px}
 @media(max-width:760px){.cal-month-grid{gap:4px}.cal-month-grid .cal-day{min-height:62px;padding:5px;gap:2px}.cal-weekdays{gap:4px}.cal-wd{font-size:8.5px}.cal-month-grid .cal-item{font-size:9.5px;padding:3px 4px 3px 11px}.cal-month-grid .cal-item small{display:none}.cal-nav strong{min-width:120px;font-size:12px}}
 .email-preview{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.email-box{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px;white-space:pre-wrap;min-height:280px}.snapshot-frame{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--surface));border-radius:8px;padding:14px;min-height:280px}.snapshot-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px}.status-list{display:flex;flex-direction:column;gap:8px}.status-line{display:flex;align-items:center;gap:8px;color:var(--muted)}.status-ico{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;color:white;font-size:11px;font-weight:800;flex:0 0 auto}.status-ico.done{background:var(--green)}.status-ico.doing{background:var(--accent);animation:spin 1.3s linear infinite}.status-ico.review{background:var(--amber)}.status-ico.overdue{background:var(--red)}.status-ico.schedule{background:var(--purple)}@keyframes spin{to{transform:rotate(360deg)}}
-.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.req{color:var(--red);font-size:11px;margin-left:2px}
+/* Profile pop-out modal */
+.profile-modal-overlay{position:fixed;inset:0;background:rgba(6,11,24,.62);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;animation:profileFadeIn .18s ease-out}
+.profile-modal-overlay.on{display:flex}
+@keyframes profileFadeIn{from{opacity:0}to{opacity:1}}
+.profile-modal-box{background:var(--panel);background-image:var(--card-grad);border:1px solid var(--line-2);border-radius:14px;width:min(520px,100%);max-height:calc(100vh - 40px);overflow:auto;box-shadow:var(--shadow-hover);display:flex;flex-direction:column}
+.profile-modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+.profile-modal-head h2{margin:0;font-size:16px}
+.profile-modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.profile-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:2px 0 -2px;padding-top:6px;border-top:1px dashed var(--line)}
+.profile-section-title:first-child{border-top:0;padding-top:0}
+.profile-avatar-preview{display:flex;align-items:center;gap:14px}
+.profile-avatar-preview .avatar{width:54px;height:54px;font-size:18px}
+.profile-modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}.owners-check-grid{display:flex;flex-wrap:wrap;gap:6px 14px;padding:5px 0}.owners-check-grid label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap}.owner-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.owner-chip{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:12px;padding:1px 7px;font-size:10.5px;background:var(--surface);color:var(--text)}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
 .chips{display:flex;gap:5px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:20px;padding:2px 7px;color:var(--muted);background:var(--surface);font-size:10.5px;white-space:nowrap}.mini{display:block;color:var(--soft);font-size:10.5px;margin-top:3px}.detail-stack{display:flex;flex-direction:column;gap:4px;min-width:190px}.login-box{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.lock{filter:saturate(.75);opacity:.72}.login-state{color:var(--soft);font-size:11.5px}.login-state.ok{color:var(--green)}.login-state.bad{color:var(--red)}.group-title{margin:6px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.7px}.group-block{display:flex;flex-direction:column;gap:10px}.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:var(--space-md)}
 #v-settings .content{gap:var(--space-lg)}
 .set-group{display:flex;flex-direction:column;gap:var(--space-md)}
@@ -305,7 +349,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 #v-settings .panel-form.on{margin-bottom:var(--space-md)}.checklist{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:8px;display:grid;gap:6px}.checklist label{display:flex;gap:7px;align-items:flex-start;color:var(--muted);font-size:12px}.checklist input{width:auto;accent-color:var(--accent);margin-top:2px}.brow{display:flex;align-items:center;gap:8px}.brow .bchk{flex:1;display:flex;gap:7px;align-items:center;color:var(--muted);font-size:12px;cursor:pointer}.brow .bval{width:104px;flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;margin-top:0}.bscope{width:7px;height:7px;border-radius:50%;flex:0 0 auto}.bscope.bs{background:#8fa4ff}.bscope.ps{background:var(--accent-2)}.battery{width:98px;height:18px;border:1px solid var(--line-2);border-radius:4px;padding:2px;position:relative;background:var(--surface)}.battery:after{content:"";position:absolute;right:-5px;top:5px;width:4px;height:6px;background:var(--line-2);border-radius:0 2px 2px 0}.battery-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));min-width:3px}.battery-text{font-size:10px;color:var(--text);margin-top:3px}
 .pbar{display:flex;align-items:center;gap:10px;min-width:130px}.pbar-track{flex:1;min-width:56px;max-width:130px;height:7px;background:rgba(255,255,255,.09);border-radius:20px;overflow:hidden}.pbar-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--progress-from),var(--progress-to))}.pbar b{font-size:12.5px;font-weight:700;min-width:36px;color:var(--text)}
 [data-theme="light"] .pbar-track{background:rgba(15,23,42,.08)}.subrow{display:none}.subrow.on{display:table-row}.subpanel{background:var(--surface);border-radius:8px;padding:10px}.toggle-link{color:#8fa4ff;cursor:pointer;font-weight:700}
-.option-editor{display:flex;flex-direction:column;gap:12px}.option-card{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}.option-head{display:grid;grid-template-columns:1.2fr .8fr .9fr .8fr .7fr .9fr auto;gap:8px;align-items:end}.option-items{display:flex;flex-direction:column;gap:8px}.option-item{display:grid;grid-template-columns:1fr 1fr 1fr .45fr .75fr .75fr 1fr 1fr auto;gap:8px;align-items:end}.option-review{display:grid;grid-template-columns:1fr;gap:8px}.option-card .field span{font-size:10px}.option-card input,.option-card select,.option-card textarea{font-size:12px}.option-actions{display:flex;gap:8px;flex-wrap:wrap}.option-summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.ptd-editor{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}.ptd-row{display:grid;grid-template-columns:2fr 1.3fr 1.1fr 1fr 1fr auto;gap:6px;align-items:end;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 10px}.ptd-row .field span{font-size:10px;color:var(--muted)}.ptd-row input,.ptd-row select{font-size:12px}.option-editor{display:flex;flex-direction:column;gap:12px}.option-card{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:10px}.option-head{display:grid;grid-template-columns:1.2fr .8fr .9fr .8fr .7fr .9fr auto;gap:8px;align-items:end}.option-items{display:flex;flex-direction:column;gap:8px}.option-item{display:grid;grid-template-columns:1fr 1fr 1fr .45fr .75fr .75fr 1fr 1fr auto;gap:8px;align-items:end}.option-review{display:grid;grid-template-columns:1fr;gap:8px}.option-card .field span{font-size:10px}.option-card input,.option-card select,.option-card textarea{font-size:12px}.option-actions{display:flex;gap:8px;flex-wrap:wrap}.option-summary{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
 @media(max-width:1180px){.g5,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g3,.g2,.settings-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-column:auto}.kanban{grid-template-columns:repeat(2,minmax(300px,1fr))}.calendar{grid-template-columns:repeat(3,minmax(180px,1fr))}.email-preview{grid-template-columns:1fr}.form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.form-grid .span3{grid-column:span 2}}
 @media(max-width:900px){.topbar{height:auto;min-height:62px;align-items:flex-start;flex-direction:column;padding:14px 16px;gap:10px}.topbar .actions{width:100%;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:thin}.topbar .actions .btn{flex:0 0 auto}.title{width:100%;min-width:0}.title p{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}.content{padding:16px}.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.filters .f-wide{grid-column:span 3}.dash-grid{grid-auto-rows:minmax(28px,auto)}.table-wrap{max-width:100%;-webkit-overflow-scrolling:touch}.tbl{min-width:760px}.bar-row{grid-template-columns:minmax(90px,1fr) minmax(90px,1.4fr) minmax(56px,auto)}.donut-flex,.split{grid-template-columns:1fr}.donut-svgbox,.donut{max-width:132px}.settings-grid{grid-template-columns:1fr}.ch{align-items:flex-start;flex-direction:column}.ch .btn{align-self:flex-start}}
 @media(max-width:900px){.option-head{grid-template-columns:repeat(2,minmax(0,1fr))}.option-item{grid-template-columns:repeat(2,minmax(0,1fr))}.option-item .btn{align-self:end}}
@@ -389,7 +433,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <button data-view="projects"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/></svg></span>Projects <span class="navdot"></span></button>
       <button data-view="tasks"><span class="ico"><svg viewBox="0 0 24 24"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>To-Do List <span class="navdot"></span></button>
       <button data-view="calendar"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>Calendar <span class="navdot"></span></button>
-      <button data-view="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="5" width="3" height="13" rx="1"/></svg></span>BD KPI <span class="navdot"></span></button>
+      <button data-view="kpi"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="12" y="8" width="3" height="10" rx="1"/><rect x="17" y="5" width="3" height="13" rx="1"/></svg></span>KPI Activity <span class="navdot"></span></button>
       <button data-view="training"><span class="ico"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 12v5c3 1.5 9 1.5 12 0v-5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Training <span class="navdot"></span></button>
       <button data-view="team"><span class="ico"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Team <span class="navdot"></span></button>
       <div class="nav-label">System</div>
@@ -397,6 +441,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <button data-view="settings"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Settings <span class="navdot"></span></button>
     </nav>
     <div class="user"><div class="avatar" id="currentAvatar">BD</div><div style="flex:1;min-width:0"><b id="currentUserName">BD Command Center</b><div class="hint" id="currentUserRole">Executive workspace</div></div><button class="bell-btn" id="bellBtn" aria-label="การแจ้งเตือน"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge bell-count" id="bellCount" style="display:none">0</span></button></div>
+    <div style="padding:0 18px 8px"><button class="btn" id="editProfileBtn" style="width:100%">👤 Edit Profile</button></div>
     <div style="padding:0 18px 8px"><button class="btn" id="themeToggle" style="width:100%">Light Theme</button></div>
     <div style="padding:0 18px 14px"><button class="btn danger" id="logoutBtn" style="width:100%">Logout</button></div>
   </aside>
@@ -421,14 +466,19 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <div class="card widget metric" data-widget="mTaskDoing"><label>Doing Task</label><strong id="mv-taskdoing">0</strong><div id="trend-taskdoing"></div><small id="ms-taskdoing"></small></div>
           <div class="card widget" data-widget="execStatus"><div class="ch"><h2>Project Status</h2><small id="statusTotal"></small></div><div class="cb"><div class="bars" id="statusBars"></div></div></div>
           <div class="card widget" data-widget="execBrand"><div class="ch"><h2>Solutions Sales</h2><small>มูลค่าตามกลุ่มโซลูชัน/แบรนด์ · hover ดูมูลค่าและ %</small></div><div class="cb" id="brandDonut"></div></div>
-          <div class="card widget" data-widget="execTeam"><div class="ch"><h2>KPI Team</h2><small>เป้าหมาย vs ทำได้</small></div><div class="cb"><div class="bars" id="teamKpiBars"></div></div></div>
+          <div class="card widget" data-widget="execTeam"><div class="ch"><h2>Team Involvement</h2><small>มูลค่าโครงการที่แต่ละคนมีส่วนร่วม · hover ดูมูลค่า</small></div><div class="cb"><div class="bars" id="teamKpiBars"></div></div></div>
+          <div class="card widget" data-widget="execPresalesTeam"><div class="ch"><h2>Presales Involvement</h2><small>มูลค่าโครงการที่ Presales แต่ละคนรับผิดชอบ</small></div><div class="cb"><div class="bars" id="presalesTeamBars"></div></div></div>
+          <div class="card widget" data-widget="execPresalesWorkload"><div class="ch"><h2>Presales Workflow</h2><small>งาน Presales รายเดือนของปีนี้ vs ปีก่อน</small></div><div class="cb"><div id="presalesWorkloadChart"></div></div></div>
+          <div class="card widget" data-widget="execPresalesTasks"><div class="ch"><h2>Presales Task Health</h2><small>สถานะงาน Presales · open / done / overdue</small></div><div class="cb" id="presalesTaskDonut"></div></div>
           <div class="card widget" data-widget="execSolutions"><div class="ch"><h2>Solutions Mix</h2><small>4 กลุ่มโซลูชันหลัก · จำนวนโครงการ</small></div><div class="cb"><div class="vbars" id="solutionGroupBars"></div></div></div>
           <div class="card widget" data-widget="execTopSystems"><div class="ch"><h2>Top 5 Systems</h2><small>ระบบที่ทำบ่อยที่สุด</small></div><div class="cb"><div class="bars" id="topSystemBars"></div></div></div>
           <div class="card widget" data-widget="execSegments"><div class="ch"><h2>Value by Segment</h2><small>มูลค่าตาม Segment · hover ดูมูลค่าและ %</small></div><div class="cb" id="segmentDonut"></div></div>
           <div class="card widget" data-widget="execTasks"><div class="ch"><h2>Task Health</h2><small>สัดส่วนสถานะงาน · hover ดูจำนวนและ %</small></div><div class="cb" id="taskHealthDonut"></div></div>
           <div class="card widget" data-widget="execWorkload"><div class="ch"><h2>Team Workload</h2><div style="display:flex;align-items:center;gap:6px"><small>เทียบปี</small><select id="wlCompare" class="btn small" style="height:24px;padding:0 6px" aria-label="เลือกปีที่ใช้เปรียบเทียบ workload"><option value="prev">ปีก่อน</option><option value="next">ปีถัดไป</option></select></div></div><div class="cb"><div id="teamWorkloadChart"></div></div></div>
           <div class="card widget" data-widget="execHighPriority"><div class="ch"><h2>High Priority Projects</h2><small>โครงการสำคัญ Top 10</small></div><div class="cb"><div id="highPriorityTable"></div></div></div>
-          <div class="card widget" data-widget="execTaskAlert"><div class="ch"><h2>Tasks: Doing / Overdue</h2><small>งานที่ต้องเร่ง Top 10</small></div><div class="cb"><div id="taskAlertTable"></div></div></div>
+          <div class="card widget" data-widget="execTaskAlert"><div class="ch"><h2>Tasks: Doing / Overdue</h2><small>งานที่ต้องเร่ง · ครบทุกคนในทีม</small></div><div class="cb"><div id="taskAlertTable"></div></div></div>
+          <div class="card widget" data-widget="execActiveByOwner"><div class="ch"><h2>Active Tasks by Owner</h2><small>งาน open (Doing/Review/Schedule/Overdue) ต่อสมาชิก</small></div><div class="cb"><div class="bars" id="activeByOwnerBars"></div></div></div>
+          <div class="card widget" data-widget="execBuildingType"><div class="ch"><h2>Building Type</h2><small>โครงการสร้างใหม่ vs ปรับปรุงตึกเดิม · มูลค่า</small></div><div class="cb" id="buildingTypeDonut"></div></div>
           <div class="card widget" data-widget="execTimeliness"><div class="ch"><h2>Delivery Timeliness</h2><small>งานย่อยส่งทันกำหนดแค่ไหน</small></div><div class="cb"><div id="timelinessBox"></div></div></div>
           <div class="card widget" data-widget="execQuickAdd"><div class="ch"><h2>Quick Add Project</h2><small>เพิ่มโครงการใหม่เร็ว ๆ</small></div><div class="cb" id="quickAddBox"></div></div>
         </div>
@@ -441,14 +491,18 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>PROJECTS</div><h1>Project Management</h1><p>บริหารโครงการ มอบหมายทีม และมูลค่าตาม Brand / PIRAMID Scope</p></div><div class="actions"><button class="btn" data-reset-filters>↺ Reset Filter</button><button class="btn primary" id="projectFormToggle">+ New Project</button><button class="btn" data-export="projects">Export</button></div></div>
       <div class="content">
         <div class="panel-form card" id="projectFormPanel"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project">x</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div>
+        <div class="panel-form card" id="projectSubTaskFormPanel"><div class="ch"><h2 id="projectSubTaskTitle">Project Sub Tasks</h2><button class="btn icon" data-close-form="projectSubTask" aria-label="Close">×</button></div><div class="cb" id="projectSubTaskBody"></div></div>
+        <div class="card"><div class="cb"><div class="filters" id="projectFilters"></div></div></div>
         <div class="card"><div class="ch"><h2>Projects</h2><small id="projectCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead id="projectTableHead"></thead><tbody id="projectRows"></tbody></table></div></div>
       </div>
     </section>
 
     <section id="v-tasks" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 6 รูปแบบ</p></div><div class="actions"><button class="btn primary" id="internalTaskFormToggle">+ Internal Task</button><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TO-DO LIST</div><h1>To-Do List</h1><p>แพลตฟอร์มงาน BD · Presales · Project Base — เลือกมุมมองได้ 6 รูปแบบ</p></div><div class="actions"><button class="btn primary" id="internalTaskFormToggle">+ Internal Task</button><button class="btn" id="todoNewProjectBtn" data-edit-module="projects">+ New Project</button><button class="btn" id="taskResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
       <div class="content">
         <div class="panel-form card" id="internalTaskFormPanel"><div class="ch"><h2>New Internal Task</h2><button class="btn icon" data-close-form="internalTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="internalTaskForm"></form></div></div>
+        <div class="panel-form card" id="todoTaskFormPanel"><div class="ch"><h2 id="todoTaskFormTitle">Edit Task</h2><button class="btn icon" data-close-form="todoTask" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="todoTaskForm"></form></div></div>
+        <div class="panel-form card" id="todoSubtaskFormPanel"><div class="ch"><h2 id="todoSubtaskTitle">Sub Tasks</h2><button class="btn icon" data-close-form="todoSubtask" aria-label="Close">×</button></div><div class="cb" id="todoSubtaskBody"></div></div>
         <div class="toolbar todo-switcher" role="tablist" aria-label="To-do view mode">
           <button class="btn small todo-view on" data-todo-view="table" role="tab">Master Table</button>
           <button class="btn small todo-view" data-todo-view="kanban" role="tab">Kanban Stage</button>
@@ -458,6 +512,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <button class="btn small todo-view" data-todo-view="queue" role="tab">BD Queue</button>
         </div>
         <div class="toolbar todo-filters" style="justify-content:flex-end">
+          <button class="btn small task-scope" data-task-scope="all">Total Task</button>
           <button class="btn small task-scope" data-task-scope="today">Today</button>
           <button class="btn small task-scope on" data-task-scope="week">This Week</button>
           <button class="btn small task-scope" data-task-scope="overdue">Overdue</button>
@@ -492,7 +547,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-kpi" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>BD KPI</div><h1>BD KPI Scorecard</h1><p>ประเมินผลงาน BD: ตรงเวลา · ครบถ้วน · คุณภาพ · ปริมาณ · Conversion — คำนวณจาก BD Activity</p></div><div class="actions"><button class="btn primary" id="kpiFormToggle">+ Add Activity</button><button class="btn" data-export="kpi">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>KPI ACTIVITY</div><h1>KPI Activity Scorecard</h1><p>ประเมินผลงานทีม: ตรงเวลา · ครบถ้วน · คุณภาพ · ปริมาณ · Conversion — คำนวณจาก Activity</p></div><div class="actions"><button class="btn primary" id="kpiFormToggle">+ Add Activity</button><button class="btn" id="kpiTypeFormToggle" data-admin-only>⚙ Activity Types</button><button class="btn" data-export="kpi">Export</button></div></div>
       <div class="content">
         <div class="toolbar" style="justify-content:flex-end">
           <button class="btn small kpi-period on" data-kpi-period="month">This Month</button>
@@ -500,7 +555,8 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <button class="btn small" id="kpiTargetBtn">🎯 ตั้งเป้า</button>
           <label class="field" style="min-width:210px"><span>BD Member</span><select id="kpiOwnerFilter"></select></label>
         </div>
-        <div class="panel-form card" id="kpiFormPanel"><div class="ch"><h2>BD Activity</h2><button class="btn icon" data-close-form="kpi">x</button></div><div class="cb"><form class="form-grid" id="kpiForm"></form></div></div>
+        <div class="panel-form card" id="kpiFormPanel"><div class="ch"><h2>KPI Activity</h2><button class="btn icon" data-close-form="kpi">x</button></div><div class="cb"><form class="form-grid" id="kpiForm"></form></div></div>
+        <div class="panel-form card" id="kpiTypeFormPanel"><div class="ch"><h2>Activity Types (Data List)</h2><button class="btn icon" data-close-form="kpiType" aria-label="Close">×</button></div><div class="cb" id="kpiTypeBody"></div></div>
         <div class="grid g4" id="kpiSummary"></div>
         <div id="kpiAlert"></div>
         <div id="kpiScorecard"></div>
@@ -509,8 +565,11 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-training" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TRAINING</div><h1>Training &amp; Certifications</h1><p>ติดตามการฝึกอบรม ใบรับรอง และการพัฒนาทักษะของทีม BD</p></div><div class="actions"><button class="btn primary" id="certFormToggle">+ Certification</button><button class="btn" id="trainEventFormToggle">+ Training</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TRAINING</div><h1>Training &amp; Certifications</h1><p>ติดตามการฝึกอบรม ใบรับรอง และการพัฒนาทักษะของทีม</p></div><div class="actions"><button class="btn primary" id="certFormToggle">+ Certification</button><button class="btn" id="trainEventFormToggle">+ Training</button></div></div>
       <div class="content">
+        <div class="toolbar" style="justify-content:flex-end">
+          <label class="field" style="min-width:240px"><span>Owner</span><select id="trainOwnerFilter"></select></label>
+        </div>
         <div class="grid g4" id="trainMetrics"></div>
         <div class="panel-form card" id="certFormPanel"><div class="ch"><h2 id="certFormTitle">New Certification</h2><button class="btn icon" data-close-form="cert" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="certForm"></form></div></div>
         <div class="panel-form card" id="trainEventFormPanel"><div class="ch"><h2 id="trainEventFormTitle">New Training Event</h2><button class="btn icon" data-close-form="trainEvent" aria-label="Close form">×</button></div><div class="cb"><form class="form-grid" id="trainEventForm"></form></div></div>
@@ -520,12 +579,12 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-team" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีม เป้าหมายการขาย และสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีมและสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
       <div class="content">
         <div class="grid g4" id="teamTaskMetrics"></div>
         <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
         <div class="panel-form card" id="teamFormPanel"><div class="ch"><h2 id="teamFormTitle">New Member</h2><button class="btn icon" data-close-form="team">x</button></div><div class="cb"><form class="form-grid" id="teamForm"></form></div></div>
-        <div class="grid g3" id="teamCards"></div>
+        <div class="grid g4 team-cols" id="teamCards"></div>
       </div>
     </section>
 
@@ -618,6 +677,15 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
   </main>
   <div class="bi-modal" id="cardEditorPanel"><div class="card"><div class="ch"><h2>Add / Edit Card (BI)</h2><small>เลือกข้อมูลและชนิดกราฟ ระบบจะแนะนำให้</small></div><div class="cb"><form class="form-grid" id="cardEditorForm"></form></div></div></div>
+  <div class="profile-modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <div class="profile-modal-box">
+      <div class="profile-modal-head"><h2 id="profileModalTitle">Edit Profile</h2><button class="btn icon" id="profileModalClose" aria-label="Close">×</button></div>
+      <form id="profileForm">
+        <div class="profile-modal-body" id="profileModalBody"></div>
+        <div class="profile-modal-foot"><button class="btn primary" type="submit">Save Profile</button><button class="btn" type="button" id="profileModalCancel">Cancel</button></div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -726,18 +794,18 @@ const seed = {
   projects:[
     {id:'P-001',name:'The Parliament - 4D Cinema',seg:'Government',sys:'AV System, Digital Signage',brand:'Panasonic',status:'Quotation',pri:'High',size:'XXL',val:180000000,bd:'tm1',sales:'tm4'},
     {id:'P-002',name:'The Parliament - AV',seg:'Government',sys:'AV System',brand:'Crestron',status:'Budgetary',pri:'High',size:'XXL',val:10000000,bd:'tm1',sales:'tm4'},
-    {id:'P-003',name:'Omega Warehouse',seg:'Enterprise',sys:'Network, Wi-Fi, Server Room',brand:'Aruba',status:'Quotation',pri:'Medium',size:'XL',val:30000000,bd:'tm1',sales:'tm5'},
+    {id:'P-003',name:'Omega Warehouse',seg:'Commercial',sys:'Network, Wi-Fi, Server Room',brand:'Aruba',status:'Quotation',pri:'Medium',size:'XL',val:30000000,bd:'tm1',sales:'tm5'},
     {id:'P-004',name:'COJ - CCTV 14M',seg:'Government',sys:'CCTV',brand:'Hikvision',status:'Quotation',pri:'Low',size:'XL',val:14000000,bd:'tm1',sales:'tm6'},
-    {id:'P-005',name:'WMA Wastewater Management',seg:'Enterprise',sys:'IOC Platform, CCTV',brand:'Hikvision',status:'Waiting PO',pri:'Medium',size:'L',val:12500000,bd:'tm3',sales:'tm4'},
-    {id:'P-006',name:'AIS All Season - Server Room',seg:'Enterprise',sys:'Server Room, Network',brand:'Dell',status:'Budgetary',pri:'High',size:'L',val:3000000,bd:'tm1',sales:'tm4'},
+    {id:'P-005',name:'WMA Wastewater Management',seg:'Commercial',sys:'IOC Platform, CCTV',brand:'Hikvision',status:'Waiting PO',pri:'Medium',size:'L',val:12500000,bd:'tm3',sales:'tm4'},
+    {id:'P-006',name:'AIS All Season - Server Room',seg:'Commercial',sys:'Server Room, Network',brand:'Dell',status:'Budgetary',pri:'High',size:'L',val:3000000,bd:'tm1',sales:'tm4'},
     {id:'P-007',name:'Layana Resort Lanta - Wi-Fi',seg:'Hospitality',sys:'Wi-Fi, Network',brand:'Ruckus',status:'Quotation',pri:'Medium',size:'M',val:3000000,bd:'tm2',sales:'tm6'},
     {id:'P-008',name:'Amari Burirum - IT Communication',seg:'Hospitality',sys:'Network, Wi-Fi, CCTV, IP PBX',brand:'Grandstream',status:'Win',pri:'High',size:'M',val:2000000,bd:'tm1',sales:'tm6'},
-    {id:'P-009',name:'SAMA Garden - AI CCTV',seg:'Enterprise',sys:'CCTV, AI CCTV',brand:'Hikvision',status:'Win',pri:'Medium',size:'M',val:1000000,bd:'tm1',sales:'tm4'},
+    {id:'P-009',name:'SAMA Garden - AI CCTV',seg:'Commercial',sys:'CCTV, AI CCTV',brand:'Hikvision',status:'Win',pri:'Medium',size:'M',val:1000000,bd:'tm1',sales:'tm4'},
     {id:'P-010',name:'Stay Hotel - Renovation',seg:'Hospitality',sys:'Network, Wi-Fi, IPTV',brand:'TP-Link',status:'Win',pri:'Medium',size:'M',val:1000000,bd:'tm1',sales:'tm5'},
     {id:'P-011',name:'Grand Hyatt Erawan',seg:'Hospitality',sys:'CCTV, Wi-Fi, Network',brand:'Hikvision',status:'Budgetary',pri:'Medium',size:'S',val:500000,bd:'tm1',sales:'tm6'},
     {id:'P-012',name:'Six Senses Yao Noi',seg:'Hospitality',sys:'Network, Wi-Fi, CCTV',brand:'Ruckus',status:'Quotation',pri:'Medium',size:'S',val:500000,bd:'tm2',sales:'tm6'},
-    {id:'P-013',name:'FEC Office - Gate Barrier',seg:'Enterprise',sys:'Access Control',brand:'ZKTeco',status:'Waiting PO',pri:'Medium',size:'S',val:200000,bd:'tm1',sales:'tm4'},
-    {id:'P-014',name:'Reignwood - Main House CCTV B1',seg:'Enterprise',sys:'CCTV',brand:'Hikvision',status:'Win',pri:'High',size:'XS',val:160000,bd:'tm1',sales:'tm5'}
+    {id:'P-013',name:'FEC Office - Gate Barrier',seg:'Commercial',sys:'Access Control',brand:'ZKTeco',status:'Waiting PO',pri:'Medium',size:'S',val:200000,bd:'tm1',sales:'tm4'},
+    {id:'P-014',name:'Reignwood - Main House CCTV B1',seg:'Commercial',sys:'CCTV',brand:'Hikvision',status:'Win',pri:'High',size:'XS',val:160000,bd:'tm1',sales:'tm5'}
   ],
   tasks:[
     {id:'T-001',project:'P-001',title:'สรุป BOQ และ option สำหรับผู้บริหาร',owner:'tm1',status:'Doing',due:'2026-05-29',level:'Manager',progress:65},
@@ -756,10 +824,10 @@ const seed = {
   taskStatuses: DEFAULT_TASK_STATUSES,
   kpiActivities: DEFAULT_KPI_ACTIVITIES,
   kpiTargets: DEFAULT_KPI_TARGETS,
-  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execPresalesTeam:true,execPresalesWorkload:true,execPresalesTasks:true,execActiveByOwner:true,execBuildingType:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
 };
 const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
-const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd'];
+const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execQuickAdd'];
 const DEFAULT_EXEC_WIDGET_SIZE = {
   execSummary:{cols:12,rows:5},
   mTotal:{cols:3,rows:4},
@@ -774,6 +842,11 @@ const DEFAULT_EXEC_WIDGET_SIZE = {
   execStatus:{cols:4,rows:10},
   execBrand:{cols:4,rows:10},
   execTeam:{cols:4,rows:10},
+  execPresalesTeam:{cols:4,rows:10},
+  execPresalesWorkload:{cols:5,rows:11},
+  execPresalesTasks:{cols:3,rows:9},
+  execActiveByOwner:{cols:6,rows:10},
+  execBuildingType:{cols:4,rows:9},
   execWorkload:{cols:7,rows:11},
   execSolutions:{cols:3,rows:9},
   execTopSystems:{cols:3,rows:9},
@@ -807,11 +880,11 @@ const BRAND_SCOPE_CATS = ['Hardware','Software','License'];
 const BRAND_CATEGORIES = [...BRAND_SCOPE_CATS,...PIRAMID_SCOPE];
 function scopeOfCategory(cat){return PIRAMID_SCOPE.includes(cat)?'PIRAMID Scope':'Brand Scope';}
 let state = loadState();
-const FILTER_DEFAULTS = {q:'',seg:'All',status:'All',team:'All',brand:'All',period:''};
-let filters = {...FILTER_DEFAULTS};
-function resetFilters(){ filters={...FILTER_DEFAULTS}; initFilters(); renderAll(false); }
+const FILTER_DEFAULTS = {q:'',seg:'All',status:'All',team:'All',brand:'All',period:'',pri:'All',building:'All',compareCustom:{start:'',end:''}};
+let filters = {...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
+function resetFilters(){ filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}}; initFilters(); initProjectFilters(); renderAll(false); }
 function resetTaskFilters(){
-  filters={...FILTER_DEFAULTS};
+  filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
   taskScope='week';
   taskPeriod='week';
   taskLeadFilter='All';
@@ -831,9 +904,11 @@ let taskLeadFilter = 'All';
 let todoView = (state && state.todoView) || 'table';
 let kpiPeriod = 'month';
 let kpiOwner = 'All';
+let trainOwner = 'All';
 let kpiEditTargets = false;
 let projectSort = {key:'id',dir:'asc'};
 let proposalEditorOptions = [];
+let ptdEditorDefs = []; // project task defs working buffer
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 let idleTimer = null;
 
@@ -1087,8 +1162,19 @@ function normalizeState(data){
       accessRole
     };
   });
-  data.projects = (data.projects||[]).map(p=>({...p,systems:projectSystems(p),proposalOptions:normalizeProposalOptions(p),brands:projectBrands({...p,proposalOptions:normalizeProposalOptions(p)})}));
-  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level}));
+  data.projects = (data.projects||[]).map(p=>{
+    // Migrate legacy segment label 'Enterprise' -> 'Commercial'
+    if(p.seg==='Enterprise') p.seg='Commercial';
+    // New field: Buddy BD (สำรอง/ช่วยงาน)
+    if(p.bdBuddy==null) p.bdBuddy='';
+    // New field: Building Type — distinguishes 'New Build' (สร้างใหม่) vs 'Existing' (ปรับปรุง)
+    if(p.buildingType==null) p.buildingType='';
+    const proposalOptions=normalizeProposalOptions(p);
+    // Preserve user-selected Brand Scope checklist if present; only derive from proposalOptions when no explicit brands stored
+    const brands=Array.isArray(p.brands)&&p.brands.length?p.brands:projectBrands({...p,proposalOptions});
+    return {...p,systems:projectSystems(p),proposalOptions,brands,projectTaskDefs:p.projectTaskDefs||[]};
+  });
+  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]) }));
   data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
     reportPeriod:r.reportPeriod||periodFromRule(r),
     attachSnapshot:r.attachSnapshot ?? true,
@@ -1109,6 +1195,7 @@ function normalizeState(data){
   data.passwordResetRequests = data.passwordResetRequests || [];
   data.todoView = data.todoView || 'table';
   data.kpiActivities = data.kpiActivities?.length ? data.kpiActivities : structuredClone(DEFAULT_KPI_ACTIVITIES);
+  data.kpiTypes = Array.isArray(data.kpiTypes)&&data.kpiTypes.length ? data.kpiTypes : [...KPI_TYPES];
   data.kpiTargets = {...DEFAULT_KPI_TARGETS, ...(data.kpiTargets||{})};
   // #6 Internal tasks: tasks without a project are allowed
   // #4 BD Work Queue: ordered list of taskIds for personal queue
@@ -1141,6 +1228,15 @@ function normalizeState(data){
   // Additive: inject execQuickAdd into existing layouts without resetting them
   if(!data.layoutOrder.includes('execQuickAdd')){ data.layoutOrder.push('execQuickAdd'); }
   if(!data.widgetSize.execQuickAdd){ data.widgetSize.execQuickAdd={cols:5,rows:8}; }
+  // Additive: inject Presales-focused widgets so existing users see them on next load without losing their custom layout
+  ['execPresalesTeam','execPresalesWorkload','execPresalesTasks','execActiveByOwner','execBuildingType'].forEach(key=>{
+    if(!data.layoutOrder.includes(key)){
+      const idx=data.layoutOrder.indexOf('execTeam');
+      if(idx>=0) data.layoutOrder.splice(idx+1,0,key); else data.layoutOrder.push(key);
+    }
+    if(!data.widgetSize[key]) data.widgetSize[key]=structuredClone(DEFAULT_EXEC_WIDGET_SIZE[key]);
+    if(data.layout[key]===undefined) data.layout[key]=true;
+  });
   if(data.layout.execQuickAdd===undefined){ data.layout.execQuickAdd=true; }
   if(data.anaLayoutVersion !== 2){
     data.anaOrder = [...DEFAULT_ANA_ORDER];
@@ -1153,6 +1249,13 @@ function normalizeState(data){
 const money = n => n ? '฿'+Number(n).toLocaleString('th-TH') : '-';
 const shortMoney = n => n>=1000000 ? '฿'+(n/1000000).toFixed(n>=10000000?0:1)+'M' : money(n);
 const byId = id => state.teams.find(t=>t.id===id) || {name:'Unassigned',role:'-',color:'#657187',target:0,email:'-'};
+// Resolve a team filter / scope token to a human-readable label.
+// Accepts a team id, 'All', or 'role:<role>' — returns 'All' / 'Group BD' / member name.
+function ownerLabel(value){
+  if(!value||value==='All') return 'All';
+  if(typeof value==='string'&&value.startsWith('role:')) return `Group ${value.slice(5)}`;
+  return byId(value).name||value;
+}
 // Chart palette resolved from CSS tokens (single source of truth, works in SVG attrs)
 let CHART=['#5b7cfa','#f6b44b','#2dd36f','#ff5a67','#b678ff','#5bc0ff','#13b8a6'];
 function loadChartColors(){const cs=getComputedStyle(document.documentElement); const c=[1,2,3,4,5,6,7].map(i=>(cs.getPropertyValue('--chart-'+i)||'').trim()).filter(Boolean); if(c.length===7) CHART=c;}
@@ -1168,7 +1271,48 @@ function mergeNotificationRules(rules){
   return Object.values(keyed).sort((a,b)=>['Member','Manager','Executive'].indexOf(a.level)-['Member','Manager','Executive'].indexOf(b.level)||['Daily','Weekly','Monthly'].indexOf(a.reportPeriod)-['Daily','Weekly','Monthly'].indexOf(b.reportPeriod));
 }
 function isBdTeamMember(id){return /bd/i.test(byId(id).role||'')}
-function bdTasks(tasks=state.tasks){return tasks.filter(t=>isBdTeamMember(t.owner))}
+function ownerIds(t){return (t.owners?.length?t.owners:[t.owner]).filter(Boolean)}
+function ownerNames(t){return ownerIds(t).map(id=>byId(id).name||id)}
+// All team members involved in a project: BD Lead, Buddy BD (สำรอง), Presales, Sales
+function projectMemberIds(p){return [p.bd,p.bdBuddy,p.presales,p.sales].filter(Boolean)}
+function projectInvolves(p,memberId){return projectMemberIds(p).includes(memberId)}
+// Team filter helpers: a filter value of 'All' matches everything,
+// 'role:<role>' matches any member whose role contains that token (e.g. 'role:BD' matches 'BD Lead'),
+// otherwise it's a specific member id.
+function memberMatchesTeamFilter(memberId,filterValue){
+  if(!filterValue||filterValue==='All') return true;
+  if(typeof filterValue==='string'&&filterValue.startsWith('role:')){
+    const role=filterValue.slice(5).toLowerCase();
+    const m=state.teams.find(t=>t.id===memberId);
+    return !!m && String(m.role||'').toLowerCase().includes(role);
+  }
+  return memberId===filterValue;
+}
+function projectMatchesTeamFilter(p,filterValue){
+  if(!filterValue||filterValue==='All') return true;
+  return projectMemberIds(p).some(id=>memberMatchesTeamFilter(id,filterValue));
+}
+function taskMatchesTeamFilter(t,filterValue){
+  if(!filterValue||filterValue==='All') return true;
+  return ownerIds(t).some(id=>memberMatchesTeamFilter(id,filterValue));
+}
+// Standard team filter dropdown: All + Group BD + Group Presales + per-member optgroups
+function teamFilterOptionsHtml(currentValue,allLabel='All'){
+  const bd=state.teams.filter(t=>/\bbd\b/i.test(t.role||''));
+  const ps=state.teams.filter(t=>/presales/i.test(t.role||''));
+  const others=state.teams.filter(t=>!/\bbd\b|presales/i.test(t.role||''));
+  const sel=v=>v===currentValue?' selected':'';
+  let h=`<option value="All"${sel('All')}>${esc(allLabel)}</option>`;
+  h+=`<optgroup label="Groups">`;
+  if(bd.length) h+=`<option value="role:BD"${sel('role:BD')}>Group BD (${bd.length})</option>`;
+  if(ps.length) h+=`<option value="role:Presales"${sel('role:Presales')}>Group Presales (${ps.length})</option>`;
+  h+=`</optgroup>`;
+  if(bd.length) h+=`<optgroup label="BD">${bd.map(t=>`<option value="${esc(t.id)}"${sel(t.id)}>${esc(t.name)}</option>`).join('')}</optgroup>`;
+  if(ps.length) h+=`<optgroup label="Presales">${ps.map(t=>`<option value="${esc(t.id)}"${sel(t.id)}>${esc(t.name)}</option>`).join('')}</optgroup>`;
+  if(others.length) h+=`<optgroup label="Others">${others.map(t=>`<option value="${esc(t.id)}"${sel(t.id)}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</optgroup>`;
+  return h;
+}
+function bdTasks(tasks=state.tasks){return tasks.filter(t=>ownerIds(t).some(id=>isBdTeamMember(id)))}
 function bdProjects(projects=state.projects){return projects.filter(p=>isBdTeamMember(p.bd))}
 function mergeBrandCatalog(projects){
   const map={};
@@ -1246,6 +1390,10 @@ function proposalOptionItems(p,mode='all'){
   return opts.flatMap(o=>(o.items||[]).map(it=>({...it,optionId:o.id,optionName:o.name,optionType:o.type,optionStatus:o.status,optionSelected:o.selected||o.status==='Selected',optionValue:o.value,optionReason:o.reason,optionReview:o.review})));
 }
 function projectBrands(p){
+  // Prefer explicit user-selected Brand Scope checklist when available
+  if(Array.isArray(p.brands)&&p.brands.length&&p.brands.every(b=>b&&typeof b==='object'&&b.name)){
+    return p.brands.map(b=>({category:b.category||'Hardware',name:b.name,model:b.model||'',value:Number(b.value||0)}));
+  }
   if(Array.isArray(p.proposalOptions)&&p.proposalOptions.length){
     return proposalOptionItems(p).filter(it=>it.brand).map(it=>({category:it.category||'Hardware',name:it.brand,model:it.model,value:Number(it.total||0),optionName:it.optionName,optionStatus:it.optionStatus,optionSelected:it.optionSelected,reason:it.optionReason,review:it.optionReview}));
   }
@@ -1275,8 +1423,11 @@ function brandStats(projects){
   const map={};
   projects.forEach(p=>{
     const proposedProjects=new Set(), selectedProjects=new Set();
+    // First: pull rich data from Proposal Options editor when available
+    let usedOptions=false;
     proposalOptionItems(p).forEach(it=>{
       if(!it.brand) return;
+      usedOptions=true;
       if(!map[it.brand]) map[it.brand]={label:it.brand,value:0,revenue:0,proposedOptions:0,selectedOptions:0,alternativeOptions:0,notSelectedOptions:0,reasons:{}};
       map[it.brand].proposedOptions += 1;
       proposedProjects.add(it.brand);
@@ -1289,6 +1440,23 @@ function brandStats(projects){
         map[it.brand].notSelectedOptions += 1;
         const r=it.optionReason||it.optionReview||'No review';
         map[it.brand].reasons[r]=(map[it.brand].reasons[r]||0)+1;
+      }
+    });
+    // Fallback / supplement: simple Brand Scope checklist (with brandValueMap auto-distribution when ฿ values are blank)
+    brandValueMap(p).forEach(b=>{
+      if(!b.name) return;
+      if(!map[b.name]) map[b.name]={label:b.name,value:0,revenue:0,proposedOptions:0,selectedOptions:0,alternativeOptions:0,notSelectedOptions:0,reasons:{}};
+      const m=map[b.name];
+      // Avoid double counting when proposal options already added this brand for this project
+      if(!proposedProjects.has(b.name)){
+        m.proposedOptions += 1;
+        m.selectedOptions += 1;
+        proposedProjects.add(b.name);
+        selectedProjects.add(b.name);
+      }
+      // Add revenue if the proposal options didn't already supply it for this brand
+      if(!usedOptions||!Number(m.revenue)){
+        m.revenue += Number(b.v||0);
       }
     });
     proposedProjects.forEach(name=>{map[name].value += 1});
@@ -1307,8 +1475,10 @@ function filteredProjects(){
     return (!filters.q || projectName.includes(filters.q.toLowerCase())) &&
       (filters.seg==='All'||p.seg===filters.seg) &&
       (filters.status==='All'||p.status===filters.status) &&
-      (filters.team==='All'||p.bd===filters.team||p.sales===filters.team) &&
-      (filters.brand==='All'||projectBrandNames(p).includes(filters.brand));
+      projectMatchesTeamFilter(p,filters.team) &&
+      (filters.brand==='All'||projectBrandNames(p).includes(filters.brand)) &&
+      (filters.pri==='All'||!filters.pri||p.pri===filters.pri) &&
+      (filters.building==='All'||!filters.building||(p.buildingType||'')===filters.building);
   });
 }
 function filteredTasks(leadOverride){
@@ -1317,7 +1487,7 @@ function filteredTasks(leadOverride){
   // Internal tasks (no project) pass the project filter; otherwise task must belong to a filtered project
   return state.tasks.filter(t=>{
     const passProject = !t.project || ids.has(t.project);
-    return passProject && (filters.team==='All'||t.owner===filters.team) && (lead==='All'||t.owner===lead);
+    return passProject && taskMatchesTeamFilter(t,filters.team) && taskMatchesTeamFilter(t,lead);
   });
 }
 function pct(v,max){return max?Math.max(3,Math.round(v/max*100)):0}
@@ -1338,20 +1508,43 @@ function initFilters(){
   host.innerHTML = `
     <label class="field f-wide"><span>Search Project</span><input id="f-q" placeholder="Search project name only"></label>
     <label class="field"><span>Compare</span><select id="f-period"></select></label>
+    <label class="field" id="f-compareRangeWrap" style="display:none"><span>ช่วงเวลา (เดือน)</span><div style="display:flex;gap:6px;align-items:center"><input id="f-cmpStart" type="month" style="flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)"><span style="color:var(--soft);font-size:11px">→</span><input id="f-cmpEnd" type="month" style="flex:1;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text)"></div></label>
     <label class="field"><span>Segment</span><select id="f-seg"></select></label>
+    <label class="field"><span>Building</span><select id="f-building"></select></label>
     <label class="field"><span>Status</span><select id="f-status"></select></label>
     <label class="field"><span>Team</span><select id="f-team"></select></label>
     <label class="field"><span>Brand</span><select id="f-brand"></select></label>`;
   const fill=(id,vals)=>document.getElementById(id).innerHTML=['All',...vals].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
-  fill('f-seg',uniq(state.projects.map(p=>p.seg)));
-  fill('f-status',uniq(state.projects.map(p=>p.status)));
-  document.getElementById('f-team').innerHTML='<option value="All">All</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  // Use the full configured catalog so users can filter by statuses even when 0 projects currently match
+  const segCatalog=['Commercial','Hospitality','Government','Retail'];
+  const extraSegs=uniq(state.projects.map(p=>p.seg)).filter(s=>s&&!segCatalog.includes(s));
+  fill('f-seg',[...segCatalog,...extraSegs]);
+  const statusCatalog=state.projectStatuses.map(s=>s.name);
+  const extraStatuses=uniq(state.projects.map(p=>p.status)).filter(s=>s&&!statusCatalog.includes(s));
+  fill('f-status',[...statusCatalog,...extraStatuses]);
+  document.getElementById('f-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
   fill('f-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
-  document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  fill('f-building',['New Build','Existing']);
+  document.getElementById('f-period').innerHTML=[['','ไม่เปรียบเทียบ'],['week','รายสัปดาห์'],['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี'],['custom','ช่วงเวลากำหนดเอง']].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  // Custom range inputs sync with filters.compareCustom; show only when period === 'custom'
+  const cmpWrap=document.getElementById('f-compareRangeWrap');
+  const cmpStartEl=document.getElementById('f-cmpStart');
+  const cmpEndEl=document.getElementById('f-cmpEnd');
+  filters.compareCustom = filters.compareCustom || {start:'',end:''};
+  const refreshCmpUi=()=>{
+    if(cmpWrap) cmpWrap.style.display = filters.period==='custom' ? '' : 'none';
+    if(cmpStartEl) cmpStartEl.value = filters.compareCustom.start||'';
+    if(cmpEndEl) cmpEndEl.value = filters.compareCustom.end||'';
+  };
+  if(cmpStartEl) cmpStartEl.onchange=()=>{ filters.compareCustom={...filters.compareCustom,start:cmpStartEl.value}; renderAll(false); };
+  if(cmpEndEl) cmpEndEl.onchange=()=>{ filters.compareCustom={...filters.compareCustom,end:cmpEndEl.value}; renderAll(false); };
+  refreshCmpUi();
+  // Re-toggle the range inputs whenever the Compare dropdown changes
+  document.getElementById('f-period').addEventListener('change',()=>{ setTimeout(refreshCmpUi,0); });
   const qInput=document.getElementById('f-q');
   qInput.setAttribute('autocomplete','off');
   const DEFAULT_FILTERS=FILTER_DEFAULTS;
-  const syncInputs=()=>['q','seg','status','team','brand','period'].forEach(k=>{const el=document.getElementById('f-'+k); if(el) el.value=filters[k]});
+  const syncInputs=()=>['q','seg','status','team','brand','period','building'].forEach(k=>{const el=document.getElementById('f-'+k); if(el) el.value=filters[k]});
   const applyProjectFilters=(p)=>{
     if(!p) return false;
     const selectedBrands=proposalOptionItems(p,'selected').map(it=>it.brand).filter(Boolean);
@@ -1394,7 +1587,7 @@ function initFilters(){
     else if(e.key==='Enter'){if(applyExactProjectFilter()){e.preventDefault(); closeSuggest(); renderAll(false);}}
     else if(e.key==='Escape'){closeSuggest();}
   });
-  ['q','seg','status','team','brand','period'].forEach(k=>{
+  ['q','seg','status','team','brand','period','building'].forEach(k=>{
     const el=document.getElementById('f-'+k); if(!el) return; el.value=filters[k];
     el.oninput=el.onchange=()=>{
       filters[k]=el.value;
@@ -1404,10 +1597,43 @@ function initFilters(){
   });
   return true;
 }
+// Projects page filter row — shares the global `filters` state with Executive, swapping Compare for Priority
+function initProjectFilters(){
+  const host=document.getElementById('projectFilters');
+  if(!host) return false;
+  host.innerHTML = `
+    <label class="field f-wide"><span>Search Project</span><input id="pf-q" placeholder="Search project name only"></label>
+    <label class="field"><span>Priority</span><select id="pf-pri"></select></label>
+    <label class="field"><span>Building Type</span><select id="pf-building"></select></label>
+    <label class="field"><span>Segment</span><select id="pf-seg"></select></label>
+    <label class="field"><span>Status</span><select id="pf-status"></select></label>
+    <label class="field"><span>Team</span><select id="pf-team"></select></label>
+    <label class="field"><span>Brand</span><select id="pf-brand"></select></label>`;
+  const fill=(id,vals)=>document.getElementById(id).innerHTML=['All',...vals].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+  const segCatalog=['Commercial','Hospitality','Government','Retail'];
+  const extraSegs=uniq(state.projects.map(p=>p.seg)).filter(s=>s&&!segCatalog.includes(s));
+  fill('pf-seg',[...segCatalog,...extraSegs]);
+  const statusCatalog=state.projectStatuses.map(s=>s.name);
+  const extraStatuses=uniq(state.projects.map(p=>p.status)).filter(s=>s&&!statusCatalog.includes(s));
+  fill('pf-status',[...statusCatalog,...extraStatuses]);
+  document.getElementById('pf-team').innerHTML=teamFilterOptionsHtml(filters.team||'All','All');
+  fill('pf-brand',uniq(state.projects.flatMap(p=>projectBrandNames(p))).sort());
+  document.getElementById('pf-pri').innerHTML=['All','High','Medium','Low'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  document.getElementById('pf-building').innerHTML=['All','New Build','Existing'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  document.getElementById('pf-q').setAttribute('autocomplete','off');
+  // Map filter input keys → state.filters keys
+  const map={q:'q',pri:'pri',building:'building',seg:'seg',status:'status',team:'team',brand:'brand'};
+  Object.entries(map).forEach(([uiKey,stateKey])=>{
+    const el=document.getElementById('pf-'+uiKey); if(!el) return;
+    el.value=filters[stateKey];
+    el.oninput=el.onchange=()=>{ filters[stateKey]=el.value; renderProjects(); };
+  });
+  return true;
+}
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'KPI Team',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execPresalesTeam:'Presales Involvement',execPresalesWorkload:'Presales Workflow',execPresalesTasks:'Presales Task Health',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execActiveByOwner:'Active Tasks by Owner',execBuildingType:'Building Type',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
-  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execTimeliness','execQuickAdd']);
+  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execQuickAdd']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
   build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
   (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
@@ -1446,12 +1672,33 @@ function renderVBars(elId, items, opts={}){
   el.innerHTML=items.length?items.map(x=>{const val=opts.money?shortMoney(x.value):esc(x.value); return `<div class="vbar" title="${esc(x.label)}: ${esc(val)}"><b class="vval">${val}</b><div class="vfill" style="height:${pct(x.value,max)}%;background-color:${x.color||'var(--accent)'}"></div><span class="vlbl">${esc(x.label)}</span></div>`;}).join(''):'<div class="hint">No data</div>';
 }
 // Team Workload: dot plot of open tasks per month (12 months) + year-over-year comparison line.
+function renderPresalesWorkloadChart(){
+  const host=document.getElementById('presalesWorkloadChart'); if(!host) return;
+  const curYear=today.getFullYear();
+  const mode=(state.workloadCompare==='next')?'next':'prev';
+  const cmpYear=curYear+(mode==='next'?1:-1);
+  const isPresalesTask=t=>ownerIds(t).some(id=>/presales/i.test(byId(id).role||''));
+  const count=year=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due||!isPresalesTask(t))return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===year) a[d.getMonth()]++;}); return a;};
+  const cur=count(curYear), cmp=count(cmpYear), max=Math.max(1,...cur,...cmp);
+  const W=380,H=150,pl=26,pr=10,pt=10,pb=20,pw=W-pl-pr,ph=H-pt-pb;
+  const X=i=>pl+pw*i/11, Y=v=>pt+ph*(1-v/max);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let grid='';[0,.5,1].forEach(f=>{const yy=pt+ph*(1-f);grid+='<line x1="'+pl+'" y1="'+yy+'" x2="'+(W-pr)+'" y2="'+yy+'" stroke="var(--line)" stroke-width="1"/><text x="'+(pl-4)+'" y="'+(yy+3)+'" text-anchor="end" font-size="9" fill="var(--soft)">'+Math.round(max*f)+'</text>';});
+  const xl=months.map((m,i)=>'<text x="'+X(i)+'" y="'+(H-9)+'" text-anchor="middle" font-size="8.5" fill="var(--soft)">'+m+'</text>').join('');
+  const cmpLine='<polyline fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3" points="'+cmp.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>'+cmp.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="2.5" fill="var(--amber)"><title>'+months[i]+' '+cmpYear+': '+v+' งาน Presales</title></circle>').join('');
+  const area='<defs><linearGradient id="pwlg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--chart-5)" stop-opacity=".28"/><stop offset="100%" stop-color="var(--chart-5)" stop-opacity="0"/></linearGradient></defs>'+
+    '<polygon fill="url(#pwlg)" points="'+pl+','+(pt+ph)+' '+cur.map((v,i)=>X(i)+','+Y(v)).join(' ')+' '+(W-pr)+','+(pt+ph)+'"/>'+
+    '<polyline fill="none" stroke="var(--chart-5)" stroke-width="2" points="'+cur.map((v,i)=>X(i)+','+Y(v)).join(' ')+'"/>';
+  const curDots=cur.map((v,i)=>'<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="4" fill="var(--chart-5)" stroke="var(--panel)" stroke-width="1.5"><title>'+months[i]+' '+curYear+': '+v+' งาน Presales</title></circle>').join('');
+  host.innerHTML='<svg class="wl-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+area+grid+xl+cmpLine+curDots+'</svg>'+
+    '<div class="wl-legend" style="display:flex;gap:16px;justify-content:center;font-size:11px;color:var(--muted)"><span><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--chart-5);margin-right:5px"></i>Presales '+curYear+'</span><span><i style="display:inline-block;width:14px;height:3px;background:var(--amber);margin-right:5px;vertical-align:middle"></i>'+cmpYear+'</span></div>';
+}
 function renderWorkloadChart(){
   const host=document.getElementById('teamWorkloadChart'); if(!host) return;
   const curYear=today.getFullYear();
   const mode=(state.workloadCompare==='next')?'next':'prev';
   const sel=document.getElementById('wlCompare');
-  if(sel){ sel.value=mode; if(!sel.dataset.bound){sel.dataset.bound='1'; sel.addEventListener('change',()=>{state.workloadCompare=sel.value; saveState(); renderWorkloadChart();});} }
+  if(sel){ sel.value=mode; if(!sel.dataset.bound){sel.dataset.bound='1'; sel.addEventListener('change',()=>{state.workloadCompare=sel.value; saveState(); renderWorkloadChart(); renderPresalesWorkloadChart();});} }
   const cmpYear=curYear+(mode==='next'?1:-1);
   const count=year=>{const a=new Array(12).fill(0); state.tasks.forEach(t=>{if(!t.due)return; const d=new Date(t.due); if(!isNaN(d)&&d.getFullYear()===year) a[d.getMonth()]++;}); return a;};
   const cur=count(curYear), cmp=count(cmpYear), max=Math.max(1,...cur,...cmp);
@@ -1644,7 +1891,7 @@ const BI_SOURCES={
   ],measures:[{key:'count',label:'จำนวนโครงการ',agg:'count'},{key:'value',label:'มูลค่ารวม (฿)',agg:'sum',money:true,val:p=>p.val||0},{key:'avgvalue',label:'มูลค่าเฉลี่ย (฿)',agg:'avg',money:true,val:p=>p.val||0},{key:'pctvalue',label:'% ของมูลค่ารวม',agg:'pct',val:p=>p.val||0}]},
   tasks:{label:'Tasks',dims:[
     {key:'status',label:'Status',get:t=>[isOverdue(t)?'Overdue':t.status]},
-    {key:'owner',label:'Owner',get:t=>[byId(t.owner).name]},
+    {key:'owner',label:'Owner',get:t=>ownerNames(t)},
     {key:'level',label:'Level',get:t=>[t.level]},
     {key:'month',label:'Month (Due)',get:t=>t.due?[new Date(t.due).toLocaleDateString('en-US',{month:'short',year:'2-digit'})]:[]}
   ],measures:[{key:'count',label:'จำนวนงาน',agg:'count'},{key:'avgprogress',label:'Progress เฉลี่ย (%)',agg:'avg',val:t=>Number(t.progress||0)}]},
@@ -1653,9 +1900,9 @@ const BI_SOURCES={
     {key:'role',label:'Role',get:m=>[m.role]},
     {key:'level',label:'Level',get:m=>[m.level]}
   ],measures:[
-    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).length},
-    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>p.bd===m.id||p.sales===m.id).reduce((s,p)=>s+(p.val||0),0)},
-    {key:'target',label:'เป้าหมาย (฿)',agg:'sum',money:true,val:m=>m.target||0}
+    {key:'pcount',label:'จำนวนโครงการ',agg:'sum',val:m=>filteredProjects().filter(p=>projectInvolves(p,m.id)).length},
+    {key:'pvalue',label:'มูลค่าโครงการ (฿)',agg:'sum',money:true,val:m=>filteredProjects().filter(p=>projectInvolves(p,m.id)).reduce((s,p)=>s+(p.val||0),0)},
+    {key:'target',label:'Reference Value (฿)',agg:'sum',money:true,val:m=>m.target||0}
   ]}
 };
 function biCompute(card){
@@ -1806,6 +2053,22 @@ function renderDonut(host, items, opts={}){
 }
 
 // ===== Period comparison helpers =====
+// Custom compare window helper: when filters.period==='custom' and start+end are set,
+// returns current = [start, end+1month), previous = same length immediately before. Otherwise null.
+function customCompareWindows(){
+  if(filters.period!=='custom') return null;
+  const cc=filters.compareCustom||{};
+  if(!cc.start||!cc.end) return null;
+  const [sy,sm]=cc.start.split('-').map(Number);
+  const [ey,em]=cc.end.split('-').map(Number);
+  if(!sy||!sm||!ey||!em) return null;
+  const a0=new Date(sy, sm-1, 1, 0,0,0,0);
+  const a1=new Date(ey, em, 1, 0,0,0,0); // first day AFTER end month → exclusive upper bound
+  if(a1<=a0) return null;
+  const span=a1.getTime()-a0.getTime();
+  const am1=new Date(a0.getTime()-span);
+  return {a0,a1,am1};
+}
 function periodStart(d, gran, offset){
   const x=new Date(d); x.setHours(0,0,0,0);
   if(gran==='week'){const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day+offset*7); return x;}
@@ -1817,22 +2080,30 @@ function inRange(iso,a,b){if(!iso)return false; const t=new Date(iso); return !i
 const PERIOD_SUFFIX={week:'สัปดาห์นี้',month:'เดือนนี้',quarter:'ไตรมาสนี้',year:'ปีนี้'};
 function periodTrend(elId, items, field, valFn, gran, goodUp, fmt){
   const el=document.getElementById(elId); if(!el) return;
-  const a0=periodStart(today,gran,0), a1=periodStart(today,gran,1), am1=periodStart(today,gran,-1);
+  const ccw=customCompareWindows();
+  const a0= ccw?ccw.a0:periodStart(today,gran,0);
+  const a1= ccw?ccw.a1:periodStart(today,gran,1);
+  const am1=ccw?ccw.am1:periodStart(today,gran,-1);
   let cur=0,prev=0;
   (items||[]).forEach(it=>{const d=it[field]; const v=valFn?(Number(valFn(it))||0):1; if(inRange(d,a0,a1))cur+=v; else if(inRange(d,am1,a0))prev+=v;});
   const diff=cur-prev, ar=diff>0?'▲':diff<0?'▼':'—', good=diff===0?'flat':((diff>0)===goodUp?'up':'down');
   el.className='metric-trend '+good;
-  el.textContent=ar+' '+(fmt?fmt(cur):cur)+' '+(PERIOD_SUFFIX[gran]||'');
+  const suffix = ccw ? 'ช่วงที่เลือก' : (PERIOD_SUFFIX[gran]||'');
+  el.textContent=ar+' '+(fmt?fmt(cur):cur)+' '+suffix;
 }
 function periodTrendPct(elId, projects, gran){
   const el=document.getElementById(elId); if(!el) return;
-  const a0=periodStart(today,gran,0), a1=periodStart(today,gran,1), am1=periodStart(today,gran,-1);
+  const ccw=customCompareWindows();
+  const a0= ccw?ccw.a0:periodStart(today,gran,0);
+  const a1= ccw?ccw.a1:periodStart(today,gran,1);
+  const am1=ccw?ccw.am1:periodStart(today,gran,-1);
   let cw=0,ct=0,pw=0,pt=0;
   (projects||[]).forEach(x=>{const d=x.createdAt, v=x.val||0; if(inRange(d,a0,a1)){ct+=v; if(x.status==='Win')cw+=v;} else if(inRange(d,am1,a0)){pt+=v; if(x.status==='Win')pw+=v;}});
   const cur=ct?Math.round(cw/ct*100):0, prev=pt?Math.round(pw/pt*100):0, diff=cur-prev;
   const ar=diff>0?'▲':diff<0?'▼':'—', good=diff===0?'flat':(diff>0?'up':'down');
   el.className='metric-trend '+good;
-  el.textContent=ar+' '+cur+'% '+(PERIOD_SUFFIX[gran]||'');
+  const suffix = ccw ? 'ช่วงที่เลือก' : (PERIOD_SUFFIX[gran]||'');
+  el.textContent=ar+' '+cur+'% '+suffix;
 }
 function renderDashboard(){
   const p=filteredProjects(), t=filteredTasks();
@@ -1874,20 +2145,26 @@ function renderDashboard(){
   document.getElementById('statusTotal').textContent=total+' projects';
   const palette=CHART;
   const stat=grouped(p,x=>x.status);
-  renderBars('statusBars',Object.entries(stat).map(([label,value],i)=>({label,value,color:palette[i%palette.length]})));
+  // Show every configured status (even with 0 projects) so executives see the full pipeline
+  const statusOrdered=state.projectStatuses.map(s=>s.name);
+  const extras=Object.keys(stat).filter(k=>!statusOrdered.includes(k));
+  const allStatusKeys=[...statusOrdered,...extras];
+  renderBars('statusBars',allStatusKeys.map((label,i)=>({label,value:stat[label]||0,color:palette[i%palette.length]})));
   const brands=brandStats(p).map(b=>({label:b.label,value:b.revenue})).filter(b=>b.value>0).sort((a,b)=>b.value-a.value).slice(0,7).map((b,i)=>({...b,color:palette[i%palette.length]}));
   renderDonut('brandDonut',brands,{money:true,centerValue:shortMoney(brands.reduce((s,x)=>s+x.value,0)),centerLabel:'sales'});
   const segItems=Object.entries(grouped(p,x=>x.seg,x=>x.val)).sort((a,b)=>b[1]-a[1]).map(([label,value],i)=>({label,value,color:palette[i%palette.length]}));
   renderDonut('segmentDonut',segItems,{money:true,centerValue:shortMoney(segItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
-  const teamKpi=state.teams.filter(tm=>/bd/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:Math.round((p.filter(x=>x.bd===tm.id||x.sales===tm.id).reduce((s,x)=>s+x.val,0)/(tm.target||1))*100)})).sort((a,b)=>b.value-a.value).slice(0,6);
-  renderBars('teamKpiBars',teamKpi);
+  // Team Involvement: show actual pipeline value each member is participating in (not % of a target)
+  const teamKpi=state.teams.filter(tm=>/bd|presales/i.test(tm.role||'')).map(tm=>({label:tm.name,color:tm.color||'var(--accent)',value:p.filter(x=>projectInvolves(x,tm.id)).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value).slice(0,12);
+  renderBars('teamKpiBars',teamKpi,{money:true});
   const selectedTeam=state.teams.find(tm=>tm.id===filters.team);
-  const bdTeams=state.teams.filter(tm=>/bd/i.test(tm.role||''));
+  const isRoleFilter=typeof filters.team==='string'&&filters.team.startsWith('role:');
   const teamValue=p.reduce((s,x)=>s+x.val,0);
-  const teamTarget=bdTeams.reduce((s,tm)=>s+Number(tm.target||0),0);
   const kpiFocus=selectedTeam
-    ? {label:selectedTeam.name,value:Math.round((p.reduce((s,x)=>s+(x.bd===selectedTeam.id||x.sales===selectedTeam.id?x.val:0),0)/(selectedTeam.target||1))*100)}
-    : {label:'KPI Team',value:teamTarget?Math.round(teamValue/teamTarget*100):0};
+    ? {label:selectedTeam.name,value:shortMoney(p.reduce((s,x)=>s+(projectInvolves(x,selectedTeam.id)?x.val:0),0))}
+    : isRoleFilter
+    ? {label:`Group ${filters.team.slice(5)}`,value:shortMoney(p.reduce((s,x)=>s+(projectMatchesTeamFilter(x,filters.team)?x.val:0),0))}
+    : {label:'Team Involvement',value:shortMoney(teamValue)};
   const summary=document.getElementById('execSummaryPanel');
   if(summary) summary.innerHTML=`<div class="executive-brief">
     <div class="brief-lead"><b>Executive reading order</b><span>เริ่มจาก health ของ pipeline แล้วอ่านสถานะ, solution sales, KPI team และ risk queue เพื่อใช้ตัดสินใจรายสัปดาห์.</span></div>
@@ -1895,11 +2172,18 @@ function renderDashboard(){
     <div class="brief-stat"><label>Win Value</label><strong style="color:var(--green)">${winPct}%</strong><small>${shortMoney(winValue)} confirmed</small></div>
     <div class="brief-stat"><label>Priority</label><strong style="color:${high.length?'var(--amber)':'var(--green)'}">${high.length}</strong><small>high priority projects</small></div>
     <div class="brief-stat"><label>Task Risk</label><strong style="color:${overdue.length?'var(--red)':'var(--green)'}">${overdue.length}</strong><small>overdue tasks</small></div>
-    <div class="brief-stat"><label>KPI Focus</label><strong>${esc(kpiFocus.label)}</strong><small>${kpiFocus.value}% of target</small></div>
+    <div class="brief-stat"><label>Involvement</label><strong>${esc(kpiFocus.label)}</strong><small>${kpiFocus.value} pipeline value</small></div>
   </div>`;
   renderWorkloadChart();
   const thColors={Done:CHART[2],Doing:CHART[0],Review:CHART[1],Schedule:CHART[4],Overdue:CHART[3]};
   renderDonut('taskHealthDonut',Object.entries(grouped(t,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||CHART[5]})),{centerValue:t.length,centerLabel:'tasks'});
+  // Presales-only widgets: pipeline value per Presales member + Presales workflow chart + Presales task health
+  const presalesMembers=state.teams.filter(tm=>/presales/i.test(tm.role||''));
+  const presalesBars=presalesMembers.map(tm=>({label:tm.name,color:tm.color||CHART[4],value:p.filter(x=>x.presales===tm.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value);
+  renderBars('presalesTeamBars',presalesBars,{money:true});
+  const presalesTasks=t.filter(task=>ownerIds(task).some(id=>/presales/i.test(byId(id).role||'')));
+  renderDonut('presalesTaskDonut',Object.entries(grouped(presalesTasks,x=>isOverdue(x)?'Overdue':x.status)).map(([label,value])=>({label,value,color:thColors[label]||CHART[5]})),{centerValue:presalesTasks.length,centerLabel:'Presales'});
+  renderPresalesWorkloadChart();
   const groupColors={'IT and Communication':CHART[0],'Security Solutions':CHART[3],'IOT and Platform':CHART[6],'BMS and Energy':CHART[1]};
   const groupShort={'IT and Communication':'IT/Comm','Security Solutions':'Security','IOT and Platform':'IOT','BMS and Energy':'BMS'};
   const solCount={}; SYSTEM_GROUPS.forEach(g=>solCount[g]=0);
@@ -1909,9 +2193,19 @@ function renderDashboard(){
   renderBars('topSystemBars',Object.entries(sysCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([label,value],i)=>({label,value,color:palette[i%palette.length]})));
   const hp=p.filter(x=>x.pri==='High').sort((a,b)=>b.val-a.val).slice(0,10);
   const hpEl=document.getElementById('highPriorityTable'); if(hpEl) hpEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Status</th><th>Value</th><th>BD Lead</th></tr></thead><tbody>'+(hp.map(x=>'<tr><td class="ellipsis">'+esc(x.name)+'</td><td>'+statusTag(x.status)+'</td><td>'+money(x.val)+'</td><td>'+esc(byId(x.bd).name)+'</td></tr>').join('')||'<tr><td colspan="4" class="hint">No data</td></tr>')+'</tbody></table></div>';
-  const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,10);
-  const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(byId(x.owner).name)+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
+  const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,25);
+  const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(ownerNames(x).join(', ')||'-')+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
   renderTimelinessInto('timelinessBox', t);
+  // Active Tasks by Owner: open task count per BD/Presales member so executives can see each member's current load
+  const activeMembers=state.teams.filter(tm=>/bd|presales/i.test(tm.role||''));
+  const activeBars=activeMembers.map(tm=>({label:tm.name+(/presales/i.test(tm.role||'')?' · PS':' · BD'),color:tm.color||CHART[0],value:t.filter(task=>task.status!=='Done'&&ownerIds(task).includes(tm.id)).length})).sort((a,b)=>b.value-a.value);
+  renderBars('activeByOwnerBars',activeBars);
+  // Building Type donut — value contribution of New Build vs Existing (with ไม่ระบุ bucket)
+  const btMap={'New Build':{val:0,count:0},'Existing':{val:0,count:0},'ไม่ระบุ':{val:0,count:0}};
+  p.forEach(x=>{const k=x.buildingType==='New Build'?'New Build':x.buildingType==='Existing'?'Existing':'ไม่ระบุ'; btMap[k].val+=x.val||0; btMap[k].count++;});
+  const btColors={'New Build':CHART[0],'Existing':CHART[3],'ไม่ระบุ':CHART[5]};
+  const btItems=Object.entries(btMap).filter(([,v])=>v.count>0).map(([label,v])=>({label:`${label} (${v.count})`,value:v.val,color:btColors[label]}));
+  renderDonut('buildingTypeDonut',btItems,{money:true,centerValue:shortMoney(btItems.reduce((s,x)=>s+x.value,0)),centerLabel:'value'});
   renderQuickAddWidget();
   renderCustomCards();
   applyExecOrder(); ensureGuides('exec'); initExecDrag(); initExecResize(); initExecAlign(); applyExecSizes(); applyExecAlign(); applyExecEdit();
@@ -2069,6 +2363,48 @@ function bindProposalOptionsEditor(){
   host.querySelectorAll('[data-remove-option-item]').forEach(b=>b.onclick=()=>{syncProposalOptionFromInputs(); const [i,j]=b.dataset.removeOptionItem.split('|').map(Number); proposalEditorOptions[i]?.items?.splice(j,1); renderProposalOptionsEditor();});
   const add=document.getElementById('addProposalOptionBtn'); if(add) add.onclick=()=>{syncProposalOptionFromInputs(); proposalEditorOptions.push({id:`OPT-${proposalEditorOptions.length+1}`,name:`Option ${proposalEditorOptions.length+1} Alternative`,type:'Alternative',status:'Proposed',value:0,revision:1,submittedAt:'',selected:false,reason:'',review:'',items:[]}); renderProposalOptionsEditor();};
 }
+// ===== Project Task Defs Editor =====
+function syncPtdFromInputs(){
+  ptdEditorDefs.forEach((d,i)=>{
+    const row=document.querySelector(`[data-ptd-row="${i}"]`); if(!row) return;
+    d.title=row.querySelector('[data-ptdf="title"]')?.value||d.title;
+    d.owner=row.querySelector('[data-ptdf="owner"]')?.value||d.owner;
+    d.status=row.querySelector('[data-ptdf="status"]')?.value||d.status;
+    d.due=row.querySelector('[data-ptdf="due"]')?.value||'';
+    d.priority=row.querySelector('[data-ptdf="priority"]')?.value||d.priority;
+    d.progress=Number(row.querySelector('[data-ptdf="progress"]')?.value||0);
+  });
+  const h=document.getElementById('projectTaskDefsJson'); if(h) h.value=JSON.stringify(ptdEditorDefs);
+}
+function renderPtdEditor(){
+  const host=document.getElementById('projectTaskDefsEditor'); if(!host) return;
+  const teamOpts=state.teams.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} (${esc(t.role||'')})</option>`).join('');
+  const statusOpts=state.taskStatuses.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
+  const priOpts=['Low','Medium','High','Critical'].map(v=>`<option value="${v}">${v}</option>`).join('');
+  host.innerHTML=`<div class="ptd-editor">${ptdEditorDefs.map((d,i)=>`
+    <div class="ptd-row" data-ptd-row="${i}">
+      <label class="field"><span>Task Title</span><input data-ptdf="title" value="${esc(d.title)}" placeholder="ชื่องาน"></label>
+      <label class="field"><span>Owner</span><select data-ptdf="owner">${state.teams.map(t=>`<option value="${esc(t.id)}"${d.owner===t.id?' selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</select></label>
+      <label class="field"><span>Status</span><select data-ptdf="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}"${d.status===s.name?' selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
+      <label class="field"><span>Due Date</span><input data-ptdf="due" type="date" value="${esc(d.due||'')}"></label>
+      <label class="field"><span>Priority</span><select data-ptdf="priority">${['Low','Medium','High','Critical'].map(v=>`<option value="${v}"${d.priority===v?' selected':''}>${v}</option>`).join('')}</select></label>
+      <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-ptd-del="${i}" aria-label="Delete sub task">×</button></div>
+    </div>`).join('')}</div>
+  <button class="btn small primary" type="button" id="addPtdBtn">+ Add Sub Task</button>
+  <input type="hidden" id="projectTaskDefsJson" name="projectTaskDefsJson">`;
+  bindPtdEditor(); syncPtdFromInputs();
+}
+function bindPtdEditor(){
+  const host=document.getElementById('projectTaskDefsEditor'); if(!host) return;
+  host.querySelectorAll('input,select').forEach(el=>el.oninput=el.onchange=()=>syncPtdFromInputs());
+  host.querySelectorAll('[data-ptd-del]').forEach(b=>b.onclick=()=>{syncPtdFromInputs(); ptdEditorDefs.splice(Number(b.dataset.ptdDel),1); renderPtdEditor();});
+  const add=document.getElementById('addPtdBtn');
+  if(add) add.onclick=()=>{
+    syncPtdFromInputs();
+    ptdEditorDefs.push({id:`PTD-${Date.now()}`,title:'',owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',status:'Schedule',due:'',priority:'Medium',progress:0});
+    renderPtdEditor();
+  };
+}
 const PROJECT_SORT_COLUMNS = [
   ['id','ID'],['name','Project'],['seg','Segment'],['systems','System Groups'],['brands','Brand Scope'],['tasks','Sub Tasks'],['progress','Progress'],['status','Status'],['pri','Priority'],['size','Size'],['val','Value'],['bd','BD Lead'],['presales','Presales'],['sales','Sales']
 ];
@@ -2114,6 +2450,7 @@ function sortProjects(rows){
   });
 }
 function renderProjects(){
+  initProjectFilters();
   const p=sortProjects(filteredProjects());
   renderProjectHead();
   const openSubs=[...document.querySelectorAll('#projectRows .subrow.on')].map(r=>r.id);
@@ -2124,11 +2461,12 @@ function renderProjects(){
     const revisions=relatedTasks.reduce((s,t)=>s+Number(t.revision||1),0);
     const optionDetail=normalizeProposalOptions(x).map(o=>`<div style="margin-bottom:12px"><b>${esc(o.name)}</b> ${statusTag(o.status)} <span class="mini">${esc(o.type)} · Rev ${o.revision||1} · ${shortMoney(o.value||0)} ${o.submittedAt?'· Submitted '+esc(o.submittedAt):''}</span><div class="chips" style="margin-top:6px">${(o.items||[]).map(it=>`<span class="chip">${esc(it.category)}: ${esc(it.brand)}${it.model?' / '+esc(it.model):''}${it.total?` (${shortMoney(it.total)})`:''}</span>`).join('')||'<span class="hint">No brand/model item</span>'}</div>${!(o.selected||o.status==='Selected')?`<span class="mini">Review: ${esc(o.reason||o.review||'No review')}</span>`:''}</div>`).join('');
     const crHtml=changeRequestsHtml(x);
-    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(byId(t.owner).name)} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
-    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
+    const details=`<tr class="subrow" id="sub-${x.id}"><td colspan="15"><div class="subpanel"><div class="group-title">Proposal Options / Alternative BOQ</div>${optionDetail}<div class="group-title">Tasks</div>${relatedTasks.map(t=>`<div style="margin-bottom:10px"><div class="status-cell" style="display:inline-flex">${taskStatusDropdown(t)}${timelinessBadge(t)?`<span>${timelinessBadge(t)}</span>`:''}</div> <b>${esc(t.title)}</b> <span class="mini">Owner: ${esc(ownerNames(t).join(', ')||'-')} · Progress ${t.progress||0}% · Rev ${t.revision||1}</span><div class="chips" style="margin-top:6px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div></div>`).join('')||'<span class="hint">No task template selected</span>'}<div class="group-title" style="display:flex;align-items:center;gap:8px;margin-top:14px">Change Requests <button class="btn small" data-add-cr="${x.id}">+ Add</button></div><div id="crlist-${x.id}">${crHtml}</div></div></td></tr>`;
+    const main=`<tr><td><span class="toggle-link" data-toggle-sub="${x.id}">${x.id}</span><span class="mini">${x.due?'Due '+esc(x.due):'No due date'}</span></td><td class="ellipsis" title="${esc(x.name)}">${esc(x.name)}<span class="mini">${esc(proposalSummary(x))}</span>${proposalOptionSummaryHtml(x)}</td><td>${esc(x.seg)}</td><td><div class="detail-stack">${projectSystemLabels(x).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><div class="detail-stack">${projectBrandLabels(x).slice(0,6).map(b=>`<span class="chip">${esc(b)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td>${relatedTasks.length} tasks<span class="mini">${subCount} sub tasks, Rev ${revisions}</span><div style="margin-top:6px">${projectTaskStatusDropdown(x)}</div></td><td>${progressBattery(x.progress ?? averageProjectProgress(x.id))}</td><td>${statusTag(x.status)}</td><td>${priTag(x.pri)}</td><td>${esc(sizeForValue(x.val))}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}${x.bdBuddy?`<span class="mini">+ Buddy: ${esc(byId(x.bdBuddy).name)}</span>`:''}</td><td>${x.presales?`<span class="tag role-presales">${esc(byId(x.presales).name)}</span>`:'<span class="hint">—</span>'}</td><td>${esc(byId(x.sales).name)}</td><td><button class="btn small" data-edit-project="${x.id}">Edit</button> <button class="btn small" data-project-subtasks="${x.id}" title="จัดการงานย่อยของโครงการ">Sub Task${relatedTasks.length?` (${relatedTasks.filter(t=>t.status==='Done').length}/${relatedTasks.length})`:''}</button> <button class="btn small danger" data-del-project="${x.id}">Delete</button></td></tr>`;
     return main+details;
   }).join('');
   document.querySelectorAll('[data-edit-project]').forEach(b=>b.onclick=()=>openProjectForm(b.dataset.editProject));
+  document.querySelectorAll('[data-project-subtasks]').forEach(b=>b.onclick=()=>openProjectSubTasks(b.dataset.projectSubtasks));
   document.querySelectorAll('[data-del-project]').forEach(b=>b.onclick=()=>deleteProject(b.dataset.delProject));
   document.querySelectorAll('[data-toggle-sub]').forEach(b=>b.onclick=()=>document.getElementById('sub-'+b.dataset.toggleSub)?.classList.toggle('on'));
   openSubs.forEach(id=>document.getElementById(id)?.classList.add('on'));
@@ -2140,34 +2478,39 @@ function renderProjects(){
 }
 function openProjectForm(id){
   if(!canEditModule('projects')){toast('สิทธิ์ Guest/Visitor ดูข้อมูลได้อย่างเดียว','error');return}
-  editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Enterprise',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,presales:state.teams.find(t=>t.role==='Presales')?.id||'',sales:state.teams.find(t=>t.role==='Sales')?.id};
+  editing.project=id||null; const p=state.projects.find(x=>x.id===id)||{id:nextId('P',state.projects),name:'',seg:'Commercial',systems:[],brands:[],status:'Quotation',pri:'Medium',size:'M',val:0,bd:state.teams[0]?.id,presales:state.teams.find(t=>t.role==='Presales')?.id||'',sales:state.teams.find(t=>t.role==='Sales')?.id};
   proposalEditorOptions=structuredClone(normalizeProposalOptions(p));
+  ptdEditorDefs=structuredClone(p.projectTaskDefs||[]);
   const relatedTasks=state.tasks.filter(t=>t.project===p.id);
   const selectedTemplateIds=p.taskTemplateIds || relatedTasks.map(t=>t.templateId).filter(Boolean);
   const projectSubtasks=p.projectSubtasks || uniq(relatedTasks.flatMap(t=>t.subtasks||[]));
   document.getElementById('projectFormTitle').textContent=id?'Edit Project':'New Project';
   document.getElementById('projectForm').innerHTML=`
     <label class="field"><span>ID</span><input name="id" value="${esc(p.id)}" ${id?'readonly':''}></label>
-    <label class="field span2"><span>Project name</span><input name="name" required value="${esc(p.name)}"></label>
-    <label class="field"><span>Segment</span><select name="seg">${['Enterprise','Hospitality','Government','Retail'].map(v=>`<option ${p.seg===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field span2"><span>Project name<span class="req">*</span></span><input name="name" value="${esc(p.name)}"></label>
+    <label class="field"><span>Segment</span><select name="seg">${['Commercial','Hospitality','Government','Retail'].map(v=>`<option ${p.seg===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Building Type <span class="hint">(วิเคราะห์ปรับปรุง/สร้างใหม่)</span></span><select name="buildingType"><option value="">— ไม่ระบุ —</option>${['New Build','Existing'].map(v=>`<option value="${v}" ${p.buildingType===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field span2"><span>System groups / systems</span>${solutionOptions(projectSystems(p))}<span class="hint">Checklist จาก Data List ใน Settings</span></label>
     <label class="field span2"><span>Brand scope</span>${brandCatalogOptions(projectBrands(p))}<span class="hint">Checklist จาก Brand Scope ใน Settings</span></label>
     <div class="span3"><div class="ch" style="padding:0 0 8px;border-bottom:0"><div class="ch-t"><h2>Proposal Options / Alternative BOQ</h2><small>เก็บ Option, Brand, Model, ราคา, Selected และเหตุผลที่ไม่เลือก เพื่อใช้วิเคราะห์ Brand Propose</small></div></div><div id="proposalOptionsEditor"></div></div>
     <label class="field span2"><span>Task templates</span>${taskTemplateOptions(selectedTemplateIds)}<span class="hint">Template มาจาก Settings และจะสร้าง task ให้ project นี้</span></label>
-    <label class="field span2"><span>Project sub tasks</span><textarea name="projectSubtasksText" placeholder="Revise BOQ round 1&#10;Revise BOQ round 2">${esc(projectSubtasks.join('\n'))}</textarea><span class="hint">เพิ่ม sub task เฉพาะโครงการนี้ได้ที่หน้า Project</span></label>
-    <label class="field"><span>Project Status</span><select name="status">${projectStatusOptions(p.status)}</select></label>
+    <label class="field span2"><span>Project sub tasks (checklist)</span><textarea name="projectSubtasksText" placeholder="Revise BOQ round 1&#10;Revise BOQ round 2">${esc(projectSubtasks.join('\n'))}</textarea><span class="hint">checklist string สำหรับแนบกับ task template</span></label>
+    <div class="span3"><div class="ch" style="padding:0 0 8px;border-bottom:0"><div class="ch-t"><h2>Project Sub Tasks <span class="hint">— งาน Assign ให้แต่ละคน สร้าง Task จริงใน To-Do List</span></h2><small>เพิ่มงานย่อยของโครงการ · กำหนด Owner, Status, Due Date · sync กับ To-Do List อัตโนมัติ</small></div></div><div id="projectTaskDefsEditor"></div></div>
+    <label class="field"><span>Project Status<span class="req">*</span></span><select name="status">${projectStatusOptions(p.status)}</select></label>
     <label class="field"><span>Task Status</span><select name="taskStatus" id="projectTaskStatus">${taskStatusOptions(p.taskStatus||inferProjectTaskStatus(p.id))}</select></label>
     <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(p.due||'')}"></label>
     <label class="field"><span>Priority</span><select name="pri">${['High','Medium','Low'].map(v=>`<option ${p.pri===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Progress %</span><input id="projectProgress" name="progress" type="number" min="0" max="100" value="${Number(p.progress ?? averageProjectProgress(p.id))||0}" ${(p.taskStatus||inferProjectTaskStatus(p.id))==='Done'?'readonly':''}></label>
     <label class="field"><span>Value</span><input name="val" type="number" min="0" value="${p.val}"></label>
-    <label class="field"><span>BD Lead</span><select name="bd">${teamOptions(p.bd,'BD Lead')}</select></label>
+    <label class="field"><span>BD Lead<span class="req">*</span></span><select name="bd">${teamOptions(p.bd,'BD Lead')}</select></label>
+    <label class="field"><span>Buddy BD <span class="hint">(สำรอง/ช่วยงาน)</span></span><select name="bdBuddy"><option value="">— ไม่มี —</option>${teamOptions(p.bdBuddy,'BD Lead')}</select></label>
     <label class="field"><span>Presales</span><select name="presales"><option value="">— ไม่มี —</option>${teamOptions(p.presales,'Presales')}</select></label>
     <label class="field"><span>Sales</span><select name="sales">${teamOptions(p.sales,'Sales')}</select></label>
     <div class="span3 workflow-hint"><span class="wf-step">Sales</span><span class="wf-arrow">→</span><span class="wf-step">BD</span><span class="wf-arrow">→</span><span class="wf-step">Presales</span><span class="wf-arrow">→</span><span class="wf-step">Manager</span><span class="wf-arrow">→</span><span class="wf-step">Sales</span><span style="margin-left:8px;color:var(--soft)">หรือ Sales → Presales → Manager → Sales (ถ้ามีข้อมูลพร้อมแล้ว)</span></div>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Project</button><button class="btn" type="button" data-close-form="project">Cancel</button><span class="hint">เมื่อ Assign team ค่า dashboard, KPI, task และ notification จะเชื่อมตามทันที</span></div>`;
   showFormPanel('projectFormPanel');
   renderProposalOptionsEditor();
+  renderPtdEditor();
   const statusSelect=document.getElementById('projectTaskStatus'), progressInput=document.getElementById('projectProgress');
   if(statusSelect&&progressInput){statusSelect.onchange=()=>{if(statusSelect.value==='Done'){progressInput.value=100;progressInput.readOnly=true}else{progressInput.readOnly=false}}}
   bindCloseButtons();
@@ -2182,7 +2525,9 @@ function saveProject(e){
   const bvals={}; document.querySelectorAll('#projectForm [data-bval]').forEach(inp=>{bvals[inp.dataset.bval]=Number(inp.value||0);});
   f.brands=checkedValues('brandsSelect').map(v=>{const [category,name]=v.split('|');return {category,name,value:bvals[v]||0}});
   syncProposalOptionFromInputs();
+  syncPtdFromInputs();
   try{f.proposalOptions=JSON.parse(document.getElementById('proposalOptionsJson')?.value||'[]')}catch{f.proposalOptions=[]}
+  try{f.projectTaskDefs=JSON.parse(document.getElementById('projectTaskDefsJson')?.value||'[]')}catch{f.projectTaskDefs=[]}
   f.proposalOptions=normalizeProposalOptions({proposalOptions:f.proposalOptions,val:f.val,brands:f.brands,status:f.status});
   const selectedQuote=f.proposalOptions.filter(o=>o.selected||o.status==='Selected').reduce((s,o)=>s+Number(o.value||0),0);
   if(selectedQuote>0) f.val=selectedQuote;
@@ -2191,7 +2536,7 @@ function saveProject(e){
   f.size=sizeForValue(f.val);
   f.sys=f.systems.map(s=>s.name).join(', ');
   f.brand=projectBrandNames(f).join(', ');
-  delete f.systemsSelect; delete f.brandsSelect; delete f.taskTemplatesSelect; delete f.projectSubtasksText; delete f.proposalOptionsJson;
+  delete f.systemsSelect; delete f.brandsSelect; delete f.taskTemplatesSelect; delete f.projectSubtasksText; delete f.proposalOptionsJson; delete f.projectTaskDefsJson;
   const nowIso=new Date().toISOString();
   if(editing.project){
     const old=state.projects.find(p=>p.id===editing.project)||{};
@@ -2209,10 +2554,12 @@ function saveProject(e){
     if(old.sales!==f.sales) logProjectEvent('sales_assign',f,old);
     state.projects=state.projects.map(p=>p.id===editing.project?f:p);
   } else {
+    if(!f.id) f.id='P'+Date.now();
     f.createdAt=nowIso; f.statusChangedAt=nowIso;
     f.wonAt=f.status==='Win'?nowIso:null; f.lostAt=f.status==='Lost'?nowIso:null;
     f.statusLog=[{status:f.status,at:nowIso}];
     f.changeRequests=[];
+    state.projects.push(f);
     logProjectEvent('new_project',f,null); // #1
   }
   syncProjectTasks(f);
@@ -2236,6 +2583,7 @@ function syncProjectTasks(project){
       templateId:tid,
       title:template.title,
       owner:existing?.owner||(PHASE_BY_STATUS[project.status]==='Presales'&&project.presales?project.presales:project.bd),
+      owners:existing?.owners||(()=>{const o=existing?.owner||(PHASE_BY_STATUS[project.status]==='Presales'&&project.presales?project.presales:project.bd);return o?[o]:[]})(),
       status:newStatus,
       due:existing?.due||project.due||'',
       level:existing?.level||'Member',
@@ -2247,6 +2595,35 @@ function syncProjectTasks(project){
       statusChangedAt:changed?nowIso:(existing?.statusChangedAt||nowIso),
       completedAt:newStatus==='Done'?(existing?.completedAt||nowIso):null,
       statusLog:(()=>{const log=(existing?.statusLog||[]).slice(); if(changed) log.push({status:newStatus,at:nowIso}); return log.slice(-30);})()
+    };
+    if(existing) state.tasks=state.tasks.map(t=>t.id===existing.id?taskData:t);
+    else state.tasks.push(taskData);
+  });
+  // Project Task Defs — create/update/remove real task records
+  const defIds=(project.projectTaskDefs||[]).map(d=>d.id);
+  state.tasks=state.tasks.filter(t=>t.project!==project.id||!t.projectTaskDefId||defIds.includes(t.projectTaskDefId));
+  (project.projectTaskDefs||[]).forEach(def=>{
+    if(!def.title?.trim()) return;
+    const existing=state.tasks.find(t=>t.project===project.id&&t.projectTaskDefId===def.id);
+    const nowIso=new Date().toISOString();
+    const taskData={
+      id:existing?.id||nextId('T',state.tasks),
+      project:project.id,
+      projectTaskDefId:def.id,
+      title:def.title.trim(),
+      owner:def.owner||existing?.owner||project.bd,
+      owners:def.owner?[def.owner]:(existing?.owners||[project.bd].filter(Boolean)),
+      status:existing?.status||def.status||'Schedule',
+      due:def.due||existing?.due||'',
+      priority:def.priority||existing?.priority||'Medium',
+      progress:existing?.progress??(def.status==='Done'?100:def.progress||0),
+      level:existing?.level||'Member',
+      revision:existing?.revision||1,
+      subtasks:existing?.subtasks||[],
+      createdAt:existing?.createdAt||nowIso,
+      statusChangedAt:existing?.statusChangedAt||nowIso,
+      completedAt:(existing?.status||def.status)==='Done'?(existing?.completedAt||nowIso):null,
+      statusLog:existing?.statusLog||[{status:def.status||'Schedule',at:nowIso}]
     };
     if(existing) state.tasks=state.tasks.map(t=>t.id===existing.id?taskData:t);
     else state.tasks.push(taskData);
@@ -2292,6 +2669,7 @@ function windowDays(period){const w=taskWindow(period);const days=[];for(let d=n
 function taskPeriodSet(tasks,scope,period,previous=false){
   const w=taskWindow(period,previous);
   const scoped = tasks.filter(t=>{
+    if(scope==='all') return true;
     if(scope==='today') return t.due===dateKey(shiftDate(today,previous?-1:0));
     if(scope==='overdue') return isOverdue(t) && inWindow(t.due,w.start,w.end);
     if(scope==='waiting') return ['Schedule','Review','Pending','Waiting Update'].includes(t.status) && inWindow(t.due,w.start,w.end);
@@ -2319,7 +2697,7 @@ function trendText(current,last,lowerIsBetter=false){
 }
 function renderTaskLeadFilter(){
   const el=document.getElementById('taskLeadFilter'); if(!el) return;
-  const options='<option value="All">All Owner</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
+  const options=teamFilterOptionsHtml(taskLeadFilter,'All Owner');
   if(el.innerHTML!==options) el.innerHTML=options;
   el.value=taskLeadFilter;
   el.onchange=()=>{taskLeadFilter=el.value;renderTodo()};
@@ -2334,7 +2712,7 @@ function renderTaskCalendar(tasks, period=taskPeriod){
     const key=dateKey(d);
     const items=tasks.filter(t=>t.due===key);
     const isToday=key===dateKey(today);
-    return `<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span>${d.toLocaleDateString('en-US',{weekday:'short'})}</span><b>${d.getDate()}</b></div><div class="cal-items">${items.map(t=>{const p=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(p?.name||t.project)} · ${esc(byId(t.owner).name)}</small></div>`}).join('')||'<div class="hint">No due task</div>'}</div></div>`;
+    return `<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span>${d.toLocaleDateString('en-US',{weekday:'short'})}</span><b>${d.getDate()}</b></div><div class="cal-items">${items.map(t=>{const p=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(p?.name||t.project)} · ${esc(ownerNames(t).join(', '))}</small></div>`}).join('')||'<div class="hint">No due task</div>'}</div></div>`;
   }).join('')+'</div>';
 }
 
@@ -2408,11 +2786,139 @@ function applyTaskStatus(t, newStatus, nowIso){ // pure mutation; returns true i
   t.statusLog=[...(t.statusLog||[]),{status:newStatus,at:nowIso}].slice(-30);
   return true;
 }
+function openProjectSubTasks(projectId){
+  if(!requireLogin()) return;
+  if(!canEditModule('projects')&&!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข','error');return}
+  const proj=state.projects.find(p=>p.id===projectId); if(!proj) return;
+  const panel=document.getElementById('projectSubTaskFormPanel');
+  const body=document.getElementById('projectSubTaskBody');
+  const titleEl=document.getElementById('projectSubTaskTitle');
+  titleEl.textContent=`Sub Tasks — ${proj.name}`;
+  const teamOpts=ownerId=>state.teams.map(t=>`<option value="${esc(t.id)}"${t.id===ownerId?' selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('');
+  const statusOpts=cur=>state.taskStatuses.map(s=>`<option value="${esc(s.name)}"${s.name===cur?' selected':''}>${esc(s.name)}</option>`).join('');
+  const priOpts=cur=>['Low','Medium','High','Critical'].map(v=>`<option value="${v}"${v===cur?' selected':''}>${v}</option>`).join('');
+  function render(){
+    const rel=state.tasks.filter(t=>t.project===projectId);
+    const done=rel.filter(t=>t.status==='Done').length;
+    const overallPct=rel.length?Math.round(rel.reduce((s,t)=>s+Number(t.progress||0),0)/rel.length):0;
+    const summary=rel.length
+      ? `<div class="hint" style="margin-bottom:10px"><b>${done}/${rel.length}</b> sub tasks เสร็จ · เฉลี่ย <b>${overallPct}%</b> ${done===rel.length&&rel.length>0?'· ✓ โครงการเสร็จ 100% อัตโนมัติ':done>0?'· โครงการกำลังดำเนินการ':''}</div>`
+      : '<div class="hint" style="margin-bottom:10px">ยังไม่มี sub task · กดปุ่ม + Add Sub Task ด้านล่าง</div>';
+    body.innerHTML=`${summary}
+      <div class="ptd-editor" id="pstList">
+        ${rel.map((t,i)=>`
+          <div class="ptd-row" data-pst-row="${esc(t.id)}">
+            <label class="field"><span>Task Title</span><input data-pf="title" value="${esc(t.title)}" placeholder="ชื่องาน"></label>
+            <label class="field"><span>Owner</span><select data-pf="owner">${teamOpts(t.owner)}</select></label>
+            <label class="field"><span>Status</span><select data-pf="status">${statusOpts(t.status)}</select></label>
+            <label class="field"><span>Due</span><input data-pf="due" type="date" value="${esc(t.due||'')}"></label>
+            <label class="field"><span>Progress %</span><input data-pf="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
+            <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-pst-del="${esc(t.id)}" aria-label="Delete sub task">×</button></div>
+          </div>`).join('')}
+      </div>
+      <button class="btn small primary" type="button" id="pstAddBtn">+ Add Sub Task</button>
+      <div class="toolbar" style="margin-top:14px"><button class="btn primary" id="pstSaveBtn">Save All</button><button class="btn" data-close-form="projectSubTask">Close</button></div>`;
+    // Delete a sub task
+    body.querySelectorAll('[data-pst-del]').forEach(b=>b.onclick=()=>{
+      const id=b.dataset.pstDel;
+      if(!confirm('ลบ sub task นี้?')) return;
+      state.tasks=state.tasks.filter(x=>x.id!==id);
+      // remove from projectTaskDefs as well
+      proj.projectTaskDefs=(proj.projectTaskDefs||[]).filter(d=>{
+        const linked=state.tasks.find(x=>x.projectTaskDefId===d.id);
+        return linked;
+      });
+      cascadeProjectDoneFromTasks(projectId);
+      saveState(); render(); renderProjects(); refreshAfterTaskChange();
+    });
+    // Add new sub task
+    document.getElementById('pstAddBtn').onclick=()=>{
+      saveRows(); // persist current edits first
+      const nowIso=new Date().toISOString();
+      const defId=`PTD-${Date.now()}`;
+      const newDef={id:defId,title:'New Sub Task',owner:proj.bd||state.teams[0]?.id||'',status:'Schedule',due:proj.due||'',priority:'Medium',progress:0};
+      proj.projectTaskDefs=[...(proj.projectTaskDefs||[]),newDef];
+      const newOwner=newDef.owner;
+      state.tasks.push({
+        id:nextId('T',state.tasks),project:projectId,projectTaskDefId:defId,
+        title:newDef.title,owner:newOwner,owners:newOwner?[newOwner]:[],
+        status:'Schedule',due:newDef.due||'',priority:'Medium',progress:0,
+        level:'Member',revision:1,subtasks:[],
+        createdAt:nowIso,statusChangedAt:nowIso,completedAt:null,
+        statusLog:[{status:'Schedule',at:nowIso}]
+      });
+      cascadeProjectDoneFromTasks(projectId);
+      saveState(); render(); renderProjects(); refreshAfterTaskChange();
+    };
+    // Save all edits
+    function saveRows(){
+      const now=new Date().toISOString();
+      body.querySelectorAll('[data-pst-row]').forEach(row=>{
+        const id=row.dataset.pstRow;
+        const t=state.tasks.find(x=>x.id===id); if(!t) return;
+        const newTitle=row.querySelector('[data-pf="title"]').value.trim();
+        const newOwner=row.querySelector('[data-pf="owner"]').value;
+        const newStatus=row.querySelector('[data-pf="status"]').value;
+        const newDue=row.querySelector('[data-pf="due"]').value;
+        const newProgress=Number(row.querySelector('[data-pf="progress"]').value||0);
+        const statusChanged=t.status!==newStatus;
+        t.title=newTitle||t.title;
+        t.owner=newOwner; t.owners=newOwner?[newOwner]:[];
+        t.due=newDue||'';
+        t.progress=newStatus==='Done'?100:newProgress;
+        if(statusChanged){
+          t.status=newStatus; t.statusChangedAt=now;
+          if(newStatus==='Done'){t.completedAt=t.completedAt||now;t.progress=100;}
+          else{t.completedAt=null;if(Number(t.progress)>=100)t.progress=90;}
+          t.statusLog=[...(t.statusLog||[]),{status:newStatus,at:now}].slice(-30);
+        }
+        // mirror back to projectTaskDefs
+        if(t.projectTaskDefId){
+          const def=(proj.projectTaskDefs||[]).find(d=>d.id===t.projectTaskDefId);
+          if(def){def.title=t.title;def.owner=t.owner;def.status=t.status;def.due=t.due;def.priority=t.priority||'Medium';def.progress=t.progress;}
+        }
+      });
+    }
+    document.getElementById('pstSaveBtn').onclick=()=>{
+      saveRows();
+      cascadeProjectDoneFromTasks(projectId);
+      saveState();
+      logActivity('อัปเดต Sub Tasks','projects',proj.name);
+      panel.classList.remove('on');
+      renderProjects();
+      refreshAfterTaskChange();
+    };
+    bindCloseButtons();
+  }
+  render();
+  showFormPanel('projectSubTaskFormPanel');
+}
+function cascadeProjectDoneFromTasks(projectId){
+  if(!projectId) return;
+  const proj=state.projects.find(p=>p.id===projectId); if(!proj) return;
+  const rel=state.tasks.filter(t=>t.project===projectId);
+  if(!rel.length) return;
+  const allDone=rel.every(t=>t.status==='Done');
+  if(allDone){
+    if(proj.taskStatus!=='Done'||Number(proj.progress||0)<100){
+      proj.taskStatus='Done'; proj.progress=100;
+      logActivity('โครงการเสร็จ 100%','projects',`${proj.name} · ทุก Sub Task เสร็จแล้ว`);
+      toast(`โครงการ "${proj.name}" เสร็จครบทุก Sub Task → Done 100%`,'success');
+    }
+  } else if(proj.taskStatus==='Done'){
+    // un-done if a task is reopened
+    proj.taskStatus='Doing';
+    proj.progress=averageProjectProgress(projectId);
+  } else {
+    proj.progress=averageProjectProgress(projectId);
+  }
+}
 function setTaskStatus(taskId, newStatus){
   const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
   if(!applyTaskStatus(t, newStatus, new Date().toISOString())) return;
   // Notify task owner if someone else changed it
-  if(t.owner && activeUser && t.owner!==activeUser.id) logUserNotification(t.owner,'task_update',`งาน "${t.title}" ถูกเปลี่ยนสถานะเป็น ${newStatus} โดย ${activeUser.name}`,{taskId});
+  if(activeUser) ownerIds(t).filter(id=>id!==activeUser.id).forEach(id=>logUserNotification(id,'task_update',`งาน "${t.title}" ถูกเปลี่ยนสถานะเป็น ${newStatus} โดย ${activeUser.name}`,{taskId}));
+  cascadeProjectDoneFromTasks(t.project);
   saveState();
   logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
   if(newStatus==='Done'){ const d=taskDelta(t); const tail=d==null?'':(d>0?` · ช้า ${d} วัน`:d<0?` · เร็ว ${-d} วัน`:' · ตรงเวลา'); toast(`${t.title} เสร็จแล้ว${tail}`, d>0?'info':'success'); }
@@ -2493,7 +2999,7 @@ function saveQuickProject(e){
   if(!f.name?.trim()){toast('กรุณากรอกชื่อโครงการ','error');return;}
   const nowIso=new Date().toISOString();
   const proj={
-    id:nextId('P',state.projects),name:f.name.trim(),seg:'Enterprise',
+    id:nextId('P',state.projects),name:f.name.trim(),seg:'Commercial',
     status:f.status||'Quotation',pri:f.pri||'Medium',
     val:Number(f.val||0),bd:f.bd||state.teams[0]?.id,
     presales:f.presales||state.teams.find(t=>t.role==='Presales')?.id||'',
@@ -2519,9 +3025,11 @@ function saveQuickProject(e){
 function openInternalTaskForm(id){
   if(!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข Task','error');return}
   const t=id?state.tasks.find(x=>x.id===id):null;
+  const itCurOwners=t?.owners?.length?t.owners:(t?.owner?[t.owner]:[state.teams[0]?.id].filter(Boolean));
+  const itOwnerChecks=state.teams.map(m=>`<label><input type="checkbox" name="owners" value="${esc(m.id)}"${itCurOwners.includes(m.id)?' checked':''}> ${esc(m.name)}<span class="tag" style="margin-left:4px;font-size:9.5px">${esc(m.role||'')}</span></label>`).join('');
   document.getElementById('internalTaskForm').innerHTML=`
     <label class="field span3"><span>Task title *</span><input name="title" required value="${esc(t?.title||'')}" placeholder="ชื่องาน"></label>
-    <label class="field"><span>Owner</span><select name="owner">${state.teams.map(m=>`<option value="${esc(m.id)}" ${(t?.owner||state.teams[0]?.id)===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></label>
+    <div class="field span2"><span>Owner(s) <span class="hint">— เลือกได้หลายคน</span></span><div class="owners-check-grid">${itOwnerChecks}</div></div>
     <label class="field"><span>Status</span><select name="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${(t?.status||'Schedule')===s.name?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
     <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(t?.due||'')}"></label>
     <label class="field"><span>Progress %</span><input type="number" name="progress" min="0" max="100" value="${t?.progress||0}"></label>
@@ -2534,13 +3042,17 @@ function openInternalTaskForm(id){
 function saveInternalTask(e){
   e.preventDefault();
   if(!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข Task','error');return}
-  const f=Object.fromEntries(new FormData(e.target));
+  const fd=new FormData(e.target);
+  const f=Object.fromEntries(fd);
+  const owners=fd.getAll('owners').filter(Boolean);
   if(!f.title?.trim()){toast('กรุณากรอกชื่องาน','error');return;}
   const nowIso=new Date().toISOString();
   f.subtasks=String(f.subtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean);
   delete f.subtasksText;
   f.project=''; // explicitly no project
   f.progress=Number(f.progress||0);
+  f.owner=owners[0]||'';
+  f.owners=owners;
   const wasId=f._id; delete f._id;
   if(wasId){
     const existing=state.tasks.find(t=>t.id===wasId)||{};
@@ -2622,7 +3134,7 @@ function renderTodoQueue(){
       <span class="q-rank">${inQueue?`<span class="todo-grip" aria-hidden="true" title="ลากเพื่อจัดลำดับ">⠿</span>`:isWorking?'▶':rank}</span>
       <div class="q-body">
         <strong>${esc(t.title)}</strong>
-        <span class="mini">${!t.project?'<span class="tag internal">Internal</span>':esc(proj?.name||t.project)} · ${esc(byId(t.owner).name)} · ${esc(t.due||'No due')}</span>
+        <span class="mini">${!t.project?'<span class="tag internal">Internal</span>':esc(proj?.name||t.project)} · ${esc(ownerNames(t).join(', '))} · ${esc(t.due||'No due')}</span>
         <span style="margin-top:3px;display:block">${statusTag(isOverdue(t)?'Overdue':t.status)} ${priTag(taskPriority(t))} ${timelinessBadge(t)}</span>
       </div>
       <div class="q-controls">
@@ -2753,14 +3265,17 @@ function certExpiryBadge(expiresAt){
   if(days<=90) return `<span class="cert-exp warn">หมดอายุใน ${days}d</span>`;
   return `<span class="cert-exp ok">Valid · ${expiresAt}</span>`;
 }
+function trainOwnerFilteredCerts(){return state.certifications.filter(c=>memberMatchesTeamFilter(c.member,trainOwner))}
+function trainOwnerFilteredEvents(){return state.trainingEvents.filter(e=>memberMatchesTeamFilter(e.member,trainOwner))}
 function renderTrainMetrics(){
   const el=document.getElementById('trainMetrics'); if(!el) return;
   const now=dateKey(today);
-  const expSoon=state.certifications.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)>=0&&daysBetween(c.expiresAt,now)<=90).length;
-  const expired=state.certifications.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)<0).length;
-  const ytdHours=state.trainingEvents.filter(e=>e.date&&e.date.startsWith(String(today.getFullYear()))).reduce((s,e)=>s+Number(e.hours||0),0);
+  const certs=trainOwnerFilteredCerts(), events=trainOwnerFilteredEvents();
+  const expSoon=certs.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)>=0&&daysBetween(c.expiresAt,now)<=90).length;
+  const expired=certs.filter(c=>c.expiresAt&&daysBetween(c.expiresAt,now)<0).length;
+  const ytdHours=events.filter(e=>e.date&&e.date.startsWith(String(today.getFullYear()))).reduce((s,e)=>s+Number(e.hours||0),0);
   el.innerHTML=[
-    metric('Total Certifications',state.certifications.length,'ใบรับรองทั้งหมด'),
+    metric('Total Certifications',certs.length,'ใบรับรองทั้งหมด'),
     metric('Expiring Soon',expSoon,'ภายใน 90 วัน',expSoon?'var(--amber)':''),
     metric('Expired',expired,'หมดอายุแล้ว',expired?'var(--red)':''),
     metric('Training Hours (YTD)',ytdHours,'ชั่วโมงอบรมปีนี้')
@@ -2815,20 +3330,28 @@ function saveTrainEvent(e){
 }
 function deleteTrainEvent(id){if(!confirm('Delete training?'))return; state.trainingEvents=state.trainingEvents.filter(x=>x.id!==id); saveState(); renderTraining();}
 function renderTraining(){
+  const sel=document.getElementById('trainOwnerFilter');
+  if(sel){
+    const opts=teamFilterOptionsHtml(trainOwner,'All Owner');
+    if(sel.innerHTML!==opts) sel.innerHTML=opts;
+    sel.value=trainOwner;
+    sel.onchange=()=>{trainOwner=sel.value;renderTraining();};
+  }
   renderTrainMetrics();
+  const certs=trainOwnerFilteredCerts(), events=trainOwnerFilteredEvents();
   const certEl=document.getElementById('certRows');
   const certLbl=document.getElementById('certCountLabel');
   const trainEl=document.getElementById('trainEventRows');
   const trainLbl=document.getElementById('trainEventCountLabel');
   if(certEl){
-    if(certLbl) certLbl.textContent=state.certifications.length+' certifications';
-    certEl.innerHTML=state.certifications.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td><button class="btn small" data-edit-cert="${esc(c.id)}">Edit</button> <button class="btn small danger" data-del-cert="${esc(c.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรอง','เพิ่มจากปุ่ม + Certification')+'</td></tr>';
+    if(certLbl) certLbl.textContent=`${certs.length} of ${state.certifications.length} certifications`;
+    certEl.innerHTML=certs.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td><button class="btn small" data-edit-cert="${esc(c.id)}">Edit</button> <button class="btn small danger" data-del-cert="${esc(c.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรองตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Certification')+'</td></tr>';
     certEl.querySelectorAll('[data-edit-cert]').forEach(b=>b.onclick=()=>openCertForm(b.dataset.editCert));
     certEl.querySelectorAll('[data-del-cert]').forEach(b=>b.onclick=()=>deleteCert(b.dataset.delCert));
   }
   if(trainEl){
-    if(trainLbl) trainLbl.textContent=state.trainingEvents.length+' events';
-    trainEl.innerHTML=state.trainingEvents.map(ev=>`<tr><td>${esc(byId(ev.member).name)}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรม','เพิ่มจากปุ่ม + Training')+'</td></tr>';
+    if(trainLbl) trainLbl.textContent=`${events.length} of ${state.trainingEvents.length} events`;
+    trainEl.innerHTML=events.map(ev=>`<tr><td>${esc(byId(ev.member).name)}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรมตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Training')+'</td></tr>';
     trainEl.querySelectorAll('[data-edit-trainev]').forEach(b=>b.onclick=()=>openTrainEventForm(b.dataset.editTrainev));
     trainEl.querySelectorAll('[data-del-trainev]').forEach(b=>b.onclick=()=>deleteTrainEvent(b.dataset.delTrainev));
   }
@@ -2913,7 +3436,7 @@ function todoSortValue(t,key){
     case 'title': return t.title||'';
     case 'project': return projectOf(t)?.name||t.project||'';
     case 'phase': return PHASE_ORDER.indexOf(taskPhase(t));
-    case 'owner': return byId(t.owner).name||'';
+    case 'owner': return ownerNames(t).join(', ')||'';
     case 'status': return isOverdue(t)?'Overdue':(t.status||'');
     case 'priority': return taskPriorityScore(t);
     case 'due': return t.due||'9999-99-99';
@@ -2939,6 +3462,140 @@ function setTodoSort(key){
   todoSort = todoSort.key===key ? {key,dir:todoSort.dir==='asc'?'desc':'asc'} : {key,dir:'asc'};
   renderTodoTable();
 }
+function openTodoTaskForm(id){
+  if(!requireLogin()) return;
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  const titleEl=document.getElementById('todoTaskFormTitle');
+  if(titleEl) titleEl.textContent=`Edit Task — ${t.id}`;
+  const curOwners=t.owners?.length?t.owners:(t.owner?[t.owner]:[]);
+  const ownerChecks=state.teams.map(m=>`<label><input type="checkbox" name="owners" value="${esc(m.id)}"${curOwners.includes(m.id)?' checked':''}> ${esc(m.name)}<span class="tag" style="margin-left:4px;font-size:9.5px">${esc(m.role||'')}</span></label>`).join('');
+  const statusOpts=state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${t.status===s.name?'selected':''}>${esc(s.name)}</option>`).join('');
+  const priOpts=['Low','Medium','High','Critical'].map(v=>`<option value="${v}" ${(t.priority||'Low')===v?'selected':''}>${v}</option>`).join('');
+  document.getElementById('todoTaskForm').innerHTML=`
+    <input type="hidden" name="id" value="${esc(t.id)}">
+    <label class="field span2"><span>Task Title</span><input name="title" required value="${esc(t.title)}"></label>
+    <label class="field"><span>Status</span><select name="status">${statusOpts}</select></label>
+    <div class="field span3"><span>Owner(s) <span class="hint">— เลือกได้หลายคน เช่น BD + Presales ทำงานพร้อมกัน</span></span><div class="owners-check-grid">${ownerChecks}</div></div>
+    <label class="field"><span>Priority</span><select name="priority">${priOpts}</select></label>
+    <label class="field"><span>Due Date</span><input name="due" type="date" value="${esc(t.due||'')}"></label>
+    <label class="field"><span>Progress (%)</span><input name="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
+    <label class="field span3"><span>Sub Tasks <span class="hint">— 1 รายการต่อบรรทัด · sync กับ Project อัตโนมัติ</span></span><textarea name="subtasksText" rows="4" placeholder="Site survey&#10;Revise BOQ round 1&#10;Revise BOQ round 2">${esc((t.subtasks||[]).join('\n'))}</textarea></label>
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="todoTask">Cancel</button>${t.project?`<span class="hint">Project: ${esc(state.projects.find(p=>p.id===t.project)?.name||t.project)} · Sub Tasks จะ sync กลับ Project</span>`:''}</div>`;
+  document.getElementById('todoTaskForm').onsubmit=saveTodoTask;
+  showFormPanel('todoTaskFormPanel'); bindCloseButtons();
+}
+function saveTodoTask(e){
+  e.preventDefault();
+  const fd=new FormData(e.target);
+  const f=Object.fromEntries(fd);
+  const owners=fd.getAll('owners').filter(Boolean);
+  const idx=state.tasks.findIndex(t=>t.id===f.id); if(idx===-1) return;
+  const now=new Date().toISOString();
+  const prev=state.tasks[idx];
+  const statusChanged=prev.status!==f.status;
+  const subtasks=String(f.subtasksText||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  state.tasks[idx]={
+    ...prev,
+    title:f.title,
+    owner:owners[0]||prev.owner,
+    owners:owners.length?owners:(prev.owners||[prev.owner].filter(Boolean)),
+    status:f.status,
+    priority:f.priority,
+    due:f.due||prev.due||'',
+    progress:Number(f.progress||0),
+    subtasks,
+    ...(statusChanged?{statusChangedAt:now}:{}),
+    ...(f.status==='Done'&&prev.status!=='Done'?{completedAt:now,progress:100}:{}),
+    ...(f.status!=='Done'&&prev.status==='Done'?{completedAt:null}:{}),
+  };
+  if(statusChanged){
+    state.tasks[idx].statusLog=[...(prev.statusLog||[]),{status:f.status,at:now}].slice(-30);
+  }
+  if(statusChanged||prev.progress!==Number(f.progress||0)) cascadeProjectDoneFromTasks(prev.project);
+  // Sync sub tasks back to the project so they persist across syncProjectTasks rebuilds
+  if(prev.project){
+    const proj=state.projects.find(p=>p.id===prev.project);
+    if(proj){
+      const templateSubtasks=(state.taskTemplates.find(tt=>tt.id===prev.templateId)?.subtasks)||[];
+      // projectSubtasks = subtasks that are project-specific (not from template)
+      const projectSpecific=subtasks.filter(s=>!templateSubtasks.includes(s));
+      // merge with existing project subtasks from other tasks of the same project
+      const otherTaskSubtasks=state.tasks
+        .filter(t=>t.id!==prev.id&&t.project===prev.project)
+        .flatMap(t=>t.subtasks||[])
+        .filter(s=>!templateSubtasks.includes(s));
+      proj.projectSubtasks=uniq([...projectSpecific,...otherTaskSubtasks]);
+    }
+  }
+  saveState();
+  document.getElementById('todoTaskFormPanel').classList.remove('on');
+  logActivity('แก้ไขงาน','tasks',f.title);
+  refreshAfterTaskChange();
+}
+function deleteTodoTask(id){
+  if(!requireLogin()) return;
+  const t=state.tasks.find(x=>x.id===id); if(!t) return;
+  if(!confirm(`Delete task "${t.title}"?\n${t.project?'⚠ งานที่เชื่อมกับ Project จะถูกสร้างใหม่เมื่อบันทึก Project':''}`.trim())) return;
+  state.tasks=state.tasks.filter(x=>x.id!==id);
+  saveState(); logActivity('ลบงาน','tasks',t.title); refreshAfterTaskChange();
+}
+function _syncSubtasksToProject(task, subtasks){
+  if(!task.project) return;
+  const proj=state.projects.find(p=>p.id===task.project); if(!proj) return;
+  const templateSubtasks=(state.taskTemplates.find(tt=>tt.id===task.templateId)?.subtasks)||[];
+  const projectSpecific=subtasks.filter(s=>!templateSubtasks.includes(s));
+  const others=state.tasks.filter(t=>t.id!==task.id&&t.project===task.project).flatMap(t=>t.subtasks||[]).filter(s=>!templateSubtasks.includes(s));
+  proj.projectSubtasks=uniq([...projectSpecific,...others]);
+}
+function manageSubTasks(taskId){
+  if(!requireLogin()) return;
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  const panel=document.getElementById('todoSubtaskFormPanel');
+  const body=document.getElementById('todoSubtaskBody');
+  const titleEl=document.getElementById('todoSubtaskTitle');
+  if(!panel||!body) return;
+  titleEl.textContent=`Sub Tasks — ${t.title}`;
+  const proj=t.project?state.projects.find(p=>p.id===t.project):null;
+  function render(){
+    const task=state.tasks.find(x=>x.id===taskId)||t;
+    const items=task.subtasks||[];
+    body.innerHTML=`
+      <p class="hint" style="margin-bottom:8px">${proj?`Project: <strong>${esc(proj.name)}</strong> · `:''}${items.length} sub task · แก้ไข/ลบ ด้านล่าง หรือพิมพ์เพิ่มใหม่</p>
+      <div class="subtask-list" id="stList">
+        ${items.map((s,i)=>`<div class="subtask-row"><input type="text" value="${esc(s)}" data-st-idx="${i}" aria-label="Sub task ${i+1}"><button class="btn small danger" data-st-del="${i}" aria-label="Delete sub task">×</button></div>`).join('')}
+      </div>
+      <div class="subtask-add-row"><input id="stNewInput" type="text" placeholder="เพิ่ม sub task ใหม่…" autocomplete="off"><button class="btn primary small" id="stAddBtn">+ Add</button></div>
+      <div class="toolbar" style="margin-top:12px"><button class="btn primary" id="stSaveBtn">Save</button><button class="btn" data-close-form="todoSubtask">Cancel</button></div>`;
+    // delete a row
+    body.querySelectorAll('[data-st-del]').forEach(b=>b.onclick=()=>{
+      const task2=state.tasks.find(x=>x.id===taskId); if(!task2) return;
+      task2.subtasks=(task2.subtasks||[]).filter((_,j)=>j!==Number(b.dataset.stDel));
+      _syncSubtasksToProject(task2,task2.subtasks); saveState(); render();
+    });
+    // add new row
+    const addFn=()=>{
+      const inp=document.getElementById('stNewInput'); if(!inp) return;
+      const val=inp.value.trim(); if(!val) return;
+      const task2=state.tasks.find(x=>x.id===taskId); if(!task2) return;
+      task2.subtasks=uniq([...(task2.subtasks||[]),val]);
+      _syncSubtasksToProject(task2,task2.subtasks); saveState(); render();
+    };
+    document.getElementById('stAddBtn')?.addEventListener('click',addFn);
+    document.getElementById('stNewInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addFn();}});
+    // save edits to existing rows
+    document.getElementById('stSaveBtn')?.addEventListener('click',()=>{
+      const task2=state.tasks.find(x=>x.id===taskId); if(!task2) return;
+      const updated=[...body.querySelectorAll('[data-st-idx]')].map(inp=>inp.value.trim()).filter(Boolean);
+      task2.subtasks=updated;
+      _syncSubtasksToProject(task2,updated); saveState();
+      logActivity('อัปเดต Sub Tasks','tasks',task2.title);
+      panel.classList.remove('on'); renderTodoTable();
+    });
+    bindCloseButtons();
+  }
+  render();
+  showFormPanel('todoSubtaskFormPanel');
+}
 function renderTodoTable(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const rows=sortTodo(filteredTasks()); // central database: all filtered tasks, not period-windowed
@@ -2946,12 +3603,16 @@ function renderTodoTable(){
   const head='<tr><th class="grip-col" aria-hidden="true"></th>'+TODO_COLUMNS.map(([key,label])=>{
     const active=todoSort.key===key, mark=active?(todoSort.dir==='asc'?'↑':'↓'):'';
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
-  }).join('')+'</tr>';
+  }).join('')+'<th>Actions</th></tr>';
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
+  const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small" data-manage-subtasks="${esc(t.id)}" aria-label="Manage sub tasks" title="จัดการ Sub Tasks">Sub Tasks${(t.subtasks?.length)?` (${t.subtasks.length})`:''}</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
   const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')||'<tr><td colspan="10">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ BD Lead ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
   body.querySelector('#clearManualSort')?.addEventListener('click',()=>{todoSort={key:'due',dir:'asc'};renderTodoTable();});
+  body.querySelectorAll('[data-edit-todo]').forEach(b=>b.onclick=()=>openTodoTaskForm(b.dataset.editTodo));
+  body.querySelectorAll('[data-del-todo]').forEach(b=>b.onclick=()=>deleteTodoTask(b.dataset.delTodo));
+  body.querySelectorAll('[data-manage-subtasks]').forEach(b=>b.onclick=()=>manageSubTasks(b.dataset.manageSubtasks));
   bindTaskStatusSelects(body);
   const tbody=body.querySelector('#todoTbody'); if(tbody) initTableDnd(tbody);
 }
@@ -2975,16 +3636,16 @@ function renderTodoProjects(){
     const tasks=byProject.get(p.id);
     const prog=tasks.length?Math.round(tasks.reduce((s,t)=>s+Number(t.progress||0),0)/tasks.length):0;
     const od=tasks.filter(isOverdue).length;
-    return `<div class="card todo-proj"><div class="ch"><h2>${esc(p.name||p.id)}</h2>${p.status?statusTag(p.status):''}<div class="meta"><span>${tasks.length} tasks</span><span>${prog}% avg</span>${od?`<span class="tag overdue">${od} overdue</span>`:''}<span>${shortMoney(Number(p.val||0))}</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Phase</th><th>Owner</th><th>Status</th><th>Priority</th><th>Due</th><th>Progress</th></tr></thead><tbody>${tasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`;
+    return `<div class="card todo-proj"><div class="ch"><h2>${esc(p.name||p.id)}</h2>${p.status?statusTag(p.status):''}<div class="meta"><span>${tasks.length} tasks</span><span>${prog}% avg</span>${od?`<span class="tag overdue">${od} overdue</span>`:''}<span>${shortMoney(Number(p.val||0))}</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Phase</th><th>Owner</th><th>Status</th><th>Priority</th><th>Due</th><th>Progress</th></tr></thead><tbody>${tasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${phaseTag(taskPhase(t))}</td><td>${esc(ownerNames(t).join(', ')||'-')}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`;
   }).join('');
-  const intHtml=internalTasks.length?`<div class="card todo-proj"><div class="ch"><h2>Internal / Cross-function</h2><span class="tag internal">Internal</span><div class="meta"><span>${internalTasks.length} tasks</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Owner</th><th>Status</th><th>Due</th><th>Progress</th></tr></thead><tbody>${internalTasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${esc(byId(t.owner).name)}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`:'';
+  const intHtml=internalTasks.length?`<div class="card todo-proj"><div class="ch"><h2>Internal / Cross-function</h2><span class="tag internal">Internal</span><div class="meta"><span>${internalTasks.length} tasks</span></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Owner</th><th>Status</th><th>Due</th><th>Progress</th></tr></thead><tbody>${internalTasks.map(t=>`<tr><td><strong>${esc(t.title)}</strong></td><td>${esc(ownerNames(t).join(', ')||'-')}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td></tr>`).join('')}</tbody></table></div></div>`:'';
   body.innerHTML=projHtml+intHtml;
 }
 function renderTodoPriority(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod).filter(t=>t.status!=='Done')
     .sort((a,b)=>taskPriorityScore(b)-taskPriorityScore(a));
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Priority</h2><small>เรียงตามความสำคัญของโครงการ + งานที่เกินกำหนด/ใกล้ครบกำหนด</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Opportunity</th><th>Phase</th><th>Owner</th><th>Priority</th><th>Status</th><th>Due</th></tr></thead><tbody>${set.map((t,i)=>`<tr><td><span class="todo-rank">${i+1}</span></td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(byId(t.owner).name)}</td><td>${priTag(taskPriority(t))}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${dueBadge(t)}</td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ไม่มีงานค้างให้จัดลำดับ','งานในช่วงที่เลือกเสร็จเรียบร้อยแล้ว')+'</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Priority</h2><small>เรียงตามความสำคัญของโครงการ + งานที่เกินกำหนด/ใกล้ครบกำหนด</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>#</th><th>Task</th><th>Opportunity</th><th>Phase</th><th>Owner</th><th>Priority</th><th>Status</th><th>Due</th></tr></thead><tbody>${set.map((t,i)=>`<tr><td><span class="todo-rank">${i+1}</span></td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td>${esc(ownerNames(t).join(', ')||'-')}</td><td>${priTag(taskPriority(t))}</td><td>${statusTag(isOverdue(t)?'Overdue':t.status)}</td><td>${dueBadge(t)}</td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ไม่มีงานค้างให้จัดลำดับ','งานในช่วงที่เลือกเสร็จเรียบร้อยแล้ว')+'</td></tr>'}</tbody></table></div></div>`;
 }
 function renderTodoExec(){
   const body=document.getElementById('todoBody'); if(!body) return;
@@ -3001,7 +3662,7 @@ function renderTodoExec(){
   const phaseCounts=grouped(set,taskPhase);
   renderDonut('todoExecPhase',PHASE_ORDER.filter(ph=>phaseCounts[ph]).map(ph=>({label:PHASE_LABEL[ph],value:phaseCounts[ph],color:phaseColors[ph]})),{centerValue:total,centerLabel:'tasks'});
   renderBars('todoExecStatus',state.taskStatuses.map((s,i)=>({label:s.name,value:set.filter(x=>x.status===s.name).length,color:CHART[i%CHART.length]})).filter(x=>x.value>0));
-  const openByOwner=grouped(set.filter(t=>t.status!=='Done'),t=>byId(t.owner).name);
+  const openByOwner={}; set.filter(t=>t.status!=='Done').forEach(t=>ownerNames(t).forEach(n=>{openByOwner[n]=(openByOwner[n]||0)+1}));
   renderBars('todoExecTeam',Object.entries(openByOwner).map(([label,value],i)=>({label,value,color:CHART[i%CHART.length]})).sort((a,b)=>b.value-a.value));
 }
 const TODO_RENDERERS={table:renderTodoTable,kanban:renderTodoKanban,project:renderTodoProjects,priority:renderTodoPriority,exec:renderTodoExec,queue:renderTodoQueue};
@@ -3016,7 +3677,7 @@ function renderTodo(){
   const overdue=metricValue(currentSet,'overdue'), overduePrev=metricValue(previousSet,'overdue');
   const done=metricValue(currentSet,'completed'), donePrev=metricValue(previousSet,'completed');
   const completion=due?Math.round(done/due*100):0, completionPrev=duePrev?Math.round(donePrev/duePrev*100):0;
-  const dueLabel = taskScope==='today' ? 'Due Today' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
+  const dueLabel = taskScope==='all' ? 'Total Tasks' : taskScope==='today' ? 'Due Today' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
   const mEl=document.getElementById('taskMetrics');
   if(mEl) mEl.innerHTML=[
     metric('Open Tasks',open,trendText(open,openPrev)),
@@ -3040,7 +3701,7 @@ function setCalMetrics(dueLabel, scoped, all){
 function renderCalendarPage(){
   const sel=document.getElementById('calLeadFilter');
   if(sel){
-    const options='<option value="All">All Owner</option>'+state.teams.map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
+    const options=teamFilterOptionsHtml(calLead,'All Owner');
     if(sel.innerHTML!==options) sel.innerHTML=options;
     sel.value=calLead;
     sel.onchange=()=>{calLead=sel.value;renderCalendarPage();};
@@ -3078,7 +3739,7 @@ function renderCalendarMonth(tasks, monthDate){
     const isToday=key===todayKey;
     const shown=items.slice(0,3);
     const more=items.length-shown.length;
-    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>`<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(byId(t.owner).name)}</small></div>`).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
+    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>{const pj=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(pj?.name||(t.project?t.project:'Internal'))} · ${esc(ownerNames(t).join(', '))}</small></div>`}).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
   }
   const trail=(7-((startWd+daysInMonth)%7))%7;
   for(let i=0;i<trail;i++) cells+='<div class="cal-day empty" aria-hidden="true"></div>';
@@ -3086,7 +3747,7 @@ function renderCalendarMonth(tasks, monthDate){
   const dueCount=tasks.filter(t=>inWindow(t.due,new Date(y,m,1,0,0,0,0),new Date(y,m+1,0,23,59,59,999))).length;
   if(label) label.textContent=`${monthDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})} · ${dueCount} tasks due`;
 }
-function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task" draggable="true" data-task-id="${esc(t.id)}"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(byId(t.owner).name)}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
+function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task" draggable="true" data-task-id="${esc(t.id)}"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(ownerNames(t).join(', ')||'-')}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
 function openTaskForm(id){
   editing.task=id||null; const t=state.taskTemplates.find(x=>x.id===id)||{id:nextId('TT',state.taskTemplates),title:'',subtasks:[]};
   const taskTitle=document.getElementById('taskFormTitle'); if(taskTitle) taskTitle.textContent=id?'Edit Task':'New Task';
@@ -3114,7 +3775,7 @@ function kpiRefDate(a){return a.submittedAt||a.dueDate||a.createdAt||''}
 function kpiActivitiesIn(period, owner, offset=0){
   const w=kpiWindow(period,offset);
   return state.kpiActivities.filter(a=>{
-    if(owner!=='All' && a.owner!==owner) return false;
+    if(!memberMatchesTeamFilter(a.owner,owner)) return false;
     const r=kpiRefDate(a); if(!r) return false;
     const dt=new Date(r+'T12:00:00'); return dt>=w.start && dt<=w.end;
   });
@@ -3138,7 +3799,7 @@ function pctOf(arr,pred,unit){
 function countKpi(arr,label){return {v:arr.length, sub:`${arr.length} ${label||''}`.trim()}}
 function winRateKpi(owner){
   let projs=state.projects.filter(p=>p.status==='Win'||p.status==='Lost');
-  if(owner!=='All') projs=projs.filter(p=>p.bd===owner);
+  if(owner!=='All') projs=projs.filter(p=>projectMatchesTeamFilter(p,owner));
   if(!projs.length) return {v:0,sub:'',na:true};
   const win=projs.filter(p=>p.status==='Win').length;
   return {v:Math.round(win/projs.length*100), sub:`${win}/${projs.length} ปิดดีล`};
@@ -3171,7 +3832,7 @@ function kpiCardHtml(r){
 }
 function renderKpiOwnerFilter(){
   const el=document.getElementById('kpiOwnerFilter'); if(!el) return;
-  const opts='<option value="All">All BD / Presales</option>'+state.teams.filter(t=>['BD Lead','Presales'].includes(t.role)).map(t=>`<option value="${t.id}">${esc(t.name)} (${esc(t.role)})</option>`).join('');
+  const opts=teamFilterOptionsHtml(kpiOwner,'All Owner');
   if(el.innerHTML!==opts) el.innerHTML=opts;
   el.value=kpiOwner; el.onchange=()=>{kpiOwner=el.value;renderKpi()};
 }
@@ -3183,7 +3844,7 @@ function renderKpiActivities(acts){
     const ot=onTime===null?'<span class="hint">—</span>':(onTime?'<span class="tag done">ทันเวลา</span>':`<span class="tag overdue">ช้า ${daysBetween(a.submittedAt,a.dueDate)}d</span>`);
     const out=a.outcome?`<span class="tag ${a.outcome==='Positive'?'done':a.outcome==='Negative'?'overdue':'doing'}">${esc(a.outcome)}</span>`:'';
     const passB=a.pass?`<span class="tag ${a.pass==='Pass'?'done':'overdue'}">${esc(a.pass)}</span>`:'';
-    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(byId(a.owner).name)}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
+    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(ownerLabel(a.owner))}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
   }).join('')||'<tr><td colspan="9">'+emptyState('ยังไม่มี Activity ในงวดนี้','กด + Add Activity เพื่อบันทึกงาน BD แล้ว KPI จะคำนวณให้อัตโนมัติ')+'</td></tr>';
   el.querySelectorAll('[data-edit-kpi]').forEach(b=>b.onclick=()=>openKpiForm(b.dataset.editKpi));
   el.querySelectorAll('[data-del-kpi]').forEach(b=>b.onclick=()=>deleteKpiActivity(b.dataset.delKpi));
@@ -3223,12 +3884,18 @@ function renderKpi(){
 function openKpiForm(id){
   if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์แก้ไข KPI','error');return}
   editing.kpi=id||null;
-  const a=state.kpiActivities.find(x=>x.id===id)||{id:nextId('KA',state.kpiActivities),type:'Proposal',title:'',owner:state.teams.find(t=>t.role==='BD Lead')?.id||'',project:'',dueDate:'',submittedAt:'',completeness:100,outcome:'',pass:''};
-  const bd=state.teams.filter(t=>t.role==='BD Lead');
+  const types=state.kpiTypes?.length?state.kpiTypes:[...KPI_TYPES];
+  const a=state.kpiActivities.find(x=>x.id===id)||{id:nextId('KA',state.kpiActivities),type:types[0]||'Proposal',title:'',owner:'',project:'',dueDate:'',submittedAt:'',completeness:100,outcome:'',pass:''};
+  const roles=uniq(state.teams.map(t=>t.role||'').filter(Boolean));
+  const ownerOpts=[
+    `<option value="All" ${a.owner==='All'?'selected':''}>All — ทั้งบริษัท</option>`,
+    `<optgroup label="ทั้งแผนก">${roles.map(r=>`<option value="role:${esc(r)}" ${a.owner===`role:${r}`?'selected':''}>ทุกคนใน ${esc(r)}</option>`).join('')}</optgroup>`,
+    `<optgroup label="รายบุคคล">${state.teams.map(t=>`<option value="${esc(t.id)}" ${a.owner===t.id?'selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</optgroup>`,
+  ].join('');
   document.getElementById('kpiForm').innerHTML=`
     <label class="field"><span>ID</span><input name="id" value="${esc(a.id)}" ${id?'readonly':''}></label>
-    <label class="field"><span>ประเภทงาน</span><select name="type">${KPI_TYPES.map(t=>`<option ${a.type===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
-    <label class="field"><span>เจ้าของ (BD)</span><select name="owner">${bd.map(t=>`<option value="${t.id}" ${a.owner===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>
+    <label class="field"><span>ประเภทงาน</span><select name="type">${types.map(t=>`<option ${a.type===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
+    <label class="field"><span>ผู้รับผิดชอบ / Lead</span><select name="owner">${ownerOpts}</select><span class="hint">เลือก All · แผนก · หรือรายบุคคล</span></label>
     <label class="field span3"><span>ชื่องาน</span><input name="title" required value="${esc(a.title)}"></label>
     <label class="field"><span>โครงการ (ถ้ามี)</span><select name="project"><option value="">—</option>${state.projects.map(p=>`<option value="${p.id}" ${a.project===p.id?'selected':''}>${esc(p.id+' '+p.name)}</option>`).join('')}</select></label>
     <label class="field"><span>วันกำหนดส่ง</span><input type="date" name="dueDate" value="${esc(a.dueDate||'')}"></label>
@@ -3252,6 +3919,34 @@ function saveKpiActivity(e){
   document.getElementById('kpiFormPanel').classList.remove('on'); renderKpi();
 }
 function deleteKpiActivity(id){ if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์ลบ KPI','error');return} if(!confirm('ลบ Activity '+id+'?'))return; state.kpiActivities=state.kpiActivities.filter(x=>x.id!==id); saveState(); renderKpi(); }
+function openKpiTypeEditor(){
+  if(!isAdmin()){toast('Admin only','error');return}
+  const body=document.getElementById('kpiTypeBody'); if(!body) return;
+  function render(){
+    const types=state.kpiTypes?.length?state.kpiTypes:[...KPI_TYPES];
+    body.innerHTML=`
+      <p class="hint" style="margin-bottom:10px">ประเภทงาน (Data List) ใช้เป็นตัวเลือกใน Add Activity · ${types.length} รายการ</p>
+      <div class="chips" id="kpiTypeChips" style="margin-bottom:10px">
+        ${types.map((t,i)=>`<span class="chip" style="padding:4px 4px 4px 10px">${esc(t)} <button class="btn small danger" style="height:22px;padding:0 6px;margin-left:4px" data-kpi-type-del="${i}" aria-label="Delete ${esc(t)}">×</button></span>`).join('')}
+      </div>
+      <div class="subtask-add-row"><input id="kpiTypeNew" type="text" placeholder="เพิ่มประเภทงานใหม่…" autocomplete="off"><button class="btn primary small" id="kpiTypeAdd">+ Add</button></div>
+      <div class="toolbar" style="margin-top:12px"><button class="btn" data-close-form="kpiType">Done</button></div>`;
+    body.querySelectorAll('[data-kpi-type-del]').forEach(b=>b.onclick=()=>{
+      state.kpiTypes.splice(Number(b.dataset.kpiTypeDel),1);
+      saveState(); render();
+    });
+    const addFn=()=>{
+      const inp=document.getElementById('kpiTypeNew'); const v=inp.value.trim(); if(!v) return;
+      state.kpiTypes=uniq([...(state.kpiTypes||[]),v]);
+      saveState(); render();
+    };
+    document.getElementById('kpiTypeAdd').onclick=addFn;
+    document.getElementById('kpiTypeNew').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addFn();}});
+    bindCloseButtons();
+  }
+  render();
+  showFormPanel('kpiTypeFormPanel');
+}
 
 function renderSettings(){
   if(!isAdmin()){document.querySelector('#v-settings .content').innerHTML='<div class="card"><div class="cb hint">Admin only: Settings ใช้ได้เฉพาะ Wongwaris</div></div>';return}
@@ -3437,7 +4132,7 @@ function renderTeam(){
     {label:'Sales', items:state.teams.filter(t=>t.role==='Sales')}
   ];
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
-    const owned=state.projects.filter(p=>p.bd===t.id||p.presales===t.id||p.sales===t.id), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>x.owner===t.id);
+    const owned=state.projects.filter(p=>projectInvolves(p,t.id)), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
     const locked = !isAdmin();
     return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="avatar" style="background:${t.color}">${esc(initials(t.name))}</div><div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
@@ -3496,13 +4191,76 @@ function openTeamForm(id){
     <label class="field"><span>Access Role</span><select name="accessRole">${['Admin','Member','Guest'].map(v=>`<option ${accessRole(t)===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Level</span><select name="level">${['Member','Manager','Executive'].map(v=>`<option ${t.level===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Email</span><input name="email" type="email" value="${esc(t.email)}"></label>
-    <label class="field"><span>KPI Target</span><input name="target" type="number" value="${t.target}"></label>
+    <label class="field"><span>Reference Value (฿)</span><input name="target" type="number" value="${t.target}" placeholder="มูลค่าอ้างอิง (ไม่ใช่ KPI)"></label>
     <label class="field"><span>Color</span><input name="color" type="color" value="${t.color}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Member</button><button class="btn" type="button" data-close-form="team">Cancel</button></div>`;
   showFormPanel('teamFormPanel'); bindCloseButtons();
 }
 function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=String(f.username||firstName(f.name)).trim().toLowerCase(); f.password=String(f.password||lastName(f.name)).trim(); f.accessRole=f.username==='wongwaris'?'Admin':f.role==='Sales'?'Guest':(f.accessRole&&f.accessRole!=='Guest'?f.accessRole:'Member'); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
-function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>p.bd===id||p.presales===id||p.sales===id)||state.tasks.some(t=>t.owner===id)){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
+function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>projectInvolves(p,id))||state.tasks.some(t=>ownerIds(t).includes(id))){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
+// ===== Self-service Profile Editor =====
+function openProfileEditor(){
+  if(!requireLogin()) return;
+  const me=state.teams.find(t=>t.id===activeUser.id); if(!me){toast('ไม่พบข้อมูลผู้ใช้','error');return}
+  const body=document.getElementById('profileModalBody'); if(!body) return;
+  body.innerHTML=`
+    <div class="profile-section-title">Avatar (ภาพเริ่มต้น)</div>
+    <div class="profile-avatar-preview">
+      <div class="avatar" id="profileAvatarPreview" style="background:${esc(me.color||'var(--accent)')}">${esc(initials(me.name||''))}</div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0">
+        <label class="field" style="flex:1"><span>Display Name</span><input id="profileName" value="${esc(me.name||'')}"></label>
+        <label class="field" style="flex:1"><span>Avatar Color</span><input id="profileColor" type="color" value="${esc(me.color||'#5b7cfa')}" style="height:34px;padding:2px"></label>
+      </div>
+    </div>
+    <div class="profile-section-title">Account</div>
+    <label class="field"><span>Email</span><input id="profileEmail" type="email" value="${esc(me.email||'')}" placeholder="user@example.com"></label>
+    <div class="profile-section-title">Change Password <span class="hint">(เว้นว่างถ้าไม่ต้องการเปลี่ยน)</span></div>
+    <label class="field"><span>Current Password</span><input id="profileCurrentPass" type="password" autocomplete="current-password" placeholder="รหัสปัจจุบัน"></label>
+    <label class="field"><span>New Password</span><input id="profileNewPass" type="password" autocomplete="new-password" placeholder="รหัสใหม่ (อย่างน้อย 4 ตัวอักษร)"></label>
+    <label class="field"><span>Confirm New Password</span><input id="profileConfirmPass" type="password" autocomplete="new-password" placeholder="ยืนยันรหัสใหม่"></label>
+    <div class="hint" id="profileError" style="color:var(--red);min-height:14px"></div>`;
+  // Live avatar preview
+  const nameEl=document.getElementById('profileName'), colorEl=document.getElementById('profileColor'), prev=document.getElementById('profileAvatarPreview');
+  const refreshPrev=()=>{prev.style.background=colorEl.value; prev.textContent=initials(nameEl.value||'');};
+  nameEl.oninput=refreshPrev; colorEl.oninput=refreshPrev;
+  document.getElementById('profileModal').classList.add('on');
+  setTimeout(()=>nameEl.focus(),50);
+}
+function closeProfileEditor(){
+  const m=document.getElementById('profileModal'); if(m) m.classList.remove('on');
+}
+function saveProfile(e){
+  e.preventDefault();
+  if(!activeUser) return;
+  const me=state.teams.find(t=>t.id===activeUser.id); if(!me){toast('ไม่พบข้อมูลผู้ใช้','error');return}
+  const errEl=document.getElementById('profileError'); if(errEl) errEl.textContent='';
+  const name=document.getElementById('profileName').value.trim();
+  const color=document.getElementById('profileColor').value;
+  const email=document.getElementById('profileEmail').value.trim();
+  const curPw=document.getElementById('profileCurrentPass').value;
+  const newPw=document.getElementById('profileNewPass').value;
+  const confPw=document.getElementById('profileConfirmPass').value;
+  if(!name){ errEl.textContent='Display Name ห้ามว่าง'; return; }
+  // Password block: only validated if user is changing it
+  if(newPw||confPw||curPw){
+    if(!curPw){ errEl.textContent='กรุณากรอกรหัสปัจจุบันเพื่อยืนยันตัวตน'; return; }
+    if(String(curPw)!==String(me.password||'')){ errEl.textContent='รหัสปัจจุบันไม่ถูกต้อง'; return; }
+    if(!newPw||newPw.length<4){ errEl.textContent='รหัสใหม่ต้องมีอย่างน้อย 4 ตัวอักษร'; return; }
+    if(newPw!==confPw){ errEl.textContent='รหัสใหม่ทั้งสองช่องไม่ตรงกัน'; return; }
+    me.password=newPw;
+  }
+  me.name=name;
+  me.color=color;
+  me.email=email;
+  // Refresh activeUser snapshot so sidebar reflects changes immediately
+  activeUser={...me};
+  saveState();
+  updateAuthUI();
+  closeProfileEditor();
+  toast('อัปเดต Profile แล้ว','success');
+  logActivity('แก้ไข Profile','team',me.name);
+  renderAll(false);
+}
 function requireLogin(){
   if(activeUser) return true;
   alert('Please sign in before editing.');
@@ -3572,7 +4330,26 @@ function previewRule(id){
     `Overdue: ${r.level==='Member'?scoped.filter(isOverdue).length:summary.overdue}`,
     ``,
     r.level==='Member'?'Your BD task list:':r.level==='Manager'?'BD team task highlights:':'Executive BD highlights:',
-    ...(scoped.slice(0,6).map((t,i)=>`${i+1}. ${t.status} - ${t.title}\n   Project: ${state.projects.find(p=>p.id===t.project)?.name||t.project}\n   Owner: ${byId(t.owner).name} · Due: ${t.due} · Progress: ${t.progress||0}%`)),
+    ...(()=>{
+      // Group tasks by project; show Main Project → sub task breakdown
+      const byProj={};
+      scoped.slice(0,12).forEach(t=>{
+        const pname=state.projects.find(p=>p.id===t.project)?.name||(t.project?`Project ${t.project}`:'Internal');
+        if(!byProj[pname]) byProj[pname]=[];
+        byProj[pname].push(t);
+      });
+      const lines=[];
+      Object.entries(byProj).forEach(([pname,tasks],pi)=>{
+        lines.push(`${pi+1}. ${pname}`);
+        tasks.forEach((t,si)=>{
+          const owners=ownerNames(t).join(', ')||'-';
+          const badge=isOverdue(t)?'⚠ Overdue':t.status==='Done'?'✓ Done':'→ '+t.status;
+          lines.push(`   ${si+1}.${si+1} ${t.title}`);
+          lines.push(`       ${badge} · Owner: ${owners} · Due: ${t.due||'-'} · ${t.progress||0}%`);
+        });
+      });
+      return lines;
+    })(),
     scoped.length?'':'No tasks for this period.',
     ``,
     r.attachSnapshot?`Attached Snapshot: ${r.snapshotView||'TaskTracker'} (${r.format||'PNG'})`:'Snapshot: Off'
@@ -3743,6 +4520,7 @@ const VIEW_RENDERERS={exec:renderDashboard,analytics:renderAnalytics,projects:re
 const dirtyViews=new Set();
 function activeViewName(){const v=document.querySelector('.view.on'); return v?v.id.replace(/^v-/,''):null;}
 function renderView(name){const fn=VIEW_RENDERERS[name]; if(!fn) return; try{fn();}catch(e){console.warn('Render failed for view "'+name+'"',e);}}
+function navigateToView(name,afterCb){const btn=document.querySelector(`.nav button[data-view="${name}"]`); if(btn){btn.click();if(afterCb) setTimeout(afterCb,60);}}
 // Show a deferred view on demand: render it only if data changed since it was last drawn.
 function ensureViewRendered(name){ if(dirtyViews.has(name)){ dirtyViews.delete(name); renderView(name); } }
 function renderAll(rebuildFilters=false){
@@ -3784,8 +4562,10 @@ function bindAppEvents(){
   on('taskFormToggle','onclick',()=>openTaskForm());
   on('solutionFormToggle','onclick',()=>openSolutionForm());
   on('kpiFormToggle','onclick',()=>openKpiForm());
+  on('kpiTypeFormToggle','onclick',()=>openKpiTypeEditor());
   on('kpiForm','onsubmit',saveKpiActivity);
   on('internalTaskFormToggle','onclick',()=>openInternalTaskForm());
+  on('todoNewProjectBtn','onclick',()=>navigateToView('projects',()=>openProjectForm()));
   on('internalTaskForm','onsubmit',saveInternalTask);
   on('certFormToggle','onclick',()=>openCertForm());
   on('certForm','onsubmit',saveCert);
@@ -3803,6 +4583,14 @@ function bindAppEvents(){
   on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
   on('submitResetRequestBtn','onclick',submitResetRequest);
   on('ruleFormToggle','onclick',()=>openRuleForm());
+  on('editProfileBtn','onclick',()=>openProfileEditor());
+  on('profileModalClose','onclick',()=>closeProfileEditor());
+  on('profileModalCancel','onclick',()=>closeProfileEditor());
+  on('profileForm','onsubmit',saveProfile);
+  // Click outside the popup card to close
+  const pm=document.getElementById('profileModal'); if(pm) pm.addEventListener('click',(e)=>{ if(e.target===pm) closeProfileEditor(); });
+  // ESC to close while open
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){const m=document.getElementById('profileModal'); if(m&&m.classList.contains('on')) closeProfileEditor();} });
   on('themeToggle','onclick',()=>{
     const root=document.documentElement;
     const smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -3873,6 +4661,7 @@ else bootApp();
 // instantly know they are NOT on the live Production site.
 (function(){
   const PROD_HOST='bdmgmt.vercel.app';
+  const PROD_URL='https://bdmgmt.vercel.app';
   const h=(location.hostname||'').toLowerCase();
   if(!h || h===PROD_HOST) return;
   const isLocal=h==='localhost'||h==='127.0.0.1'||h.startsWith('192.168.')||h.endsWith('.local');
@@ -3884,6 +4673,30 @@ else bootApp();
     });
   };
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',tag); else tag();
+  // Migration banner: dev only — direct users to the production site that now holds the live data
+  if(isLocal) return;
+  const STORAGE_KEY='piramid-migration-banner-dismissed-v1';
+  const showBanner=()=>{
+    if(document.getElementById('migrationBanner')) return;
+    if(sessionStorage.getItem(STORAGE_KEY)==='1') return;
+    const ov=document.createElement('div');
+    ov.id='migrationBanner';
+    ov.className='migration-banner-overlay';
+    ov.innerHTML=`
+      <div class="migration-banner-card" role="dialog" aria-labelledby="migBannerTitle">
+        <div class="migration-banner-tag">MIGRATION</div>
+        <h1 id="migBannerTitle">🚧 โยกย้ายระบบ</h1>
+        <p class="migration-banner-sub">ระบบจริงย้ายไปที่ <b>bdmgmt.vercel.app</b> แล้ว · ข้อมูลทั้งหมดถูกย้ายไปเรียบร้อย</p>
+        <p class="migration-banner-hint">หน้านี้ (Dev) เก็บไว้เพื่อทดสอบฟังก์ชันใหม่เท่านั้น — ข้อมูลจริงและการอัปเดตอยู่ที่ Production</p>
+        <div class="migration-banner-actions">
+          <a class="btn primary migration-banner-cta" href="${PROD_URL}">ไปที่ระบบจริง →</a>
+          <button type="button" class="btn migration-banner-dismiss" id="migBannerDismiss">อยู่ที่ Dev เพื่อทดสอบ</button>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+    document.getElementById('migBannerDismiss').onclick=()=>{ sessionStorage.setItem(STORAGE_KEY,'1'); ov.remove(); };
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',showBanner); else showBanner();
 })();
 </script>
 </body>
