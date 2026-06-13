@@ -300,7 +300,20 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .cal-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.cal-month-grid .cal-day{min-height:104px}.cal-month-grid .cal-day.empty{background:transparent;border-color:transparent;box-shadow:none;min-height:0}.cal-more{color:var(--soft);font-size:10.5px;margin-top:1px}
 @media(max-width:760px){.cal-month-grid{gap:4px}.cal-month-grid .cal-day{min-height:62px;padding:5px;gap:2px}.cal-weekdays{gap:4px}.cal-wd{font-size:8.5px}.cal-month-grid .cal-item{font-size:9.5px;padding:3px 4px 3px 11px}.cal-month-grid .cal-item small{display:none}.cal-nav strong{min-width:120px;font-size:12px}}
 .email-preview{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.email-box{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px;white-space:pre-wrap;min-height:280px}.snapshot-frame{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--surface));border-radius:8px;padding:14px;min-height:280px}.snapshot-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px}.status-list{display:flex;flex-direction:column;gap:8px}.status-line{display:flex;align-items:center;gap:8px;color:var(--muted)}.status-ico{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;color:white;font-size:11px;font-weight:800;flex:0 0 auto}.status-ico.done{background:var(--green)}.status-ico.doing{background:var(--accent);animation:spin 1.3s linear infinite}.status-ico.review{background:var(--amber)}.status-ico.overdue{background:var(--red)}.status-ico.schedule{background:var(--purple)}@keyframes spin{to{transform:rotate(360deg)}}
-.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.req{color:var(--red);font-size:11px;margin-left:2px}.owners-check-grid{display:flex;flex-wrap:wrap;gap:6px 14px;padding:5px 0}.owners-check-grid label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap}.owner-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.owner-chip{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:12px;padding:1px 7px;font-size:10.5px;background:var(--surface);color:var(--text)}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.req{color:var(--red);font-size:11px;margin-left:2px}
+/* Profile pop-out modal */
+.profile-modal-overlay{position:fixed;inset:0;background:rgba(6,11,24,.62);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;animation:profileFadeIn .18s ease-out}
+.profile-modal-overlay.on{display:flex}
+@keyframes profileFadeIn{from{opacity:0}to{opacity:1}}
+.profile-modal-box{background:var(--panel);background-image:var(--card-grad);border:1px solid var(--line-2);border-radius:14px;width:min(520px,100%);max-height:calc(100vh - 40px);overflow:auto;box-shadow:var(--shadow-hover);display:flex;flex-direction:column}
+.profile-modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+.profile-modal-head h2{margin:0;font-size:16px}
+.profile-modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.profile-section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:2px 0 -2px;padding-top:6px;border-top:1px dashed var(--line)}
+.profile-section-title:first-child{border-top:0;padding-top:0}
+.profile-avatar-preview{display:flex;align-items:center;gap:14px}
+.profile-avatar-preview .avatar{width:54px;height:54px;font-size:18px}
+.profile-modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}.owners-check-grid{display:flex;flex-wrap:wrap;gap:6px 14px;padding:5px 0}.owners-check-grid label{display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;white-space:nowrap}.owner-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}.owner-chip{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);border-radius:12px;padding:1px 7px;font-size:10.5px;background:var(--surface);color:var(--text)}.notice{border:1px solid var(--line);background:var(--panel-2);border-radius:10px;padding:13px 15px;color:var(--text);font-size:12.5px;line-height:1.55}.notice b{color:var(--text);font-weight:700}
 .chips{display:flex;gap:5px;flex-wrap:wrap}.chip{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:20px;padding:2px 7px;color:var(--muted);background:var(--surface);font-size:10.5px;white-space:nowrap}.mini{display:block;color:var(--soft);font-size:10.5px;margin-top:3px}.detail-stack{display:flex;flex-direction:column;gap:4px;min-width:190px}.login-box{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.lock{filter:saturate(.75);opacity:.72}.login-state{color:var(--soft);font-size:11.5px}.login-state.ok{color:var(--green)}.login-state.bad{color:var(--red)}.group-title{margin:6px 0 0;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.7px}.group-block{display:flex;flex-direction:column;gap:10px}.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:var(--space-md)}
 #v-settings .content{gap:var(--space-lg)}
 .set-group{display:flex;flex-direction:column;gap:var(--space-md)}
@@ -403,6 +416,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <button data-view="settings"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Settings <span class="navdot"></span></button>
     </nav>
     <div class="user"><div class="avatar" id="currentAvatar">BD</div><div style="flex:1;min-width:0"><b id="currentUserName">BD Command Center</b><div class="hint" id="currentUserRole">Executive workspace</div></div><button class="bell-btn" id="bellBtn" aria-label="การแจ้งเตือน"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge bell-count" id="bellCount" style="display:none">0</span></button></div>
+    <div style="padding:0 18px 8px"><button class="btn" id="editProfileBtn" style="width:100%">👤 Edit Profile</button></div>
     <div style="padding:0 18px 8px"><button class="btn" id="themeToggle" style="width:100%">Light Theme</button></div>
     <div style="padding:0 18px 14px"><button class="btn danger" id="logoutBtn" style="width:100%">Logout</button></div>
   </aside>
@@ -638,6 +652,15 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
   </main>
   <div class="bi-modal" id="cardEditorPanel"><div class="card"><div class="ch"><h2>Add / Edit Card (BI)</h2><small>เลือกข้อมูลและชนิดกราฟ ระบบจะแนะนำให้</small></div><div class="cb"><form class="form-grid" id="cardEditorForm"></form></div></div></div>
+  <div class="profile-modal-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+    <div class="profile-modal-box">
+      <div class="profile-modal-head"><h2 id="profileModalTitle">Edit Profile</h2><button class="btn icon" id="profileModalClose" aria-label="Close">×</button></div>
+      <form id="profileForm">
+        <div class="profile-modal-body" id="profileModalBody"></div>
+        <div class="profile-modal-foot"><button class="btn primary" type="submit">Save Profile</button><button class="btn" type="button" id="profileModalCancel">Cancel</button></div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -4150,6 +4173,69 @@ function openTeamForm(id){
 }
 function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=String(f.username||firstName(f.name)).trim().toLowerCase(); f.password=String(f.password||lastName(f.name)).trim(); f.accessRole=f.username==='wongwaris'?'Admin':f.role==='Sales'?'Guest':(f.accessRole&&f.accessRole!=='Guest'?f.accessRole:'Member'); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
 function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>projectInvolves(p,id))||state.tasks.some(t=>ownerIds(t).includes(id))){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
+// ===== Self-service Profile Editor =====
+function openProfileEditor(){
+  if(!requireLogin()) return;
+  const me=state.teams.find(t=>t.id===activeUser.id); if(!me){toast('ไม่พบข้อมูลผู้ใช้','error');return}
+  const body=document.getElementById('profileModalBody'); if(!body) return;
+  body.innerHTML=`
+    <div class="profile-section-title">Avatar (ภาพเริ่มต้น)</div>
+    <div class="profile-avatar-preview">
+      <div class="avatar" id="profileAvatarPreview" style="background:${esc(me.color||'var(--accent)')}">${esc(initials(me.name||''))}</div>
+      <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0">
+        <label class="field" style="flex:1"><span>Display Name</span><input id="profileName" value="${esc(me.name||'')}"></label>
+        <label class="field" style="flex:1"><span>Avatar Color</span><input id="profileColor" type="color" value="${esc(me.color||'#5b7cfa')}" style="height:34px;padding:2px"></label>
+      </div>
+    </div>
+    <div class="profile-section-title">Account</div>
+    <label class="field"><span>Email</span><input id="profileEmail" type="email" value="${esc(me.email||'')}" placeholder="user@example.com"></label>
+    <div class="profile-section-title">Change Password <span class="hint">(เว้นว่างถ้าไม่ต้องการเปลี่ยน)</span></div>
+    <label class="field"><span>Current Password</span><input id="profileCurrentPass" type="password" autocomplete="current-password" placeholder="รหัสปัจจุบัน"></label>
+    <label class="field"><span>New Password</span><input id="profileNewPass" type="password" autocomplete="new-password" placeholder="รหัสใหม่ (อย่างน้อย 4 ตัวอักษร)"></label>
+    <label class="field"><span>Confirm New Password</span><input id="profileConfirmPass" type="password" autocomplete="new-password" placeholder="ยืนยันรหัสใหม่"></label>
+    <div class="hint" id="profileError" style="color:var(--red);min-height:14px"></div>`;
+  // Live avatar preview
+  const nameEl=document.getElementById('profileName'), colorEl=document.getElementById('profileColor'), prev=document.getElementById('profileAvatarPreview');
+  const refreshPrev=()=>{prev.style.background=colorEl.value; prev.textContent=initials(nameEl.value||'');};
+  nameEl.oninput=refreshPrev; colorEl.oninput=refreshPrev;
+  document.getElementById('profileModal').classList.add('on');
+  setTimeout(()=>nameEl.focus(),50);
+}
+function closeProfileEditor(){
+  const m=document.getElementById('profileModal'); if(m) m.classList.remove('on');
+}
+function saveProfile(e){
+  e.preventDefault();
+  if(!activeUser) return;
+  const me=state.teams.find(t=>t.id===activeUser.id); if(!me){toast('ไม่พบข้อมูลผู้ใช้','error');return}
+  const errEl=document.getElementById('profileError'); if(errEl) errEl.textContent='';
+  const name=document.getElementById('profileName').value.trim();
+  const color=document.getElementById('profileColor').value;
+  const email=document.getElementById('profileEmail').value.trim();
+  const curPw=document.getElementById('profileCurrentPass').value;
+  const newPw=document.getElementById('profileNewPass').value;
+  const confPw=document.getElementById('profileConfirmPass').value;
+  if(!name){ errEl.textContent='Display Name ห้ามว่าง'; return; }
+  // Password block: only validated if user is changing it
+  if(newPw||confPw||curPw){
+    if(!curPw){ errEl.textContent='กรุณากรอกรหัสปัจจุบันเพื่อยืนยันตัวตน'; return; }
+    if(String(curPw)!==String(me.password||'')){ errEl.textContent='รหัสปัจจุบันไม่ถูกต้อง'; return; }
+    if(!newPw||newPw.length<4){ errEl.textContent='รหัสใหม่ต้องมีอย่างน้อย 4 ตัวอักษร'; return; }
+    if(newPw!==confPw){ errEl.textContent='รหัสใหม่ทั้งสองช่องไม่ตรงกัน'; return; }
+    me.password=newPw;
+  }
+  me.name=name;
+  me.color=color;
+  me.email=email;
+  // Refresh activeUser snapshot so sidebar reflects changes immediately
+  activeUser={...me};
+  saveState();
+  updateAuthUI();
+  closeProfileEditor();
+  toast('อัปเดต Profile แล้ว','success');
+  logActivity('แก้ไข Profile','team',me.name);
+  renderAll(false);
+}
 function requireLogin(){
   if(activeUser) return true;
   alert('Please sign in before editing.');
@@ -4472,6 +4558,14 @@ function bindAppEvents(){
   on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
   on('submitResetRequestBtn','onclick',submitResetRequest);
   on('ruleFormToggle','onclick',()=>openRuleForm());
+  on('editProfileBtn','onclick',()=>openProfileEditor());
+  on('profileModalClose','onclick',()=>closeProfileEditor());
+  on('profileModalCancel','onclick',()=>closeProfileEditor());
+  on('profileForm','onsubmit',saveProfile);
+  // Click outside the popup card to close
+  const pm=document.getElementById('profileModal'); if(pm) pm.addEventListener('click',(e)=>{ if(e.target===pm) closeProfileEditor(); });
+  // ESC to close while open
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){const m=document.getElementById('profileModal'); if(m&&m.classList.contains('on')) closeProfileEditor();} });
   on('themeToggle','onclick',()=>{
     const root=document.documentElement;
     const smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
