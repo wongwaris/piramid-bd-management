@@ -174,6 +174,11 @@ html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 @media(max-width:1100px){.filters{grid-template-columns:repeat(3,minmax(0,1fr))}.filters .f-wide{grid-column:span 3}}
 @media(max-width:640px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters .f-wide{grid-column:span 2}}.field{display:flex;flex-direction:column;gap:6px}.field span{color:var(--soft);font-size:11px}.field input,.field select,.field textarea{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:var(--r);padding:8px 10px;outline:none}.field textarea{min-height:74px;resize:vertical}
 .masked-entry{-webkit-text-security:disc;text-security:disc}
+.pw-wrap{position:relative;display:flex;align-items:center}
+.pw-wrap input{flex:1;padding-right:40px;min-width:0}
+.pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);height:28px;width:30px;display:inline-flex;align-items:center;justify-content:center;border:0;background:transparent;cursor:pointer;color:var(--muted);border-radius:6px;font-size:15px;line-height:1}
+.pw-eye:hover{color:var(--text);background:var(--panel-2)}
+.pw-eye:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .grid{display:grid;gap:14px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.wide{grid-column:span 2}
 .team-cols{grid-template-columns:repeat(4,1fr);align-items:start}.team-cols .group-block{display:flex;flex-direction:column;gap:10px;min-width:0}.team-cols .group-block>.card{margin:0}
 .card,.metric{background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s,border-color .2s}
@@ -497,20 +502,20 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     <p>Enter your PIRAMID team ID and access code to continue.</p>
     <form id="appLoginForm">
       <label class="field"><span>User ID</span><input id="appLoginUser" autocomplete="off" required placeholder="user id"></label>
-      <label class="field"><span>Access Code</span><input id="appLoginPass" class="masked-entry" type="text" autocomplete="off" required placeholder="access code"></label>
+      <label class="field"><span>Access Code</span><div class="pw-wrap"><input id="appLoginPass" class="masked-entry" type="text" autocomplete="off" required placeholder="access code"><button type="button" class="pw-eye" data-eye="appLoginPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
       <button class="btn primary" type="submit">Continue</button>
-      <button class="btn" type="button" id="forgotPasscodeBtn">Reset access / request approval</button>
+      <button class="btn" type="button" id="forgotPasscodeBtn">ลืม / รีเซ็ตรหัสผ่าน</button>
       <div class="login-error" id="appLoginError"></div>
     </form>
     <div class="panel-form" id="forgotPasscodePanel" style="margin-top:12px">
-      <div class="card"><div class="cb"><label class="field"><span>Username</span><input id="resetUsername" placeholder="username"></label><label class="field"><span>Note to Admin</span><textarea id="resetNote" placeholder="Please approve my login reset"></textarea></label><button class="btn primary" id="submitResetRequestBtn">Send request to Admin</button><div class="hint" id="resetRequestState"></div></div></div>
+      <div class="card"><div class="cb" id="forgotPasscodeBody"></div></div>
     </div>
     <div class="login-meta">PIRAMID Solutions Co., Ltd. · Business Development Platform · v1.0.0</div>
   </div>
 </section>
 <div class="app locked" id="appShell">
   <aside class="sidebar">
-    <div class="brand"><div class="mark">P</div><div><strong>PIRAMID BD</strong><span>Command Center</span></div></div>
+    <div class="brand"><div class="mark">P</div><div><strong>PIRAMID</strong><span>Management</span></div></div>
     <nav class="nav">
       <div class="nav-label">Analytics</div>
       <button class="on" data-view="exec"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></span>Executive <span class="navdot"></span></button>
@@ -526,7 +531,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <button data-view="notify"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></span>Notifications <span class="badge" id="notifNavBadge" style="display:none">0</span><span class="navdot"></span></button>
       <button data-view="settings"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Settings <span class="navdot"></span></button>
     </nav>
-    <div class="user"><div class="avatar" id="currentAvatar">BD</div><div style="flex:1;min-width:0"><b id="currentUserName">BD Command Center</b><div class="hint" id="currentUserRole">Executive workspace</div></div><button class="bell-btn" id="bellBtn" aria-label="การแจ้งเตือน"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge bell-count" id="bellCount" style="display:none">0</span></button></div>
+    <div class="user"><div class="avatar" id="currentAvatar">BD</div><div style="flex:1;min-width:0"><b id="currentUserName">PIRAMID Management</b><div class="hint" id="currentUserRole">Executive workspace</div></div><button class="bell-btn" id="bellBtn" aria-label="การแจ้งเตือน"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge bell-count" id="bellCount" style="display:none">0</span></button></div>
     <div style="padding:0 18px 8px"><button class="btn" id="editProfileBtn" style="width:100%">👤 Edit Profile</button></div>
     <div style="padding:0 18px 8px"><button class="btn" id="themeToggle" style="width:100%">Light Theme</button></div>
     <div style="padding:0 18px 14px"><button class="btn danger" id="logoutBtn" style="width:100%">Logout</button></div>
@@ -668,7 +673,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>TEAM</div><h1>Team Management</h1><p>จัดการสมาชิกทีมและสีประจำตัว</p></div><div class="actions"><button class="btn primary" id="teamFormToggle">+ New Member</button></div></div>
       <div class="content">
         <div class="grid g4" id="teamTaskMetrics"></div>
-        <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
+        <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><div class="ch-t"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="toolbar" style="margin-left:auto"><span class="hint">โหมดรีเซ็ตรหัส:</span><button class="btn small" id="resetModeAuto" data-reset-mode="auto">Auto</button><button class="btn small" id="resetModeManual" data-reset-mode="manual">Manual</button></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
         <div class="panel-form card" id="teamFormPanel"><div class="ch"><h2 id="teamFormTitle">New Member</h2><button class="btn icon" data-close-form="team">x</button></div><div class="cb"><form class="form-grid" id="teamForm"></form></div></div>
         <div class="grid g4 team-cols" id="teamCards"></div>
       </div>
@@ -1095,7 +1100,69 @@ function applyRbacUI(){
   ['projectFormToggle','internalTaskFormToggle','kpiFormToggle','certFormToggle','trainEventFormToggle'].forEach(id=>{const el=document.getElementById(id); if(el) el.hidden=!canEditModule(id.includes('kpi')?'kpi':id.includes('project')?'projects':id.includes('internal')?'tasks':'training')});
   ['teamFormToggle','ruleFormToggle','solutionFormToggle','brandFormToggle','sizeFormToggle','projectStatusFormToggle','taskStatusFormToggle','processEmailQueueBtn'].forEach(id=>{const el=document.getElementById(id); if(el) el.hidden=!isAdmin()});
 }
-function toggleForgotPasscode(){document.getElementById('forgotPasscodePanel').classList.toggle('on')}
+// Eye toggle: works for masked-entry (CSS-masked) inputs and plain type=password inputs.
+function bindPasswordEyes(root){
+  (root||document).querySelectorAll('[data-eye]').forEach(btn=>{
+    if(btn.dataset.eyeBound) return; btn.dataset.eyeBound='1';
+    btn.onclick=()=>{
+      const inp=document.getElementById(btn.dataset.eye); if(!inp) return;
+      let shown;
+      if(inp.classList.contains('masked-entry')||inp.dataset.maskMode){ // CSS-masked text input
+        shown=inp.classList.toggle('masked-entry')===false;
+      } else { // native password input
+        shown=inp.type==='password'; inp.type=shown?'text':'password';
+      }
+      btn.textContent=shown?'🙈':'👁';
+      btn.setAttribute('aria-label',shown?'ซ่อนรหัส':'แสดงรหัส');
+    };
+  });
+}
+function resetMode(){return state.resetApprovalMode==='manual'?'manual':'auto';}
+function toggleForgotPasscode(){
+  const panel=document.getElementById('forgotPasscodePanel');
+  const opening=!panel.classList.contains('on');
+  panel.classList.toggle('on');
+  if(opening) renderForgotPasscode();
+}
+function renderForgotPasscode(){
+  const body=document.getElementById('forgotPasscodeBody'); if(!body) return;
+  if(resetMode()==='auto'){
+    body.innerHTML=`
+      <p class="hint" style="margin:0 0 10px">รีเซ็ตรหัสผ่านได้เองทันที (โหมด Auto · ไม่ต้องรอ Admin อนุมัติ)</p>
+      <label class="field"><span>Username</span><input id="resetUsername" placeholder="username" autocomplete="off"></label>
+      <label class="field"><span>รหัสผ่านใหม่</span><div class="pw-wrap"><input id="resetNewPass" class="masked-entry" type="text" autocomplete="off" placeholder="อย่างน้อย 4 ตัวอักษร"><button type="button" class="pw-eye" data-eye="resetNewPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
+      <label class="field"><span>ยืนยันรหัสผ่านใหม่</span><div class="pw-wrap"><input id="resetConfirmPass" class="masked-entry" type="text" autocomplete="off" placeholder="พิมพ์รหัสใหม่อีกครั้ง"><button type="button" class="pw-eye" data-eye="resetConfirmPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
+      <button class="btn primary" id="selfResetBtn">รีเซ็ตรหัสผ่าน</button>
+      <div class="hint" id="resetRequestState"></div>`;
+    bindPasswordEyes(body);
+    document.getElementById('selfResetBtn').onclick=selfResetPasscode;
+  } else {
+    body.innerHTML=`
+      <p class="hint" style="margin:0 0 10px">โหมด Manual · ส่งคำขอให้ Admin (Wongwaris) อนุมัติ</p>
+      <label class="field"><span>Username</span><input id="resetUsername" placeholder="username" autocomplete="off"></label>
+      <label class="field"><span>Note to Admin</span><textarea id="resetNote" placeholder="Please approve my login reset"></textarea></label>
+      <button class="btn primary" id="submitResetRequestBtn">Send request to Admin</button>
+      <div class="hint" id="resetRequestState"></div>`;
+    document.getElementById('submitResetRequestBtn').onclick=submitResetRequest;
+  }
+}
+function selfResetPasscode(){
+  const box=document.getElementById('resetRequestState');
+  const username=document.getElementById('resetUsername').value.trim();
+  const np=document.getElementById('resetNewPass').value;
+  const cp=document.getElementById('resetConfirmPass').value;
+  const user=state.teams.find(t=>String(t.username||'').trim().toLowerCase()===username.toLowerCase());
+  if(!user){box.textContent='ไม่พบ Username นี้';box.style.color='var(--red)';return}
+  if(!np||np.length<4){box.textContent='รหัสผ่านใหม่ต้องมีอย่างน้อย 4 ตัวอักษร';box.style.color='var(--red)';return}
+  if(np!==cp){box.textContent='รหัสผ่านใหม่ทั้งสองช่องไม่ตรงกัน';box.style.color='var(--red)';return}
+  user.password=np;
+  // Record the self-reset for audit (admin can still see it in the approvals log)
+  state.passwordResetRequests ||= [];
+  state.passwordResetRequests.push({id:nextId('RR',state.passwordResetRequests),userId:user.id,username:user.username,name:user.name,note:'Self-service reset (auto)',status:'Approved',requestedAt:new Date().toISOString(),approvedAt:new Date().toISOString(),approvedBy:'auto'});
+  saveState();
+  box.textContent=`รีเซ็ตสำเร็จ · เข้าสู่ระบบด้วย username "${user.username}" และรหัสใหม่ได้เลย`;
+  box.style.color='var(--green)';
+}
 function submitResetRequest(){
   const username=document.getElementById('resetUsername').value.trim();
   const note=document.getElementById('resetNote').value.trim();
@@ -1279,6 +1346,7 @@ function normalizeState(data){
   const nowIso=new Date().toISOString();
   data.projects = data.projects.map(p=>({...p,due:p.due||'',createdAt:p.createdAt||nowIso,taskStatus:p.taskStatus||inferProjectTaskStatus(p.id,data.tasks),progress:Number(p.progress ?? averageProjectProgress(p.id,data.tasks))||0,size:sizeForValue(p.val,data.sizeRanges)}));
   data.passwordResetRequests = data.passwordResetRequests || [];
+  data.resetApprovalMode = data.resetApprovalMode==='manual' ? 'manual' : 'auto'; // self-service password reset; 'auto' = no admin approval
   data.todoView = data.todoView || 'table';
   data.kpiActivities = data.kpiActivities?.length ? data.kpiActivities : structuredClone(DEFAULT_KPI_ACTIVITIES);
   data.kpiTypes = Array.isArray(data.kpiTypes)&&data.kpiTypes.length ? data.kpiTypes : [...KPI_TYPES];
@@ -4337,6 +4405,11 @@ function renderResetApprovals(){
   document.getElementById('resetRequestRows').innerHTML=rows.map(r=>`<tr><td>${esc(r.name)}<span class="mini">${esc(r.username)}</span></td><td>${esc(new Date(r.requestedAt).toLocaleString())}</td><td>${esc(r.note||'-')}</td><td>${statusTag(r.status==='Approved'?'Done':r.status==='Rejected'?'Lost':'Pending')}</td><td>${r.status==='Pending'?`<button class="btn small primary" data-approve-reset="${r.id}">Approve</button> <button class="btn small danger" data-reject-reset="${r.id}">Reject</button>`:'-'}</td></tr>`).join('')||'<tr><td colspan="5" class="hint">No reset requests</td></tr>';
   document.querySelectorAll('[data-approve-reset]').forEach(b=>b.onclick=()=>approveResetRequest(b.dataset.approveReset));
   document.querySelectorAll('[data-reject-reset]').forEach(b=>b.onclick=()=>rejectResetRequest(b.dataset.rejectReset));
+  // Reset-mode toggle (Auto = self-service, Manual = admin approval)
+  document.querySelectorAll('[data-reset-mode]').forEach(b=>{
+    b.classList.toggle('primary',resetMode()===b.dataset.resetMode);
+    b.onclick=()=>{ state.resetApprovalMode=b.dataset.resetMode; saveState(); logActivity('เปลี่ยนโหมดรีเซ็ตรหัส','team',b.dataset.resetMode); renderResetApprovals(); };
+  });
 }
 function approveResetRequest(id){
   if(!isAdmin()) return alert('Only Wongwaris can approve reset requests.');
@@ -4403,14 +4476,15 @@ function openProfileEditor(){
     <div class="profile-section-title">Account</div>
     <label class="field"><span>Email</span><input id="profileEmail" type="email" value="${esc(me.email||'')}" placeholder="user@example.com"></label>
     <div class="profile-section-title">Change Password <span class="hint">(เว้นว่างถ้าไม่ต้องการเปลี่ยน)</span></div>
-    <label class="field"><span>Current Password</span><input id="profileCurrentPass" type="password" autocomplete="current-password" placeholder="รหัสปัจจุบัน"></label>
-    <label class="field"><span>New Password</span><input id="profileNewPass" type="password" autocomplete="new-password" placeholder="รหัสใหม่ (อย่างน้อย 4 ตัวอักษร)"></label>
-    <label class="field"><span>Confirm New Password</span><input id="profileConfirmPass" type="password" autocomplete="new-password" placeholder="ยืนยันรหัสใหม่"></label>
+    <label class="field"><span>Current Password</span><div class="pw-wrap"><input id="profileCurrentPass" type="password" autocomplete="current-password" placeholder="รหัสปัจจุบัน"><button type="button" class="pw-eye" data-eye="profileCurrentPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
+    <label class="field"><span>New Password</span><div class="pw-wrap"><input id="profileNewPass" type="password" autocomplete="new-password" placeholder="รหัสใหม่ (อย่างน้อย 4 ตัวอักษร)"><button type="button" class="pw-eye" data-eye="profileNewPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
+    <label class="field"><span>Confirm New Password</span><div class="pw-wrap"><input id="profileConfirmPass" type="password" autocomplete="new-password" placeholder="ยืนยันรหัสใหม่"><button type="button" class="pw-eye" data-eye="profileConfirmPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
     <div class="hint" id="profileError" style="color:var(--red);min-height:14px"></div>`;
   // Live avatar preview
   const nameEl=document.getElementById('profileName'), colorEl=document.getElementById('profileColor'), prev=document.getElementById('profileAvatarPreview');
   const refreshPrev=()=>{prev.style.background=colorEl.value; prev.textContent=initials(nameEl.value||'');};
   nameEl.oninput=refreshPrev; colorEl.oninput=refreshPrev;
+  bindPasswordEyes(body);
   document.getElementById('profileModal').classList.add('on');
   setTimeout(()=>nameEl.focus(),50);
 }
@@ -4772,7 +4846,7 @@ function bindAppEvents(){
   on('appLoginForm','onsubmit',loginApp);
   on('logoutBtn','onclick',logoutApp);
   on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
-  on('submitResetRequestBtn','onclick',submitResetRequest);
+  bindPasswordEyes(document);
   on('ruleFormToggle','onclick',()=>openRuleForm());
   on('editProfileBtn','onclick',()=>openProfileEditor());
   on('profileModalClose','onclick',()=>closeProfileEditor());
@@ -4837,7 +4911,7 @@ function bootApp(){
   restoreSession();
   if(!appBooted){appBooted=true;
     try{
-      console.log('%cPIRAMID BD%c Command Center','color:#6088ff;font-weight:800;font-size:14px','color:#16c6b2;font-size:14px');
+      console.log('%cPIRAMID%c Management','color:#6088ff;font-weight:800;font-size:14px','color:#16c6b2;font-size:14px');
       console.log('%cบริหารงาน BD · Presales · Project ด้วยข้อมูลจริง · v1.0.0','color:#697587;font-size:11px');
     }catch{}
     initDatabase();
