@@ -69,7 +69,7 @@ html,body{max-width:100%;overflow-x:hidden}
 button,input,select,textarea{font:inherit}
 button{border:0}
 .app{display:flex;min-height:100vh}
-.app.locked{display:none}.login-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(900px 600px at 50% -10%,rgba(96,136,255,.16),transparent 60%),radial-gradient(700px 500px at 100% 110%,rgba(22,198,178,.12),transparent 55%)}.login-panel{position:relative;width:min(420px,100%);background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-2);border-radius:18px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6),0 0 0 1px rgba(96,136,255,.08);padding:30px 28px;overflow:hidden}.login-panel::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}.login-panel .brand{padding:0 0 20px;border-bottom:0}.login-panel .mark{width:40px;height:40px;border-radius:10px;font-size:18px;box-shadow:0 6px 18px -4px var(--accent)}.login-panel h1{margin:4px 0 8px;font-size:25px;letter-spacing:-.4px}.login-panel p{margin:0 0 20px;color:var(--muted)}.login-panel form{display:grid;gap:13px}.login-panel .btn.primary{height:42px;font-size:14px;font-weight:600}.login-panel[hidden]{display:none!important}.login-screen[hidden]{display:none!important}.login-error{min-height:18px;color:var(--red);font-size:12px}.login-meta{margin-top:16px;color:var(--soft);font-size:11px;text-align:center}
+.app.locked{display:none}.login-screen{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(900px 600px at 50% -10%,rgba(96,136,255,.16),transparent 60%),radial-gradient(700px 500px at 100% 110%,rgba(22,198,178,.12),transparent 55%)}.login-panel{position:relative;width:min(420px,100%);background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-2);border-radius:18px;box-shadow:0 30px 80px -20px rgba(0,0,0,.6),0 0 0 1px rgba(96,136,255,.08);padding:30px 28px;overflow:hidden}.login-panel::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}.login-panel .brand{padding:0 0 20px;border-bottom:0}.login-panel .mark{width:40px;height:40px;border-radius:10px;font-size:18px;box-shadow:0 6px 18px -4px var(--accent)}.brand-logo{width:38px;height:38px;border-radius:8px;object-fit:contain;flex:0 0 auto}.login-panel h1{margin:4px 0 8px;font-size:25px;letter-spacing:-.4px}.login-panel p{margin:0 0 20px;color:var(--muted)}.login-panel form{display:grid;gap:13px}.login-panel .btn.primary{height:42px;font-size:14px;font-weight:600}.login-panel[hidden]{display:none!important}.login-screen[hidden]{display:none!important}.login-error{min-height:18px;color:var(--red);font-size:12px}.login-meta{margin-top:16px;color:var(--soft);font-size:11px;text-align:center}
 .sidebar{position:fixed;inset:0 auto 0 0;width:var(--side);background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:var(--z-nav);box-shadow:var(--shadow)}
 .brand{padding:18px;display:flex;gap:11px;align-items:center;border-bottom:1px solid var(--line)}
 .mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:800}
@@ -331,6 +331,45 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .cal-nav{display:flex;align-items:center;gap:6px}.cal-nav strong{min-width:150px;text-align:center;font-size:13px;font-weight:700}
 .cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:8px}.cal-wd{color:var(--soft);font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:2px 0}
 .cal-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.cal-month-grid .cal-day{min-height:104px}.cal-month-grid .cal-day.empty{background:transparent;border-color:transparent;box-shadow:none;min-height:0}.cal-more{color:var(--soft);font-size:10.5px;margin-top:1px}
+.cal-week-grid{display:grid;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.cal-week-col{border-right:1px solid var(--line);min-width:0}
+.cal-week-col:last-child{border-right:0}
+.cal-week-head{padding:10px 10px 8px;border-bottom:1px solid var(--line);background:var(--panel-2);font-size:11px;color:var(--muted)}
+.cal-week-head b{display:block;font-size:18px;color:var(--text);line-height:1.1;margin-top:1px}
+.cal-week-head.today-col{background:rgba(91,124,250,.08)}
+.cal-week-head.today-col b{color:var(--accent)}
+.cal-week-events{padding:8px;display:flex;flex-direction:column;gap:6px;min-height:120px}
+.cal-event-card{border-radius:7px;padding:7px 9px;font-size:11.5px;cursor:pointer;transition:opacity .12s}
+.cal-event-card:hover{opacity:.85}
+.cal-event-card strong{display:block;font-size:12px;margin-bottom:2px;line-height:1.3}
+.cal-event-card small{opacity:.8;display:block;line-height:1.3}
+.cal-today-outer{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.cal-today-time{flex:0 0 48px;border-right:1px solid var(--line);background:var(--panel-2)}
+.cal-today-time-row{height:56px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:9.5px;color:var(--muted)}
+.cal-today-cols{display:flex;flex:1;overflow-x:auto}
+.cal-today-col{flex:1;min-width:140px;border-right:1px solid var(--line)}
+.cal-today-col:last-child{border-right:0}
+.cal-today-col-head{height:48px;padding:0 10px;border-bottom:1px solid var(--line);background:var(--panel-2);display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600}
+.cal-today-col-head .avatar{width:26px;height:26px;font-size:9px;flex:0 0 26px}
+.cal-today-body{padding:8px;display:flex;flex-direction:column;gap:6px;position:relative}
+.cal-now-line{position:absolute;left:0;right:0;height:2px;background:var(--red);pointer-events:none}
+.cal-now-line::before{content:'';position:absolute;left:-1px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+.td-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px}
+.td-header .avatar{width:42px;height:42px;font-size:14px;flex:0 0 42px}
+.td-meta{flex:1;min-width:0}
+.td-meta h3{margin:0 0 2px;font-size:16px;line-height:1.3}
+.td-meta small{color:var(--muted);font-size:12px}
+.td-section{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.td-section-title{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.td-subtask-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--line-2)}
+.td-subtask-row:last-child{border-bottom:0}
+.td-subtask-row input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--accent);flex:0 0 15px}
+.td-subtask-row span{font-size:12.5px;flex:1}
+.td-subtask-row span.done{text-decoration:line-through;color:var(--muted)}
+.td-progress-bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px}
+.td-progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent-2));transform-origin:left;transition:transform .3s}
+.td-notify-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.td-notify-row .btn{font-size:11px}
 @media(max-width:760px){.cal-month-grid{gap:4px}.cal-month-grid .cal-day{min-height:62px;padding:5px;gap:2px}.cal-weekdays{gap:4px}.cal-wd{font-size:8.5px}.cal-month-grid .cal-item{font-size:9.5px;padding:3px 4px 3px 11px}.cal-month-grid .cal-item small{display:none}.cal-nav strong{min-width:120px;font-size:12px}}
 .email-preview{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.email-box{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:14px;white-space:pre-wrap;min-height:280px}.snapshot-frame{border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),var(--surface));border-radius:8px;padding:14px;min-height:280px}.snapshot-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px}.status-list{display:flex;flex-direction:column;gap:8px}.status-line{display:flex;align-items:center;gap:8px;color:var(--muted)}.status-ico{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;color:white;font-size:11px;font-weight:800;flex:0 0 auto}.status-ico.done{background:var(--green)}.status-ico.doing{background:var(--accent);animation:spin 1.3s linear infinite}.status-ico.review{background:var(--amber)}.status-ico.overdue{background:var(--red)}.status-ico.schedule{background:var(--purple)}@keyframes spin{to{transform:rotate(360deg)}}
 .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-grid .span2{grid-column:span 2}.form-grid .span3{grid-column:span 3}.panel-form{display:none}.panel-form.on{display:block}.hint{color:var(--soft);font-size:11.5px}.req{color:var(--red);font-size:11px;margin-left:2px}
@@ -502,7 +541,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
 <body>
 <section class="login-screen" id="loginScreen">
   <div class="login-panel">
-    <div class="brand"><div class="mark">P</div><div><strong>PIRAMID BD</strong><span>Management Platform</span></div></div>
+    <div class="brand"><img src="prm-circle.png" class="brand-logo" alt="PIRAMID Solutions"><div><strong>PIRAMID BD</strong><span>Management Platform</span></div></div>
     <h1>Team Access</h1>
     <p>Enter your PIRAMID team ID and access code to continue.</p>
     <form id="appLoginForm">
@@ -520,7 +559,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
 </section>
 <div class="app locked" id="appShell">
   <aside class="sidebar">
-    <div class="brand"><div class="mark">P</div><div><strong>PIRAMID</strong><span>Management</span></div></div>
+    <div class="brand"><img src="prm-circle.png" class="brand-logo" alt="PIRAMID Solutions"><div><strong>PIRAMID</strong><span>Management</span></div></div>
     <nav class="nav">
       <div class="nav-label">Analytics</div>
       <button class="on" data-view="exec"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></span>Executive <span class="navdot"></span></button>
@@ -584,9 +623,10 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
 
 
     <section id="v-projects" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>PROJECTS</div><h1>Project Management</h1><p>บริหารโครงการ มอบหมายทีม และมูลค่าตาม Brand / PIRAMID Scope</p></div><div class="actions"><button class="btn" data-reset-filters>↺ Reset Filter</button><button class="btn primary" id="projectFormToggle">+ New Project</button><button class="btn" data-export="projects">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>PROJECTS</div><h1>Project Management</h1><p>บริหารโครงการ มอบหมายทีม และมูลค่าตาม Brand / PIRAMID Scope</p></div><div class="actions"><button class="btn" data-reset-filters>↺ Reset Filter</button><button class="btn primary" id="projectFormToggle">+ New Project</button><button class="btn" data-export="projects">Export CSV</button><button class="btn" id="projectImportBtn">Import CSV</button><input type="file" id="projectImportInput" accept=".csv" style="display:none" aria-hidden="true"></div></div>
       <div class="content">
         <div class="panel-form app-modal" id="projectFormPanel" role="dialog" aria-modal="true" aria-labelledby="projectFormTitle"><div class="app-modal-card"><div class="ch"><h2 id="projectFormTitle">New Project</h2><button class="btn icon" data-close-form="project" aria-label="Close">×</button></div><div class="cb"><form class="form-grid" id="projectForm"></form></div></div></div>
+        <div class="panel-form app-modal" id="taskDetailFormPanel" role="dialog" aria-modal="true" aria-labelledby="tdModalTitle"><div class="app-modal-card" style="width:min(640px,100%)"><div class="ch"><h2 id="tdModalTitle">Task Detail</h2><button class="btn icon" data-close-form="taskDetail" aria-label="Close">×</button></div><div class="cb" id="tdModalBody"></div></div></div>
         <div class="panel-form card" id="projectSubTaskFormPanel"><div class="ch"><h2 id="projectSubTaskTitle">Project Sub Tasks</h2><button class="btn icon" data-close-form="projectSubTask" aria-label="Close">×</button></div><div class="cb" id="projectSubTaskBody"></div></div>
         <div class="card"><div class="cb"><div class="filters" id="projectFilters"></div></div></div>
         <div class="card"><div class="ch"><h2>Projects</h2><small id="projectCountLabel"></small></div><div class="table-wrap"><table class="tbl"><thead id="projectTableHead"></thead><tbody id="projectRows"></tbody></table></div></div>
@@ -624,21 +664,34 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     </section>
 
     <section id="v-calendar" class="view">
-      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>CALENDAR</div><h1>Calendar</h1><p>ดูกำหนดส่งงาน (Due Date) ของทีม รายสัปดาห์หรือรายเดือน</p></div><div class="actions"><button class="btn" id="calResetFilterBtn">↺ Reset Filter</button><button class="btn" data-export="tasks">Export</button></div></div>
+      <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>CALENDAR</div><h1>Calendar</h1><p>ดูกำหนดส่งงาน (Due Date) ของทีม รายวัน รายสัปดาห์ หรือรายเดือน</p></div><div class="actions"><button class="btn" id="calResetFilterBtn">↺ Reset</button><button class="btn" data-export="tasks">Export</button></div></div>
       <div class="content">
-        <div class="toolbar" style="gap:8px">
-          <button class="btn small cal-period" data-cal-period="week">Week</button>
-          <button class="btn small cal-period on" data-cal-period="month">Month</button>
+        <div class="toolbar" style="gap:8px;flex-wrap:wrap">
+          <div style="display:flex;gap:4px">
+            <button class="btn small cal-period" data-cal-period="today">Today</button>
+            <button class="btn small cal-period" data-cal-period="week">Weekly</button>
+            <button class="btn small cal-period on" data-cal-period="month">Monthly</button>
+          </div>
+          <div class="cal-nav" id="calDayNav" style="display:none">
+            <button class="btn icon" id="calPrevDay" aria-label="Previous day">‹</button>
+            <strong id="calDayLabel" style="min-width:160px;text-align:center"></strong>
+            <button class="btn icon" id="calNextDay" aria-label="Next day">›</button>
+          </div>
+          <div class="cal-nav" id="calWeekNav" style="display:none">
+            <button class="btn icon" id="calPrevWeek" aria-label="Previous week">‹</button>
+            <strong id="calWeekLabel" style="min-width:170px;text-align:center"></strong>
+            <button class="btn icon" id="calNextWeek" aria-label="Next week">›</button>
+          </div>
           <div class="cal-nav" id="calMonthNav">
             <button class="btn icon" id="calPrevMonth" aria-label="Previous month">‹</button>
-            <strong id="calMonthLabel"></strong>
+            <strong id="calMonthLabel" style="min-width:140px;text-align:center"></strong>
             <button class="btn icon" id="calNextMonth" aria-label="Next month">›</button>
-            <button class="btn small" id="calTodayBtn">Today</button>
           </div>
-          <label class="field" style="min-width:210px;margin-left:auto"><span>Owner</span><select id="calLeadFilter"></select></label>
+          <button class="btn small" id="calTodayBtn">↺ Today</button>
+          <label class="field" style="min-width:180px;margin-left:auto"><span>Owner</span><select id="calLeadFilter"></select></label>
         </div>
         <div class="grid g4" id="calMetrics"></div>
-        <div class="card"><div class="ch"><h2>Due Date Calendar</h2><small id="taskCalendarLabel"></small></div><div class="cb"><div id="taskCalendar"></div></div></div>
+        <div class="card"><div class="ch"><h2 id="calViewTitle">Due Date Calendar</h2><small id="taskCalendarLabel"></small></div><div class="cb" style="padding:0"><div id="taskCalendar" style="padding:16px"></div></div></div>
       </div>
     </section>
 
@@ -3886,9 +3939,10 @@ function renderTodoTable(){
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
   const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small" data-manage-subtasks="${esc(t.id)}" aria-label="Manage sub tasks" title="จัดการ Sub Tasks">Sub Tasks${(t.subtasks?.length)?` (${t.subtasks.length})`:''}</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
   const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><strong>${esc(t.title)}</strong></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><button class="btn-link" data-open-task="${esc(t.id)}" style="font-weight:600;text-align:left;background:none;border:none;padding:0;cursor:pointer;color:var(--text)">${esc(t.title)}</button></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
   body.querySelector('#clearManualSort')?.addEventListener('click',()=>{todoSort={key:'due',dir:'asc'};renderTodoTable();});
+  body.querySelectorAll('[data-open-task]').forEach(b=>b.onclick=()=>openTaskDetail(b.dataset.openTask));
   body.querySelectorAll('[data-edit-todo]').forEach(b=>b.onclick=()=>openTodoTaskForm(b.dataset.editTodo));
   body.querySelectorAll('[data-del-todo]').forEach(b=>b.onclick=()=>deleteTodoTask(b.dataset.delTodo));
   body.querySelectorAll('[data-manage-subtasks]').forEach(b=>b.onclick=()=>manageSubTasks(b.dataset.manageSubtasks));
@@ -3968,6 +4022,9 @@ function renderTodo(){
 }
 // ===== Calendar page (independent period + lead filter) =====
 let calPeriod='month', calLead='All', calMonth=new Date(today.getFullYear(),today.getMonth(),1);
+let calViewDate=new Date(today), calWeekStart=calGetMonday(today);
+function calGetMonday(d){const c=new Date(d);const day=c.getDay();c.setDate(c.getDate()-(day===0?6:day-1));c.setHours(0,0,0,0);return c;}
+function calAddDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function setCalMetrics(dueLabel, scoped, all){
   const cm=document.getElementById('calMetrics'); if(!cm) return;
   cm.innerHTML=[
@@ -3980,27 +4037,95 @@ function setCalMetrics(dueLabel, scoped, all){
 function renderCalendarPage(){
   const sel=document.getElementById('calLeadFilter');
   if(sel){
-    const options=teamFilterOptionsHtml(calLead,'All Owner');
-    if(sel.innerHTML!==options) sel.innerHTML=options;
+    const opts=teamFilterOptionsHtml(calLead,'All Owner');
+    if(sel.innerHTML!==opts) sel.innerHTML=opts;
     sel.value=calLead;
     sel.onchange=()=>{calLead=sel.value;renderCalendarPage();};
   }
   document.querySelectorAll('.cal-period').forEach(b=>b.classList.toggle('on',b.dataset.calPeriod===calPeriod));
-  const nav=document.getElementById('calMonthNav'); if(nav) nav.style.display=calPeriod==='month'?'flex':'none';
+  document.getElementById('calDayNav').style.display=calPeriod==='today'?'flex':'none';
+  document.getElementById('calWeekNav').style.display=calPeriod==='week'?'flex':'none';
+  document.getElementById('calMonthNav').style.display=calPeriod==='month'?'flex':'none';
   const tasks=filteredTasks(calLead);
-  if(calPeriod==='month'){
-    const y=calMonth.getFullYear(), m=calMonth.getMonth();
-    const lab=document.getElementById('calMonthLabel'); if(lab) lab.textContent=calMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-    const mStart=new Date(y,m,1,0,0,0,0), mEnd=new Date(y,m+1,0,23,59,59,999);
+  const titleEl=document.getElementById('calViewTitle');
+  if(calPeriod==='today'){
+    const lab=document.getElementById('calDayLabel');
+    const isToday=dateKey(calViewDate)===dateKey(today);
+    if(lab) lab.textContent=calViewDate.toLocaleDateString('en-US',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+(isToday?' (Today)':'');
+    if(titleEl) titleEl.textContent='Today — Department Workspace';
+    const dayTasks=tasks.filter(t=>t.due===dateKey(calViewDate));
+    setCalMetrics('Due Today',dayTasks,tasks);
+    renderCalToday(tasks,calViewDate);
+  } else if(calPeriod==='week'){
+    const wEnd=calAddDays(calWeekStart,6);
+    const lab=document.getElementById('calWeekLabel');
+    if(lab) lab.textContent=calWeekStart.toLocaleDateString('en-US',{day:'numeric',month:'short'})+' – '+wEnd.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+    if(titleEl) titleEl.textContent='Weekly View';
+    const inWin=tasks.filter(t=>inWindow(t.due,calWeekStart,wEnd));
+    setCalMetrics('Due (this week)',inWin,tasks);
+    renderCalWeek(tasks,calWeekStart);
+  } else {
+    const y=calMonth.getFullYear(),m=calMonth.getMonth();
+    const lab=document.getElementById('calMonthLabel');
+    if(lab) lab.textContent=calMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    if(titleEl) titleEl.textContent='Monthly View';
+    const mStart=new Date(y,m,1,0,0,0,0),mEnd=new Date(y,m+1,0,23,59,59,999);
     const inMonth=tasks.filter(t=>inWindow(t.due,mStart,mEnd));
     setCalMetrics('Due ('+calMonth.toLocaleDateString('en-US',{month:'short'})+')',inMonth,tasks);
     renderCalendarMonth(tasks,calMonth);
-  } else {
-    const w=taskWindow('week');
-    const inWin=tasks.filter(t=>inWindow(t.due,w.start,w.end));
-    setCalMetrics('Due (this week)',inWin,tasks);
-    renderTaskCalendar(inWin,'week');
   }
+}
+function renderCalToday(tasks,viewDate){
+  const host=document.getElementById('taskCalendar'); if(!host) return;
+  const todayKey=dateKey(viewDate);
+  const pjOf=t=>{const p=state.projects.find(x=>x.id===t.project);return p?.name||(t.project?t.project:'Internal Task');};
+  let members=[];
+  if(calLead==='All'){
+    const activeIds=new Set(tasks.filter(t=>t.due===todayKey).flatMap(t=>ownerIds(t)));
+    members=state.teams.filter(t=>activeIds.has(t.id));
+    if(!members.length) members=state.teams.slice(0,6);
+  } else if(calLead.startsWith('role:')){
+    const r=calLead.replace('role:','').toLowerCase();
+    members=state.teams.filter(t=>(t.role||'').toLowerCase().includes(r));
+  } else {
+    members=state.teams.filter(t=>t.id===calLead);
+  }
+  const HOURS=[8,9,10,11,12,13,14,15,16,17];
+  const now=new Date(); const nowMin=now.getHours()*60+now.getMinutes();
+  const isToday=todayKey===dateKey(today);
+  const ROW_H=54;
+  const timeCol=`<div class="cal-today-time"><div style="height:48px;border-bottom:1px solid var(--line)"></div>${HOURS.map(h=>`<div class="cal-today-time-row">${h}:00</div>`).join('')}</div>`;
+  const memberCols=members.map(m=>{
+    const myTasks=tasks.filter(t=>t.due===todayKey&&ownerIds(t).includes(m.id));
+    const color=m.color||'var(--accent)';
+    const cards=myTasks.map(t=>`<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44" data-open-task="${t.id}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${statusTag(isOverdue(t)?'Overdue':t.status)}</small></div>`).join('');
+    const nowPct=isToday&&nowMin>=480&&nowMin<=1080?((nowMin-480)/600*100):null;
+    const nowLine=nowPct!=null?`<div class="cal-now-line" style="top:${Math.round(HOURS.length*ROW_H*nowPct/100)}px"></div>`:'';
+    const slots=HOURS.map(()=>`<div style="height:${ROW_H}px;border-bottom:1px solid var(--line-2)"></div>`).join('');
+    return `<div class="cal-today-col"><div class="cal-today-col-head">${memberAvatarHtml(m)}<span>${esc(m.name)}</span></div><div style="position:relative"><div style="position:absolute;inset:0;pointer-events:none">${slots}${nowLine}</div><div class="cal-today-body">${cards||'<div class="hint" style="font-size:11px;padding:6px 0">ไม่มีงานวันนี้</div>'}</div></div></div>`;
+  }).join('');
+  host.innerHTML=`<div class="cal-today-outer">${timeCol}<div class="cal-today-cols">${memberCols||'<div class="hint" style="padding:20px">ไม่พบสมาชิกทีมที่มีงานวันนี้</div>'}</div></div>`;
+  host.querySelectorAll('[data-open-task]').forEach(el=>el.onclick=()=>openTaskDetail(el.dataset.openTask));
+}
+function renderCalWeek(tasks,weekStart){
+  const host=document.getElementById('taskCalendar'); if(!host) return;
+  const todayKey=dateKey(today);
+  const DAYS=['จ.','อ.','พ.','พฤ.','ศ.','ส.','อา.'];
+  const pjOf=t=>{const p=state.projects.find(x=>x.id===t.project);return p?.name||(t.project?t.project:'Internal Task');};
+  const cols=Array.from({length:7},(_,i)=>{
+    const d=calAddDays(weekStart,i);
+    const key=dateKey(d);
+    const isToday=key===todayKey;
+    const dayTasks=tasks.filter(t=>t.due===key);
+    const cards=dayTasks.map(t=>{
+      const m=state.teams.find(x=>ownerIds(t).includes(x.id));
+      const color=m?.color||'var(--accent)';
+      return `<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44" data-open-task="${t.id}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))}</small></div>`;
+    }).join('');
+    return `<div class="cal-week-col"><div class="cal-week-head${isToday?' today-col':''}"><span>${DAYS[i]}</span><b>${d.getDate()}</b><span style="font-size:10px">${d.toLocaleDateString('en-US',{month:'short'})}</span></div><div class="cal-week-events">${cards||'<div class="hint" style="font-size:11px">-</div>'}</div></div>`;
+  }).join('');
+  host.innerHTML=`<div class="cal-week-grid" style="grid-template-columns:repeat(7,minmax(0,1fr))">${cols}</div>`;
+  host.querySelectorAll('[data-open-task]').forEach(el=>el.onclick=()=>openTaskDetail(el.dataset.openTask));
 }
 function renderCalendarMonth(tasks, monthDate){
   const host=document.getElementById('taskCalendar'); if(!host) return;
@@ -4542,6 +4667,85 @@ function openProfileEditor(){
 function closeProfileEditor(){
   const m=document.getElementById('profileModal'); if(m) m.classList.remove('on');
 }
+function openTaskDetail(id){
+  const t=state.tasks.find(x=>x.id===id); if(!t){toast('ไม่พบงานนี้','error');return;}
+  const proj=state.projects.find(p=>p.id===t.project);
+  const owners=ownerIds(t).map(oid=>state.teams.find(x=>x.id===oid)).filter(Boolean);
+  const subtasks=t.subtasks||[];
+  const done=new Set(t.subtasksDone||[]);
+  const pct=subtasks.length?Math.round(done.size/subtasks.length*100):Number(t.progress||0);
+  const statusOpts=(state.taskStatuses||['Todo','Doing','Done','Pending']).map(s=>`<option${t.status===s?' selected':''}>${esc(s)}</option>`).join('');
+  const subRows=subtasks.map((s,i)=>`<div class="td-subtask-row"><input type="checkbox" id="tds-${i}" ${done.has(i)?'checked':''} data-sub="${i}"><label for="tds-${i}" class="td-subtask-row" style="flex:1;border:0;padding:0;cursor:pointer"><span class="${done.has(i)?'done':''}">${esc(s)}</span></label></div>`).join('');
+  const ownerChips=owners.map(m=>`<div style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:20px;padding:3px 9px 3px 4px;font-size:11.5px;background:var(--surface)">${memberAvatarHtml(m,'')}<span>${esc(m.name)}</span></div>`).join('');
+  document.getElementById('tdModalTitle').textContent=t.title||'Task Detail';
+  const body=document.getElementById('tdModalBody');
+  body.innerHTML=`
+    <div class="td-header">
+      <div class="td-meta">
+        <h3>${esc(t.title)}</h3>
+        <small>${esc(proj?.name||t.project||'Internal Task')} · Due: ${t.due||'ไม่กำหนด'}</small>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <label class="field" style="min-width:160px"><span>Status</span><select id="tdStatus">${statusOpts}</select></label>
+      ${isOverdue(t)?`<span style="color:var(--red);font-size:12px;font-weight:600">⚠ Overdue</span>`:''}
+    </div>
+    ${ownerChips?`<div class="td-section"><div class="td-section-title">Assignees</div><div style="display:flex;gap:6px;flex-wrap:wrap">${ownerChips}</div></div>`:''}
+    ${subtasks.length?`<div class="td-section"><div class="td-section-title">Sub Tasks <span class="hint">(${done.size}/${subtasks.length})</span></div><div class="td-progress-bar"><div class="td-progress-fill" id="tdProgFill" style="width:${pct}%"></div></div><div id="tdSubRows" style="margin-top:8px">${subRows}</div></div>`:''}
+    <div class="td-section"><div class="td-section-title">Notes</div><textarea id="tdNotes" rows="3" style="width:100%;resize:vertical;font-size:13px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)">${esc(t.notes||'')}</textarea></div>
+    <div class="td-section"><div class="td-section-title">การแจ้งเตือน</div><div class="td-notify-row">
+      <button class="btn small" id="tdNotifyTeam">📨 แจ้งทีม</button>
+      <button class="btn small" id="tdNotifySales">📢 แจ้งฝ่ายขาย</button>
+      <button class="btn small" id="tdNotifyMgr">👔 แจ้งหัวหน้า</button>
+    </div><div class="hint" id="tdNotifyStatus" style="min-height:14px;margin-top:4px"></div></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)">
+      <button class="btn primary" id="tdSaveBtn">Save</button>
+      <button class="btn" data-close-form="taskDetail">Cancel</button>
+    </div>`;
+  // subtask checkbox live update
+  body.querySelectorAll('[data-sub]').forEach(cb=>{
+    cb.onchange=()=>{
+      const i=Number(cb.dataset.sub); if(cb.checked) done.add(i); else done.delete(i);
+      const p=subtasks.length?Math.round(done.size/subtasks.length*100):0;
+      const fill=document.getElementById('tdProgFill'); if(fill) fill.style.width=p+'%';
+      const lbl=cb.closest('.td-subtask-row')?.querySelector('span'); if(lbl) lbl.className=cb.checked?'done':'';
+    };
+  });
+  document.getElementById('tdSaveBtn').onclick=()=>{
+    t.status=document.getElementById('tdStatus').value;
+    t.notes=document.getElementById('tdNotes').value.trim();
+    t.subtasksDone=[...done];
+    if(subtasks.length) t.progress=Math.round(done.size/subtasks.length*100);
+    if(t.status==='Done'&&!t.completedAt) t.completedAt=new Date().toISOString();
+    if(t.status!=='Done') t.completedAt=null;
+    t.statusChangedAt=new Date().toISOString();
+    if(t.project) cascadeProjectDoneFromTasks(t.project);
+    saveState(); closeFormPanel('taskDetailFormPanel'); refreshAfterTaskChange();
+    toast('อัปเดตงานแล้ว','success');
+    logActivity('อัปเดตงาน','tasks',t.title);
+  };
+  const notifyStatus=document.getElementById('tdNotifyStatus');
+  const sendNotify=async(scope)=>{
+    const projName=proj?.name||'งาน';
+    const msg=`แจ้งเตือน: "${t.title}" (${projName}) — สถานะ: ${t.status||'-'} Due: ${t.due||'ไม่กำหนด'}`;
+    let recipients=[];
+    if(scope==='team') recipients=owners.map(m=>m.email).filter(Boolean);
+    else if(scope==='sales'){const s=state.teams.filter(m=>/sales/i.test(m.role||'')); recipients=s.map(m=>m.email).filter(Boolean);}
+    else if(scope==='mgr'){const a=state.teams.find(m=>m.username==='wongwaris'); if(a?.email) recipients=[a.email];}
+    if(!recipients.length){notifyStatus.textContent='ไม่พบอีเมลที่จะส่ง';return;}
+    notifyStatus.textContent='กำลังส่ง…';
+    try{
+      const r=await fetch('/api/email/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:recipients.join(','),subject:`[PIRAMID BD] Task: ${t.title}`,html:`<p>${msg.replace(/\n/g,'<br>')}</p>`})});
+      const d=await r.json();
+      notifyStatus.textContent=r.ok?`ส่งแล้ว → ${recipients.join(', ')}`:`Error: ${d.error||r.status}`;
+    }catch(err){notifyStatus.textContent='ส่งไม่สำเร็จ: '+err.message;}
+  };
+  document.getElementById('tdNotifyTeam').onclick=()=>sendNotify('team');
+  document.getElementById('tdNotifySales').onclick=()=>sendNotify('sales');
+  document.getElementById('tdNotifyMgr').onclick=()=>sendNotify('mgr');
+  bindCloseButtons(body);
+  showFormPanel('taskDetailFormPanel');
+}
 function saveProfile(e){
   e.preventDefault();
   if(!activeUser) return;
@@ -4852,6 +5056,60 @@ function exportCsv(type){
   const csv='﻿'+[headers.join(','),...rows.map(r=>r.map(cell).join(','))].join('\r\n');
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download=`piramid-${type}.csv`; a.click(); URL.revokeObjectURL(a.href);
 }
+function importProjectsCsv(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const text=e.target.result.replace(/^﻿/,''); // strip BOM
+    const lines=text.split(/\r?\n/).filter(l=>l.trim());
+    if(lines.length<2){toast('ไฟล์ CSV ว่างเปล่าหรือไม่มีข้อมูล','error');return;}
+    const parseRow=line=>{
+      const cells=[]; let cur='', inQ=false;
+      for(let i=0;i<line.length;i++){
+        const c=line[i];
+        if(c==='"'&&!inQ){inQ=true;}
+        else if(c==='"'&&inQ&&line[i+1]==='"'){cur+='"';i++;}
+        else if(c==='"'&&inQ){inQ=false;}
+        else if(c===','&&!inQ){cells.push(cur.trim());cur='';}
+        else cur+=c;
+      }
+      cells.push(cur.trim()); return cells;
+    };
+    const headers=parseRow(lines[0]).map(h=>h.toLowerCase().replace(/[^a-z0-9]/g,''));
+    const col=name=>headers.indexOf(name);
+    const findTeamId=nameOrId=>{
+      if(!nameOrId) return '';
+      const lower=String(nameOrId).toLowerCase().trim();
+      const m=state.teams.find(t=>t.id===nameOrId||String(t.name||'').toLowerCase()===lower);
+      return m?m.id:'';
+    };
+    let added=0, skipped=0;
+    for(let i=1;i<lines.length;i++){
+      const r=parseRow(lines[i]);
+      const name=(r[col('projectname')]||r[col('name')]||r[1]||'').trim();
+      if(!name){skipped++;continue;}
+      if(state.projects.find(p=>p.name.toLowerCase()===name.toLowerCase())){skipped++;continue;}
+      let id=(r[col('projectid')]||r[col('id')]||'').trim();
+      if(!id||state.projects.find(p=>p.id===id)) id='P'+Date.now()+Math.floor(Math.random()*1000);
+      const seg=r[col('segment')]||r[2]||'';
+      const status=r[col('status')]||r[3]||state.projectStatuses[0]||'Prospect';
+      const pri=r[col('priority')]||r[4]||'';
+      const size=r[col('size')]||r[5]||'';
+      const val=Number(String(r[col('valuethb')]||r[col('value')]||r[6]||'0').replace(/[^0-9.]/g,''))||0;
+      const bd=findTeamId(r[col('bdlead')]||r[col('bd')]||r[7]||'');
+      const sales=findTeamId(r[col('sales')]||r[8]||'');
+      const bdBuddy=findTeamId(r[col('bdbuddy')]||r[col('buddy')]||'');
+      const buildingType=r[col('buildingtype')]||r[col('building')]||'';
+      const proj={id,name,seg,status,pri,size,val,bd,bdBuddy,sales,buildingType,createdAt:new Date().toISOString(),statusChangedAt:new Date().toISOString(),statusLog:[],brands:[],subtasks:[]};
+      normalizeState({projects:[proj]}); // run field defaults on this project
+      state.projects.push(proj);
+      logActivity('นำเข้าโครงการ','projects',name);
+      added++;
+    }
+    if(added>0){saveState();renderProjects();toast(`นำเข้า ${added} โครงการ${skipped?' (ข้าม '+skipped+')'  :''}`);}
+    else toast(`ไม่มีโครงการใหม่ (ข้าม ${skipped} แถว — ชื่อซ้ำหรือว่าง)`,'error');
+  };
+  reader.readAsText(file,'utf-8');
+}
 const VIEW_RENDERERS={exec:renderDashboard,analytics:renderAnalytics,projects:renderProjects,tasks:renderTodo,calendar:renderCalendarPage,kpi:renderKpi,training:renderTraining,team:renderTeam,notify:renderRules,settings:renderSettings};
 const dirtyViews=new Set();
 function activeViewName(){const v=document.querySelector('.view.on'); return v?v.id.replace(/^v-/,''):null;}
@@ -4893,11 +5151,17 @@ function bindAppEvents(){
   document.querySelectorAll('.task-period').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-period').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskPeriod=b.dataset.taskPeriod;renderTodo()});
   document.querySelectorAll('.todo-view').forEach(b=>b.onclick=()=>{todoView=b.dataset.todoView;state.todoView=todoView;saveState();renderTodo()});
   document.querySelectorAll('.cal-period').forEach(b=>b.onclick=()=>{calPeriod=b.dataset.calPeriod;renderCalendarPage()});
+  on('calPrevDay','onclick',()=>{calViewDate=calAddDays(calViewDate,-1);renderCalendarPage()});
+  on('calNextDay','onclick',()=>{calViewDate=calAddDays(calViewDate,1);renderCalendarPage()});
+  on('calPrevWeek','onclick',()=>{calWeekStart=calAddDays(calWeekStart,-7);renderCalendarPage()});
+  on('calNextWeek','onclick',()=>{calWeekStart=calAddDays(calWeekStart,7);renderCalendarPage()});
   on('calPrevMonth','onclick',()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1);renderCalendarPage()});
   on('calNextMonth','onclick',()=>{calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1);renderCalendarPage()});
-  on('calTodayBtn','onclick',()=>{calPeriod='month';calMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendarPage()});
-  on('calResetFilterBtn','onclick',()=>{calPeriod='month';calLead='All';calMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendarPage()});
+  on('calTodayBtn','onclick',()=>{calViewDate=new Date(today);calWeekStart=calGetMonday(today);calMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendarPage()});
+  on('calResetFilterBtn','onclick',()=>{calPeriod='month';calLead='All';calViewDate=new Date(today);calWeekStart=calGetMonday(today);calMonth=new Date(today.getFullYear(),today.getMonth(),1);renderCalendarPage()});
   on('projectFormToggle','onclick',()=>openProjectForm());
+  on('projectImportBtn','onclick',()=>document.getElementById('projectImportInput')?.click());
+  on('projectImportInput','onchange',e=>{const f=e.target.files[0];if(f){importProjectsCsv(f);e.target.value='';}});
   on('taskFormToggle','onclick',()=>openTaskForm());
   on('solutionFormToggle','onclick',()=>openSolutionForm());
   on('kpiFormToggle','onclick',()=>openKpiForm());
