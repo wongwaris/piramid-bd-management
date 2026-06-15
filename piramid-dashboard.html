@@ -159,7 +159,7 @@ html.env-nonprod body{box-shadow:inset 0 3px 0 0 var(--amber)}
 .act-row{display:flex;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
 .act-time{color:var(--soft);font-size:11px;min-width:120px}
 .act-body{flex:1}.act-body b{color:var(--text)} .act-body .act-view{color:var(--soft);font-size:11px;margin-left:6px}
-.user{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:white;font-size:11px;font-weight:700;flex:0 0 auto}
+.user{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px}.avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:white;font-size:11px;font-weight:700;flex:0 0 auto;overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
 .main{margin-left:var(--side);min-width:0;flex:1}.topbar{position:sticky;top:0;z-index:var(--z-sticky);height:62px;background:var(--surface);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 22px;box-shadow:var(--shadow)}
 .title{flex:1;min-width:0}.title h1,.title h2{font-size:17px;line-height:1.1;margin:0 0 5px;font-weight:700}.title p{margin:0;color:var(--soft);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 13px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);color:var(--text);cursor:pointer;white-space:nowrap;font-weight:500;transition:background .15s,border-color .15s,box-shadow .15s,transform .1s}
@@ -346,6 +346,11 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .profile-section-title:first-child{border-top:0;padding-top:0}
 .profile-avatar-preview{display:flex;align-items:center;gap:14px}
 .profile-avatar-preview .avatar{width:54px;height:54px;font-size:18px}
+.avatar-picker-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.av-opt{width:46px;height:46px;border-radius:50%;cursor:pointer;border:2px solid transparent;padding:0;background:transparent;transition:transform .12s;display:block;overflow:hidden}
+.av-opt:hover{transform:scale(1.1)}
+.av-opt.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.av-opt img{width:100%;height:100%;display:block;border-radius:50%}
 .profile-modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--line)}
 /* Generic full-page modal — repurposes .panel-form so existing .on toggling + bindCloseButtons keep working */
 .panel-form.app-modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;z-index:9999;padding:20px;overflow-y:auto;background:rgba(6,11,24,.62);backdrop-filter:blur(4px);border:0;border-radius:0;box-shadow:none;background-image:none}
@@ -968,6 +973,18 @@ const DEFAULT_ANA_WIDGET_SIZE = {
 };
 const PIRAMID_SCOPE = ['Installation','Cabling','Maintenance','Project management fee'];
 const BRAND_SCOPE_CATS = ['Hardware','Software','License'];
+const AVATAR_PRESETS=[
+  {id:'m1',label:'ชาย 1',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#4f73e3"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M13 13q0-6 7-6t7 6" fill="#3558b0" opacity=".7"/></svg>'},
+  {id:'m2',label:'ชาย 2',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#2da86d"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><rect x="12" y="9" width="16" height="5" rx="2.5" fill="#1d8054" opacity=".7"/></svg>'},
+  {id:'m3',label:'ชาย 3',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#e07b2a"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M12 13q1-5 4-5q2 2 4 0t4 5" fill="#b35e1a" opacity=".7"/></svg>'},
+  {id:'m4',label:'ชาย 4',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#7c3aed"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/></svg>'},
+  {id:'m5',label:'ชาย 5',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#dc2626"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M13 13q0-6 7-6t7 6" fill="#a31b1b" opacity=".7"/><path d="M15 19q0 2.5 5 2.5t5-2.5" fill="#a31b1b" opacity=".4"/></svg>'},
+  {id:'f1',label:'หญิง 1',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#db2777"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M12 15q-1-9 8-9t8 9" fill="#9d1b5a" opacity=".7"/><path d="M28 13q2 8 1 18" stroke="#9d1b5a" stroke-width="3" fill="none" opacity=".6"/><path d="M12 13q-2 8-1 18" stroke="#9d1b5a" stroke-width="3" fill="none" opacity=".6"/></svg>'},
+  {id:'f2',label:'หญิง 2',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#0d9488"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M12 15q-1-9 8-9t8 9" fill="#0a7267" opacity=".7"/><path d="M28 12q3 10 2 26" stroke="#0a7267" stroke-width="3.5" fill="none" opacity=".6"/><path d="M12 12q-3 10-2 26" stroke="#0a7267" stroke-width="3.5" fill="none" opacity=".6"/></svg>'},
+  {id:'f3',label:'หญิง 3',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#d97706"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M12 15q-1-9 8-9t8 9" fill="#a35805" opacity=".7"/><path d="M28 12q2 6 1 14" stroke="#a35805" stroke-width="3.5" fill="none" opacity=".6"/><path d="M12 12q-2 6-1 14" stroke="#a35805" stroke-width="3.5" fill="none" opacity=".6"/></svg>'},
+  {id:'f4',label:'หญิง 4',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#7c3aed"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M12 15q-1-9 8-9t8 9" fill="#5b21b6" opacity=".7"/><circle cx="29" cy="11" r="4" fill="#5b21b6" opacity=".7"/><path d="M29 15q1 5 0 12" stroke="#5b21b6" stroke-width="2.5" fill="none" opacity=".6"/></svg>'},
+  {id:'f5',label:'หญิง 5',svg:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="#059669"/><circle cx="20" cy="15" r="7.5" fill="#ffffffdd"/><path d="M7 38q0-13 13-13t13 13z" fill="#ffffffdd"/><path d="M12 15q-3-9 4-9q3 3 4 0q1-3 4 0q7 0 4 9" fill="#047a54" opacity=".7"/></svg>'},
+];
 const BRAND_CATEGORIES = [...BRAND_SCOPE_CATS,...PIRAMID_SCOPE];
 function scopeOfCategory(cat){return PIRAMID_SCOPE.includes(cat)?'PIRAMID Scope':'Brand Scope';}
 let state = loadState();
@@ -1042,7 +1059,13 @@ function updateAuthUI(){
   loginScreen.hidden=logged;
   appShell.classList.toggle('locked',!logged);
   const name=document.getElementById('currentUserName'), role=document.getElementById('currentUserRole'), avatar=document.getElementById('currentAvatar');
-  if(name&&role&&avatar&&activeUser){name.textContent=activeUser.name;role.textContent=`${accessRole(activeUser)} · ${activeUser.role} · ${activeUser.level}`;avatar.textContent=initials(activeUser.name)}
+  if(name&&role&&activeUser){name.textContent=activeUser.name;role.textContent=`${accessRole(activeUser)} · ${activeUser.role} · ${activeUser.level}`;}
+  if(avatar&&activeUser){
+    const me=state.teams.find(t=>t.id===activeUser.id)||activeUser;
+    if(me.avatarImg){avatar.style.background='transparent';avatar.innerHTML=`<img src="${esc(me.avatarImg)}" alt="${esc(initials(me.name||''))}">`;}
+    else if(me.avatarPreset){const p=AVATAR_PRESETS.find(x=>x.id===me.avatarPreset);if(p){avatar.style.background='transparent';avatar.innerHTML=`<img src="data:image/svg+xml,${encodeURIComponent(p.svg)}" alt="">`;} else {avatar.style.background=me.color||'var(--accent)';avatar.textContent=initials(me.name||'');}}
+    else{avatar.style.background=me.color||'var(--accent)';avatar.textContent=initials(me.name||'');}
+  }
   updateLoginState();
   updateNotifBadge();
   applyRbacUI();
@@ -4390,7 +4413,7 @@ function renderTeam(){
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
     const owned=state.projects.filter(p=>projectInvolves(p,t.id)), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
     const locked = !isAdmin();
-    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><div class="avatar" style="background:${t.color}">${esc(initials(t.name))}</div><div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
+    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">${memberAvatarHtml(t)}<div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
   updateLoginState();
   document.querySelectorAll('[data-edit-team]').forEach(b=>b.onclick=()=>openTeamForm(b.dataset.editTeam));
@@ -4464,29 +4487,57 @@ function openProfileEditor(){
   if(!requireLogin()) return;
   const me=state.teams.find(t=>t.id===activeUser.id); if(!me){toast('ไม่พบข้อมูลผู้ใช้','error');return}
   const body=document.getElementById('profileModalBody'); if(!body) return;
+  let pendingPreset=me.avatarPreset||null, pendingImg=me.avatarImg||null;
+  const presetGrid=(gender)=>AVATAR_PRESETS.filter(p=>p.id.startsWith(gender)).map(p=>`<button type="button" class="av-opt${pendingPreset===p.id?' sel':''}" data-preset="${p.id}" aria-label="${p.label}"><img src="data:image/svg+xml,${encodeURIComponent(p.svg)}" alt="${p.label}"></button>`).join('');
   body.innerHTML=`
-    <div class="profile-section-title">Avatar (ภาพเริ่มต้น)</div>
+    <div class="profile-section-title">Avatar</div>
     <div class="profile-avatar-preview">
-      <div class="avatar" id="profileAvatarPreview" style="background:${esc(me.color||'var(--accent)')}">${esc(initials(me.name||''))}</div>
-      <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0">
-        <label class="field" style="flex:1"><span>Display Name</span><input id="profileName" value="${esc(me.name||'')}"></label>
-        <label class="field" style="flex:1"><span>Avatar Color</span><input id="profileColor" type="color" value="${esc(me.color||'#5b7cfa')}" style="height:34px;padding:2px"></label>
+      <div id="profileAvatarPreview" style="width:60px;height:60px;flex:0 0 60px">${memberAvatarHtml({...me,avatarPreset:pendingPreset,avatarImg:pendingImg},'')}</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <input type="file" id="avatarUploadInput" accept="image/*" style="display:none">
+        <button type="button" class="btn small" id="avatarUploadBtn">📁 อัปโหลดรูป</button>
+        <button type="button" class="btn small" id="avatarClearBtn">✕ ใช้ตัวอักษร</button>
       </div>
     </div>
+    <div class="hint" style="margin:-4px 0 2px">ผู้ชาย</div>
+    <div class="avatar-picker-grid">${presetGrid('m')}</div>
+    <div class="hint" style="margin:6px 0 2px">ผู้หญิง</div>
+    <div class="avatar-picker-grid">${presetGrid('f')}</div>
     <div class="profile-section-title">Account</div>
+    <label class="field"><span>Display Name</span><input id="profileName" value="${esc(me.name||'')}"></label>
+    <label class="field"><span>Avatar Color <span class="hint">(ใช้เมื่อไม่มีรูป)</span></span><input id="profileColor" type="color" value="${esc(me.color||'#5b7cfa')}" style="height:34px;padding:2px"></label>
     <label class="field"><span>Email</span><input id="profileEmail" type="email" value="${esc(me.email||'')}" placeholder="user@example.com"></label>
     <div class="profile-section-title">Change Password <span class="hint">(เว้นว่างถ้าไม่ต้องการเปลี่ยน)</span></div>
     <label class="field"><span>Current Password</span><div class="pw-wrap"><input id="profileCurrentPass" type="password" autocomplete="current-password" placeholder="รหัสปัจจุบัน"><button type="button" class="pw-eye" data-eye="profileCurrentPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
     <label class="field"><span>New Password</span><div class="pw-wrap"><input id="profileNewPass" type="password" autocomplete="new-password" placeholder="รหัสใหม่ (อย่างน้อย 4 ตัวอักษร)"><button type="button" class="pw-eye" data-eye="profileNewPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
     <label class="field"><span>Confirm New Password</span><div class="pw-wrap"><input id="profileConfirmPass" type="password" autocomplete="new-password" placeholder="ยืนยันรหัสใหม่"><button type="button" class="pw-eye" data-eye="profileConfirmPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
     <div class="hint" id="profileError" style="color:var(--red);min-height:14px"></div>`;
-  // Live avatar preview
-  const nameEl=document.getElementById('profileName'), colorEl=document.getElementById('profileColor'), prev=document.getElementById('profileAvatarPreview');
-  const refreshPrev=()=>{prev.style.background=colorEl.value; prev.textContent=initials(nameEl.value||'');};
-  nameEl.oninput=refreshPrev; colorEl.oninput=refreshPrev;
+  const prevWrap=document.getElementById('profileAvatarPreview');
+  const refreshPrev=()=>{
+    const nameEl=document.getElementById('profileName'), colorEl=document.getElementById('profileColor');
+    prevWrap.innerHTML=memberAvatarHtml({name:nameEl?.value||me.name,color:colorEl?.value||me.color,avatarPreset:pendingPreset,avatarImg:pendingImg},'');
+    prevWrap.querySelector('.avatar').style.cssText+='width:60px;height:60px;font-size:20px';
+  };
+  document.getElementById('profileName').oninput=refreshPrev;
+  document.getElementById('profileColor').oninput=refreshPrev;
+  body.querySelectorAll('.av-opt').forEach(btn=>{
+    btn.onclick=()=>{
+      pendingPreset=btn.dataset.preset; pendingImg=null;
+      body.querySelectorAll('.av-opt').forEach(b=>b.classList.toggle('sel',b===btn));
+      refreshPrev();
+    };
+  });
+  document.getElementById('avatarUploadBtn').onclick=()=>document.getElementById('avatarUploadInput').click();
+  document.getElementById('avatarUploadInput').onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    resizeImageForAvatar(f,dataUrl=>{pendingImg=dataUrl;pendingPreset=null;body.querySelectorAll('.av-opt').forEach(b=>b.classList.remove('sel'));refreshPrev();});
+  };
+  document.getElementById('avatarClearBtn').onclick=()=>{pendingPreset=null;pendingImg=null;body.querySelectorAll('.av-opt').forEach(b=>b.classList.remove('sel'));refreshPrev();};
+  refreshPrev();
   bindPasswordEyes(body);
   document.getElementById('profileModal').classList.add('on');
-  setTimeout(()=>nameEl.focus(),50);
+  setTimeout(()=>document.getElementById('profileName').focus(),50);
+  body._getPendingAvatar=()=>({preset:pendingPreset,img:pendingImg});
 }
 function closeProfileEditor(){
   const m=document.getElementById('profileModal'); if(m) m.classList.remove('on');
@@ -4503,7 +4554,6 @@ function saveProfile(e){
   const newPw=document.getElementById('profileNewPass').value;
   const confPw=document.getElementById('profileConfirmPass').value;
   if(!name){ errEl.textContent='Display Name ห้ามว่าง'; return; }
-  // Password block: only validated if user is changing it
   if(newPw||confPw||curPw){
     if(!curPw){ errEl.textContent='กรุณากรอกรหัสปัจจุบันเพื่อยืนยันตัวตน'; return; }
     if(String(curPw)!==String(me.password||'')){ errEl.textContent='รหัสปัจจุบันไม่ถูกต้อง'; return; }
@@ -4511,10 +4561,13 @@ function saveProfile(e){
     if(newPw!==confPw){ errEl.textContent='รหัสใหม่ทั้งสองช่องไม่ตรงกัน'; return; }
     me.password=newPw;
   }
-  me.name=name;
-  me.color=color;
-  me.email=email;
-  // Refresh activeUser snapshot so sidebar reflects changes immediately
+  me.name=name; me.color=color; me.email=email;
+  const body=document.getElementById('profileModalBody');
+  const pending=body?._getPendingAvatar?.();
+  if(pending){
+    me.avatarPreset=pending.preset||null;
+    me.avatarImg=pending.img||null;
+  }
   activeUser={...me};
   saveState();
   updateAuthUI();
@@ -4740,6 +4793,27 @@ async function savePreference(userId){
 
 function nextId(prefix,arr){const nums=arr.map(x=>Number(String(x.id).replace(/\D/g,''))).filter(Boolean);return prefix+'-'+String((Math.max(0,...nums)+1)).padStart(3,'0')}
 function initials(name){return name.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
+function memberAvatarHtml(m,extraClass=''){
+  const cls='avatar'+(extraClass?' '+extraClass:'');
+  if(m&&m.avatarImg) return `<div class="${cls}" style="background:transparent"><img src="${esc(m.avatarImg)}" alt="${esc(initials(m.name||''))}"></div>`;
+  if(m&&m.avatarPreset){const p=AVATAR_PRESETS.find(x=>x.id===m.avatarPreset);if(p) return `<div class="${cls}" style="background:transparent"><img src="data:image/svg+xml,${encodeURIComponent(p.svg)}" alt="${esc(initials(m.name||''))}"></div>`;}
+  return `<div class="${cls}" style="background:${esc((m&&m.color)||'var(--accent)')}">${esc(initials((m&&m.name)||''))}</div>`;
+}
+function resizeImageForAvatar(file,cb){
+  const MAX=200,reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const s=Math.min(MAX/img.width,MAX/img.height,1);
+      const c=document.createElement('canvas');
+      c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      cb(c.toDataURL('image/jpeg',.82));
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 function bindCloseButtons(){document.querySelectorAll('[data-close-form]').forEach(b=>b.onclick=()=>closeFormPanel(b.dataset.closeForm+'FormPanel'))}
 function exportCsv(type){
   const teamName=id=>{const t=byId(id); return t&&t.name?t.name:(id||'');};
