@@ -2,7 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "crons": [
-    { "path": "/api/email/notify", "schedule": "0 * * * *" }
+    { "path": "/api/email/notify", "schedule": "0 1 * * *" }
   ],
   "rewrites": [
     { "source": "/app", "destination": "/" },
