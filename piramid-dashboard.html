@@ -1663,8 +1663,8 @@ function legacyProjectBrands(p){
 function normalizeProposalOptions(p){
   const raw=Array.isArray(p.proposalOptions)&&p.proposalOptions.length?p.proposalOptions:null;
   if(!raw){
-    const items=legacyProjectBrands(p).map((b,i)=>({id:`IT-${i+1}`,category:b.category||'Hardware',brand:b.name||'',model:b.model||'',qty:1,unitPrice:Number(b.value||0),total:Number(b.value||0),systemGroup:'',system:'',remark:'legacy brand scope'}));
-    return [{id:'OPT-1',name:'Option 1 Main',type:'Main',status:p.status==='Lost'?'Proposed':'Selected',value:Number(p.val||0),revision:1,submittedAt:String(p.createdAt||'').slice(0,10),selected:p.status!=='Lost',reason:'',review:'Migrated from project Brand Scope',items}];
+    const items=legacyProjectBrands(p).map((b,i)=>({id:`IT-${i+1}`,category:b.category||'Hardware',brand:b.name||'',model:b.model||'',qty:1,unit:'',unitPrice:Number(b.value||0),total:Number(b.value||0),systemGroup:'',system:'',remark:'legacy brand scope'}));
+    return [{id:'OPT-1',name:'Option 1 Main',type:'Main',status:p.status==='Lost'?'Proposed':'Selected',value:Number(p.val||0),revision:1,submittedAt:String(p.createdAt||'').slice(0,10),selected:p.status!=='Lost',reason:'',review:'',items}];
   }
   return raw.map((o,i)=>({
     id:o.id||`OPT-${i+1}`,
@@ -1683,6 +1683,7 @@ function normalizeProposalOptions(p){
       brand:it.brand||it.name||'',
       model:it.model||'',
       qty:Number(it.qty||1),
+      unit:it.unit||'',
       unitPrice:Number(it.unitPrice||0),
       total:Number(it.total ?? ((Number(it.qty||1)||1)*(Number(it.unitPrice||0)||0))),
       systemGroup:it.systemGroup||'',
@@ -2665,15 +2666,14 @@ function syncProposalOptionFromInputs(){
     o.review=root.querySelector('[data-of="review"]')?.value||'';
     o.items=(o.items||[]).map((it,j)=>{
       const row=root.querySelector(`[data-option-item="${j}"]`); if(!row) return it;
-      const qty=Number(row.querySelector('[data-if="qty"]')?.value||1), unitPrice=Number(row.querySelector('[data-if="unitPrice"]')?.value||0);
+      const qty=Number(row.querySelector('[data-if="qty"]')?.value||1);
       return {
         id:it.id||`IT-${j+1}`,
         category:row.querySelector('[data-if="category"]')?.value||'Hardware',
         brand:row.querySelector('[data-if="brand"]')?.value||'',
         model:row.querySelector('[data-if="model"]')?.value||'',
         qty,
-        unitPrice,
-        total:Number(row.querySelector('[data-if="total"]')?.value||0) || qty*unitPrice,
+        unit:row.querySelector('[data-if="unit"]')?.value||'',
         systemGroup:row.querySelector('[data-if="systemGroup"]')?.value||'',
         system:row.querySelector('[data-if="system"]')?.value||'',
         remark:row.querySelector('[data-if="remark"]')?.value||''
@@ -2702,8 +2702,7 @@ function renderProposalOptionsEditor(){
           <label class="field"><span>Brand</span><input data-if="brand" value="${esc(it.brand||'')}" placeholder="Brand"></label>
           <label class="field"><span>Model</span><input data-if="model" value="${esc(it.model||'')}" placeholder="Model"></label>
           <label class="field"><span>Qty</span><input data-if="qty" type="number" min="0" value="${Number(it.qty||1)}"></label>
-          <label class="field"><span>Unit</span><input data-if="unitPrice" type="number" min="0" value="${Number(it.unitPrice||0)}"></label>
-          <label class="field"><span>Total</span><input data-if="total" type="number" min="0" value="${Number(it.total||0)}"></label>
+          <label class="field"><span>Unit</span><input data-if="unit" value="${esc(it.unit||'')}" placeholder="ea / set / job"></label>
           <label class="field"><span>Group</span><select data-if="systemGroup"><option value="">-</option>${SYSTEM_GROUPS.map(g=>`<option value="${esc(g)}" ${it.systemGroup===g?'selected':''}>${esc(g)}</option>`).join('')}</select></label>
           <label class="field"><span>System</span><input data-if="system" value="${esc(it.system||'')}" placeholder="System"></label>
           <button class="btn small danger" type="button" data-remove-option-item="${i}|${j}">Delete</button>
@@ -2720,7 +2719,7 @@ function bindProposalOptionsEditor(){
   const host=document.getElementById('proposalOptionsEditor'); if(!host) return;
   host.querySelectorAll('input,select,textarea').forEach(el=>el.oninput=el.onchange=()=>syncProposalOptionFromInputs());
   host.querySelectorAll('[data-remove-option]').forEach(b=>b.onclick=()=>{syncProposalOptionFromInputs(); proposalEditorOptions.splice(Number(b.dataset.removeOption),1); renderProposalOptionsEditor();});
-  host.querySelectorAll('[data-add-option-item]').forEach(b=>b.onclick=()=>{syncProposalOptionFromInputs(); const o=proposalEditorOptions[Number(b.dataset.addOptionItem)]; o.items ||= []; o.items.push({id:`IT-${o.items.length+1}`,category:'Hardware',brand:'',model:'',qty:1,unitPrice:0,total:0,systemGroup:'',system:'',remark:''}); renderProposalOptionsEditor();});
+  host.querySelectorAll('[data-add-option-item]').forEach(b=>b.onclick=()=>{syncProposalOptionFromInputs(); const o=proposalEditorOptions[Number(b.dataset.addOptionItem)]; o.items ||= []; o.items.push({id:`IT-${o.items.length+1}`,category:'Hardware',brand:'',model:'',qty:1,unit:'',systemGroup:'',system:'',remark:''}); renderProposalOptionsEditor();});
   host.querySelectorAll('[data-remove-option-item]').forEach(b=>b.onclick=()=>{syncProposalOptionFromInputs(); const [i,j]=b.dataset.removeOptionItem.split('|').map(Number); proposalEditorOptions[i]?.items?.splice(j,1); renderProposalOptionsEditor();});
   const add=document.getElementById('addProposalOptionBtn'); if(add) add.onclick=()=>{syncProposalOptionFromInputs(); proposalEditorOptions.push({id:`OPT-${proposalEditorOptions.length+1}`,name:`Option ${proposalEditorOptions.length+1} Alternative`,type:'Alternative',status:'Proposed',value:0,revision:1,submittedAt:'',selected:false,reason:'',review:'',items:[]}); renderProposalOptionsEditor();};
 }
