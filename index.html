@@ -2741,9 +2741,10 @@ function renderPtdEditor(){
   const teamOpts=state.teams.map(t=>`<option value="${esc(t.id)}">${esc(t.name)} (${esc(t.role||'')})</option>`).join('');
   const statusOpts=state.taskStatuses.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');
   const priOpts=['Low','Medium','High','Critical'].map(v=>`<option value="${v}">${v}</option>`).join('');
-  host.innerHTML=`<div class="ptd-editor">${ptdEditorDefs.map((d,i)=>`
+  const ptdTitles=[...new Set((state.taskTemplates||[]).flatMap(t=>(t.subtasks||[])).filter(Boolean))].map(s=>`<option value="${esc(s)}"></option>`).join('');
+  host.innerHTML=`<datalist id="ptdTitleList">${ptdTitles}</datalist><div class="ptd-editor">${ptdEditorDefs.map((d,i)=>`
     <div class="ptd-row" data-ptd-row="${i}">
-      <label class="field"><span>Task Title</span><input data-ptdf="title" value="${esc(d.title)}" placeholder="ชื่องาน"></label>
+      <label class="field"><span>Task Title</span><input data-ptdf="title" list="ptdTitleList" value="${esc(d.title)}" placeholder="ชื่องาน หรือเลือกจาก template"></label>
       <label class="field"><span>Owner</span><select data-ptdf="owner">${state.teams.map(t=>`<option value="${esc(t.id)}"${d.owner===t.id?' selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</select></label>
       <label class="field"><span>Status</span><select data-ptdf="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}"${d.status===s.name?' selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
       <label class="field"><span>Due Date</span><input data-ptdf="due" type="date" value="${esc(d.due||'')}"></label>
