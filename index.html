@@ -1498,6 +1498,7 @@ function normalizeState(data){
   data.taskStatuses = data.taskStatuses?.length ? data.taskStatuses : structuredClone(DEFAULT_TASK_STATUSES);
   const nowIso=new Date().toISOString();
   data.projects = data.projects.map(p=>({...p,due:p.due||'',createdAt:p.createdAt||nowIso,taskStatus:p.taskStatus||inferProjectTaskStatus(p.id,data.tasks),progress:Number(p.progress ?? averageProjectProgress(p.id,data.tasks))||0,size:sizeForValue(p.val,data.sizeRanges)}));
+  data.tasks = data.tasks.map(t=>({...t,assignedAt:t.assignedAt||dateKey(new Date(t.createdAt||nowIso))}));
   data.passwordResetRequests = data.passwordResetRequests || [];
   data.resetApprovalMode = data.resetApprovalMode==='manual' ? 'manual' : 'auto'; // self-service password reset; 'auto' = no admin approval
   data.todoView = data.todoView || 'table';
@@ -2626,7 +2627,7 @@ function bindTaskTemplateSubtaskOptions(){
     ptdEditorDefs=ptdEditorDefs.filter(d=>!d.fromTemplate||checkedTitles.has(d.title));
     checkedTitles.forEach(title=>{
       if(!ptdEditorDefs.some(d=>d.title===title)){
-        ptdEditorDefs.push({id:'PTD-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),title,owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',status:'Schedule',due:'',priority:'Medium',progress:0,fromTemplate:true});
+        ptdEditorDefs.push({id:'PTD-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),title,owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',assignedAt:dateKey(today),status:'Schedule',due:'',priority:'Medium',progress:0,fromTemplate:true});
       }
     });
     renderPtdEditor();
@@ -2747,6 +2748,7 @@ function syncPtdFromInputs(){
     d.title=row.querySelector('[data-ptdf="title"]')?.value||d.title;
     d.owner=row.querySelector('[data-ptdf="owner"]')?.value||d.owner;
     d.status=row.querySelector('[data-ptdf="status"]')?.value||d.status;
+    d.assignedAt=row.querySelector('[data-ptdf="assignedAt"]')?.value||'';
     d.due=row.querySelector('[data-ptdf="due"]')?.value||'';
     d.priority=row.querySelector('[data-ptdf="priority"]')?.value||d.priority;
     d.progress=Number(row.querySelector('[data-ptdf="progress"]')?.value||0);
@@ -2764,6 +2766,7 @@ function renderPtdEditor(){
       <label class="field"><span>Task Title</span><input data-ptdf="title" list="ptdTitleList" value="${esc(d.title)}" placeholder="ชื่องาน หรือเลือกจาก template"></label>
       <label class="field"><span>Owner</span><select data-ptdf="owner">${state.teams.map(t=>`<option value="${esc(t.id)}"${d.owner===t.id?' selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</select></label>
       <label class="field"><span>Status</span><select data-ptdf="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}"${d.status===s.name?' selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
+      <label class="field"><span>Assigned</span><input data-ptdf="assignedAt" type="date" value="${esc(d.assignedAt||'')}" title="วันที่ได้รับมอบหมาย"></label>
       <label class="field"><span>Due Date</span><input data-ptdf="due" type="date" value="${esc(d.due||'')}"></label>
       <label class="field"><span>Priority</span><select data-ptdf="priority">${['Low','Medium','High','Critical'].map(v=>`<option value="${v}"${d.priority===v?' selected':''}>${v}</option>`).join('')}</select></label>
       <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-ptd-del="${i}" aria-label="Delete sub task">×</button></div>
@@ -2779,7 +2782,7 @@ function bindPtdEditor(){
   const add=document.getElementById('addPtdBtn');
   if(add) add.onclick=()=>{
     syncPtdFromInputs();
-    ptdEditorDefs.push({id:`PTD-${Date.now()}`,title:'',owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',status:'Schedule',due:'',priority:'Medium',progress:0});
+    ptdEditorDefs.push({id:`PTD-${Date.now()}`,title:'',owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',assignedAt:dateKey(today),status:'Schedule',due:'',priority:'Medium',progress:0});
     renderPtdEditor();
   };
 }
@@ -2979,6 +2982,7 @@ function syncProjectTasks(project){
       progress:project.taskStatus==='Done'?100:(existing?.progress||project.progress||0),
       revision:existing?.revision||1,
       subtasks:uniq([...selectedTemplateSubtasks,...(project.projectSubtasks||[])]),
+      assignedAt:existing?.assignedAt||dateKey(new Date(nowIso)),
       createdAt:existing?.createdAt||nowIso,
       // auto-capture status-change timeline for reporting/analytics
       statusChangedAt:changed?nowIso:(existing?.statusChangedAt||nowIso),
@@ -3009,6 +3013,7 @@ function syncProjectTasks(project){
       level:existing?.level||'Member',
       revision:existing?.revision||1,
       subtasks:existing?.subtasks||[],
+      assignedAt:def.assignedAt||existing?.assignedAt||dateKey(new Date(nowIso)),
       createdAt:existing?.createdAt||nowIso,
       statusChangedAt:existing?.statusChangedAt||nowIso,
       completedAt:(existing?.status||def.status)==='Done'?(existing?.completedAt||nowIso):null,
@@ -3200,6 +3205,7 @@ function openProjectSubTasks(projectId){
             <label class="field"><span>Task Title</span><input data-pf="title" list="pstTitleList" value="${esc(t.title)}" placeholder="ชื่องาน หรือเลือกจาก template"></label>
             <label class="field"><span>Owner</span><select data-pf="owner">${teamOpts(t.owner)}</select></label>
             <label class="field"><span>Status</span><select data-pf="status">${statusOpts(t.status)}</select></label>
+            <label class="field"><span>Assigned</span><input data-pf="assignedAt" type="date" value="${esc(t.assignedAt||'')}" title="วันที่ได้รับมอบหมาย"></label>
             <label class="field"><span>Due</span><input data-pf="due" type="date" value="${esc(t.due||'')}"></label>
             <label class="field"><span>Progress %</span><input data-pf="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
             <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-pst-del="${esc(t.id)}" aria-label="Delete sub task">×</button></div>
@@ -3225,7 +3231,7 @@ function openProjectSubTasks(projectId){
       saveRows(); // persist current edits first
       const nowIso=new Date().toISOString();
       const defId=`PTD-${Date.now()}`;
-      const newDef={id:defId,title:'New Sub Task',owner:proj.bd||state.teams[0]?.id||'',status:'Schedule',due:proj.due||'',priority:'Medium',progress:0};
+      const newDef={id:defId,title:'New Sub Task',owner:proj.bd||state.teams[0]?.id||'',assignedAt:dateKey(today),status:'Schedule',due:proj.due||'',priority:'Medium',progress:0};
       proj.projectTaskDefs=[...(proj.projectTaskDefs||[]),newDef];
       const newOwner=newDef.owner;
       state.tasks.push({
@@ -3233,7 +3239,7 @@ function openProjectSubTasks(projectId){
         title:newDef.title,owner:newOwner,owners:newOwner?[newOwner]:[],
         status:'Schedule',due:newDef.due||'',priority:'Medium',progress:0,
         level:'Member',revision:1,subtasks:[],
-        createdAt:nowIso,statusChangedAt:nowIso,completedAt:null,
+        assignedAt:dateKey(today),createdAt:nowIso,statusChangedAt:nowIso,completedAt:null,
         statusLog:[{status:'Schedule',at:nowIso}]
       });
       cascadeProjectDoneFromTasks(projectId);
@@ -3253,6 +3259,7 @@ function openProjectSubTasks(projectId){
         const statusChanged=t.status!==newStatus;
         t.title=newTitle||t.title;
         t.owner=newOwner; t.owners=newOwner?[newOwner]:[];
+        t.assignedAt=row.querySelector('[data-pf="assignedAt"]')?.value||t.assignedAt||'';
         t.due=newDue||'';
         t.progress=newStatus==='Done'?100:newProgress;
         if(statusChanged){
@@ -3264,7 +3271,7 @@ function openProjectSubTasks(projectId){
         // mirror back to projectTaskDefs
         if(t.projectTaskDefId){
           const def=(proj.projectTaskDefs||[]).find(d=>d.id===t.projectTaskDefId);
-          if(def){def.title=t.title;def.owner=t.owner;def.status=t.status;def.due=t.due;def.priority=t.priority||'Medium';def.progress=t.progress;}
+          if(def){def.title=t.title;def.owner=t.owner;def.assignedAt=t.assignedAt||'';def.status=t.status;def.due=t.due;def.priority=t.priority||'Medium';def.progress=t.progress;}
         }
       });
     }
