@@ -1421,7 +1421,7 @@ async function loadRemoteState(){
     renderAll(true);
     return;
   }
-  if(!dbReady) await saveRemoteState();
+  // DB load failed or empty — use localStorage only; do NOT auto-save (prevents seed data overwriting real DB data)
   dbReady=true;
   restoreSession();
   renderAll(false);
