@@ -547,6 +547,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     <form id="appLoginForm">
       <label class="field"><span>User ID</span><input id="appLoginUser" autocomplete="off" required placeholder="user id"></label>
       <label class="field"><span>Access Code</span><div class="pw-wrap"><input id="appLoginPass" class="masked-entry" type="text" autocomplete="off" required placeholder="access code"><button type="button" class="pw-eye" data-eye="appLoginPass" aria-label="แสดง/ซ่อนรหัส">👁</button></div></label>
+      <label class="switch"><input type="checkbox" id="rememberLogin">Remember this device for 30 days</label>
       <button class="btn primary" type="submit">Continue</button>
       <button class="btn" type="button" id="forgotPasscodeBtn">ลืม / รีเซ็ตรหัสผ่าน</button>
       <div class="login-error" id="appLoginError"></div>
@@ -1072,6 +1073,8 @@ let proposalEditorOptions = [];
 let ptdEditorDefs = []; // project task defs working buffer
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000;
 let idleTimer = null;
+const REMEMBER_LOGIN_COOKIE = 'piramid-remember-login';
+const REMEMBER_LOGIN_DAYS = 30;
 
 function applyTheme(){
   document.documentElement.dataset.theme = currentTheme;
@@ -1083,6 +1086,62 @@ function findUser(username,password){
   const passKey=String(password||'').trim();
   return state.teams.find(t=>String(t.username||'').trim().toLowerCase()===userKey && String(t.password||'').trim()===passKey);
 }
+function setCookie(name,value,maxAgeSeconds){
+  const secure=location.protocol==='https:'?'; Secure':'';
+  document.cookie=`${name}=${encodeURIComponent(value)}; Max-Age=${maxAgeSeconds}; Path=/; SameSite=Lax${secure}`;
+}
+function getCookie(name){
+  const prefix=name+'=';
+  const item=document.cookie.split(';').map(x=>x.trim()).find(x=>x.startsWith(prefix));
+  return item?decodeURIComponent(item.slice(prefix.length)):'';
+}
+function deleteCookie(name){document.cookie=`${name}=; Max-Age=0; Path=/; SameSite=Lax`;}
+function readRememberedLogin(){
+  const raw=getCookie(REMEMBER_LOGIN_COOKIE);
+  if(!raw) return null;
+  try{
+    const data=JSON.parse(raw);
+    if(!data||data.v!==1||!data.username||!data.password) return null;
+    return data;
+  }catch(err){return null}
+}
+function saveRememberedLogin(username,password){
+  const payload={v:1,username:String(username||'').trim(),password:String(password||''),savedAt:new Date().toISOString()};
+  setCookie(REMEMBER_LOGIN_COOKIE,JSON.stringify(payload),REMEMBER_LOGIN_DAYS*24*60*60);
+}
+function clearRememberedLogin(){deleteCookie(REMEMBER_LOGIN_COOKIE);}
+function syncRememberedLoginForm(){
+  const data=readRememberedLogin();
+  const userInput=document.getElementById('appLoginUser');
+  const passInput=document.getElementById('appLoginPass');
+  const remember=document.getElementById('rememberLogin');
+  if(!remember) return data;
+  remember.checked=!!data;
+  if(data&&!activeUser){
+    if(userInput&&!userInput.value) userInput.value=data.username;
+    if(passInput&&!passInput.value) passInput.value=data.password;
+  }
+  return data;
+}
+function restoreRememberedLogin(auto=false){
+  const data=syncRememberedLoginForm();
+  if(!data) return false;
+  const user=findUser(data.username,data.password);
+  if(!user){
+    clearRememberedLogin();
+    const err=document.getElementById('appLoginError');
+    if(auto&&err) err.textContent='Saved login expired. Please login again.';
+    return false;
+  }
+  if(auto){setActiveUser(user); return true;}
+  return false;
+}
+function refreshRememberedLoginFor(user){
+  const data=readRememberedLogin();
+  if(data&&String(data.username||'').trim().toLowerCase()===String(user?.username||'').trim().toLowerCase()){
+    saveRememberedLogin(user.username,user.password);
+  }
+}
 function setActiveUser(user){
   activeUser=user||null;
   if(user){localStorage.setItem('piramid-active-user',user.id);localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer();loadUserLayout(user.id);}
@@ -1092,10 +1151,14 @@ function setActiveUser(user){
 function restoreSession(){
   const id=localStorage.getItem('piramid-active-user');
   const at=Number(localStorage.getItem('piramid-session-at')||0);
-  if(id && (!at || Date.now()-at>SESSION_TIMEOUT_MS)){expireSession('Session expired after 30 minutes idle. Please login again.');return}
+  if(id && (!at || Date.now()-at>SESSION_TIMEOUT_MS)){
+    if(restoreRememberedLogin(true)) return;
+    expireSession('Session expired after 30 minutes idle. Please login again.');return
+  }
   const user=state.teams.find(t=>t.id===id);
   activeUser=user||null;
   if(activeUser){ startIdleTimer(); loadUserLayout(activeUser.id); }
+  else restoreRememberedLogin(true);
   updateAuthUI();
 }
 function touchSession(){if(activeUser){localStorage.setItem('piramid-session-at',String(Date.now()));startIdleTimer()}}
@@ -1120,6 +1183,7 @@ function updateAuthUI(){
     else{avatar.style.background=me.color||'var(--accent)';avatar.textContent=initials(me.name||'');}
   }
   updateLoginState();
+  if(!logged) syncRememberedLoginForm();
   updateNotifBadge();
   applyRbacUI();
 }
@@ -1130,12 +1194,15 @@ function loginApp(e){
   const found=findUser(user,pass);
   if(!found){const err=document.getElementById('appLoginError'); if(err) err.textContent='Username or passcode is incorrect.';return}
   const err=document.getElementById('appLoginError'); if(err) err.textContent='';
+  if(document.getElementById('rememberLogin')?.checked) saveRememberedLogin(user,pass);
+  else clearRememberedLogin();
   setActiveUser(found);
   renderAll(false);
 }
 function logoutApp(){
   setActiveUser(null);
-  const pass=document.getElementById('appLoginPass'); if(pass) pass.value='';
+  if(readRememberedLogin()) syncRememberedLoginForm();
+  else {const pass=document.getElementById('appLoginPass'); if(pass) pass.value='';}
 }
 function accessRole(user=activeUser){
   if(!user) return 'Guest';
@@ -1306,11 +1373,10 @@ function loadUserLayout(userId){
 }
 // ─────────────────────────────────────────────────────────────────────────────
 function saveState(){
-  syncUserLayout(); // keep per-user layout slot in sync before every write
-  // Local persistence stays immediate: synchronous, reliable, and the offline fallback.
+  syncUserLayout();
+  state._savedAt=Date.now();
   try{ localStorage.setItem('piramid-bd-state',JSON.stringify(state)); }
   catch(e){ console.warn('Local save failed',e); }
-  // Cloud sync is debounced: a burst of edits collapses into a single POST of the latest state.
   remoteSavePending=true;
   if(remoteSaveTimer) clearTimeout(remoteSaveTimer);
   remoteSaveTimer=setTimeout(()=>flushRemoteState(),REMOTE_SAVE_DEBOUNCE_MS);
@@ -1329,17 +1395,28 @@ function initDatabase(){
   loadRemoteState();
 }
 async function loadRemoteState(){
-  let remoteData=null;
+  let remoteData=null,remoteUpdatedAt=null;
   try{
     const res=await fetch(STATE_API,{headers:{Accept:'application/json'},cache:'no-store'});
     if(!res.ok) throw new Error('State API load failed: '+res.status);
     const row=await res.json();
     remoteData=row?.data||null;
+    remoteUpdatedAt=row?.updated_at||null;
   }catch(err){console.warn('Neon load failed, using localStorage',err)}
   if(remoteData){
-    state=normalizeState(remoteData);
+    // Use whichever copy is newer: compare _savedAt timestamps.
+    // If remote is older than what we already have locally, keep local and push it to DB.
+    const localTs=state._savedAt||0;
+    const remoteTs=remoteData._savedAt||(remoteUpdatedAt?new Date(remoteUpdatedAt).getTime():0);
+    if(remoteTs>=localTs){
+      state=normalizeState(remoteData);
+      localStorage.setItem('piramid-bd-state',JSON.stringify(state));
+    }else{
+      // Local is newer — reconcile by pushing local state to DB immediately
+      console.info('Local state is newer than DB (local:',localTs,'remote:',remoteTs,') — pushing local to DB');
+      saveRemoteState();
+    }
     dbReady=true;
-    localStorage.setItem('piramid-bd-state',JSON.stringify(state));
     restoreSession();
     renderAll(true);
     return;
@@ -4773,6 +4850,7 @@ function saveProfile(e){
     me.avatarImg=pending.img||null;
   }
   activeUser={...me};
+  refreshRememberedLoginFor(me);
   saveState();
   updateAuthUI();
   closeProfileEditor();
@@ -5230,6 +5308,7 @@ function bindAppEvents(){
   on('teamFormToggle','onclick',()=>openTeamForm());
   on('appLoginForm','onsubmit',loginApp);
   on('logoutBtn','onclick',logoutApp);
+  on('rememberLogin','onchange',()=>{if(!document.getElementById('rememberLogin')?.checked) clearRememberedLogin();});
   on('forgotPasscodeBtn','onclick',toggleForgotPasscode);
   bindPasswordEyes(document);
   on('ruleFormToggle','onclick',()=>openRuleForm());
