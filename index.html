@@ -2748,6 +2748,7 @@ function syncPtdFromInputs(){
     d.title=row.querySelector('[data-ptdf="title"]')?.value||d.title;
     d.owner=row.querySelector('[data-ptdf="owner"]')?.value||d.owner;
     d.status=row.querySelector('[data-ptdf="status"]')?.value||d.status;
+    d._srcTaskId=row.querySelector('[data-ptdf="_srcTaskId"]')?.value||d._srcTaskId||'';
     d.assignedAt=row.querySelector('[data-ptdf="assignedAt"]')?.value||'';
     d.due=row.querySelector('[data-ptdf="due"]')?.value||'';
     d.priority=row.querySelector('[data-ptdf="priority"]')?.value||d.priority;
@@ -2769,7 +2770,7 @@ function renderPtdEditor(){
       <label class="field"><span>Assigned</span><input data-ptdf="assignedAt" type="date" value="${esc(d.assignedAt||'')}" title="วันที่ได้รับมอบหมาย"></label>
       <label class="field"><span>Due Date</span><input data-ptdf="due" type="date" value="${esc(d.due||'')}"></label>
       <label class="field"><span>Priority</span><select data-ptdf="priority">${['Low','Medium','High','Critical'].map(v=>`<option value="${v}"${d.priority===v?' selected':''}>${v}</option>`).join('')}</select></label>
-      <div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-ptd-del="${i}" aria-label="Delete sub task">×</button></div>
+      <input type="hidden" data-ptdf="_srcTaskId" value="${esc(d._srcTaskId||'')}"><div style="display:flex;align-items:flex-end"><button class="btn small danger" type="button" data-ptd-del="${i}" aria-label="Delete sub task">×</button></div>
     </div>`).join('')}</div>
   <button class="btn small primary" type="button" id="addPtdBtn">+ Add Sub Task</button>
   <input type="hidden" id="projectTaskDefsJson" name="projectTaskDefsJson">`;
@@ -2867,6 +2868,14 @@ function openProjectForm(id){
   proposalEditorOptions=structuredClone(normalizeProposalOptions(p));
   ptdEditorDefs=structuredClone(p.projectTaskDefs||[]);
   const relatedTasks=state.tasks.filter(t=>t.project===p.id);
+  // Merge template tasks not yet covered by a projectTaskDef entry (match by title, case-insensitive)
+  const ptdTitleSet=new Set(ptdEditorDefs.map(d=>(d.title||'').trim().toLowerCase()));
+  relatedTasks.filter(t=>t.templateId&&!t.projectTaskDefId).forEach(t=>{
+    if(!ptdTitleSet.has((t.title||'').trim().toLowerCase())){
+      ptdEditorDefs.push({id:'PTDT-'+t.id,_srcTaskId:t.id,title:t.title||'',owner:t.owner||'',assignedAt:t.assignedAt||'',status:t.status||'Schedule',due:t.due||'',priority:t.priority||'Medium',progress:t.progress||0});
+      ptdTitleSet.add((t.title||'').trim().toLowerCase());
+    }
+  });
   const selectedTemplateIds=p.taskTemplateIds || relatedTasks.map(t=>t.templateId).filter(Boolean);
   const projectSubtasks=p.projectSubtasks || uniq(relatedTasks.flatMap(t=>t.subtasks||[]));
   const templateSubtaskMap=p.taskTemplateSubtasks || {};
@@ -2916,6 +2925,20 @@ function saveProject(e){
   syncPtdFromInputs();
   try{f.proposalOptions=JSON.parse(document.getElementById('proposalOptionsJson')?.value||'[]')}catch{f.proposalOptions=[]}
   try{f.projectTaskDefs=JSON.parse(document.getElementById('projectTaskDefsJson')?.value||'[]')}catch{f.projectTaskDefs=[]}
+  // Sync merged template-task rows back to state.tasks directly (don't re-create as projectTaskDefs)
+  const _nowPtd=new Date().toISOString();
+  ptdEditorDefs.forEach(d=>{
+    if(!d._srcTaskId) return;
+    const tk=state.tasks.find(t=>t.id===d._srcTaskId); if(!tk) return;
+    const sc=tk.status!==d.status;
+    tk.owner=d.owner||tk.owner; tk.owners=d.owner?[d.owner]:tk.owners;
+    tk.assignedAt=d.assignedAt||tk.assignedAt||''; tk.due=d.due||tk.due||'';
+    tk.priority=d.priority||tk.priority||'Medium';
+    tk.progress=d.status==='Done'?100:Number(d.progress||tk.progress||0);
+    if(sc){tk.status=d.status;tk.statusChangedAt=_nowPtd;if(d.status==='Done'){tk.completedAt=tk.completedAt||_nowPtd;}else{tk.completedAt=null;}tk.statusLog=[...(tk.statusLog||[]),{status:d.status,at:_nowPtd}].slice(-30);}
+  });
+  // Strip synthetic entries so syncProjectTasks doesn't create extra tasks for them
+  f.projectTaskDefs=f.projectTaskDefs.filter(d=>!/^PTDT-/.test(d.id||''));
   f.proposalOptions=normalizeProposalOptions({proposalOptions:f.proposalOptions,val:f.val,brands:f.brands,status:f.status});
   const selectedQuote=f.proposalOptions.filter(o=>o.selected||o.status==='Selected').reduce((s,o)=>s+Number(o.value||0),0);
   if(selectedQuote>0) f.val=selectedQuote;
@@ -2959,9 +2982,17 @@ function deleteProject(id){if(!canEditModule('projects')){toast('คุณไม
 function syncProjectTasks(project){
   const templateIds=project.taskTemplateIds||[];
   state.tasks=state.tasks.filter(t=>t.project!==project.id || !t.templateId || templateIds.includes(t.templateId));
+  const _ptdTitleSet=new Set((project.projectTaskDefs||[]).map(d=>(d.title||'').trim().toLowerCase()));
   templateIds.forEach(tid=>{
     const template=state.taskTemplates.find(t=>t.id===tid);
     if(!template) return;
+    // Skip if a projectTaskDef task with this title already owns it
+    if(_ptdTitleSet.has((template.title||'').trim().toLowerCase())){
+      // Still update existing template task if one exists (keep data consistent)
+      const dup=state.tasks.find(t=>t.project===project.id&&t.templateId===tid);
+      if(dup) state.tasks=state.tasks.filter(t=>!(t.project===project.id&&t.templateId===tid));
+      return;
+    }
     const existing=state.tasks.find(t=>t.project===project.id && t.templateId===tid);
     const selectedTemplateSubtasks=Array.isArray(project.taskTemplateSubtasks?.[tid])
       ? project.taskTemplateSubtasks[tid]
