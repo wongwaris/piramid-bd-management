@@ -3176,11 +3176,11 @@ function openProjectSubTasks(projectId){
     const summary=rel.length
       ? `<div class="hint" style="margin-bottom:10px"><b>${done}/${rel.length}</b> sub tasks เสร็จ · เฉลี่ย <b>${overallPct}%</b> ${done===rel.length&&rel.length>0?'· ✓ โครงการเสร็จ 100% อัตโนมัติ':done>0?'· โครงการกำลังดำเนินการ':''}</div>`
       : '<div class="hint" style="margin-bottom:10px">ยังไม่มี sub task · กดปุ่ม + Add Sub Task ด้านล่าง</div>';
-    body.innerHTML=`${summary}
+    body.innerHTML=`${summary}<datalist id="pstTitleList">${[...new Set((state.taskTemplates||[]).flatMap(t=>(t.subtasks||[])).filter(Boolean))].map(s=>`<option value="${esc(s)}"></option>`).join('')}</datalist>
       <div class="ptd-editor" id="pstList">
         ${rel.map((t,i)=>`
           <div class="ptd-row" data-pst-row="${esc(t.id)}">
-            <label class="field"><span>Task Title</span><input data-pf="title" value="${esc(t.title)}" placeholder="ชื่องาน"></label>
+            <label class="field"><span>Task Title</span><input data-pf="title" list="pstTitleList" value="${esc(t.title)}" placeholder="ชื่องาน หรือเลือกจาก template"></label>
             <label class="field"><span>Owner</span><select data-pf="owner">${teamOpts(t.owner)}</select></label>
             <label class="field"><span>Status</span><select data-pf="status">${statusOpts(t.status)}</select></label>
             <label class="field"><span>Due</span><input data-pf="due" type="date" value="${esc(t.due||'')}"></label>
