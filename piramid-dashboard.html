@@ -2616,6 +2616,21 @@ function taskTemplateSubtaskOptions(selectedTemplateIds=[], selectedMap={}){
   }).join('')}</div>`;
 }
 function bindTaskTemplateSubtaskOptions(){
+  const syncPtd=()=>{
+    const checkedTitles=new Set();
+    document.querySelectorAll('input[name="templateSubtaskSelect"]:checked').forEach(chk=>{
+      const title=String(chk.value||'').split('|').slice(1).join('|');
+      if(title) checkedTitles.add(title);
+    });
+    syncPtdFromInputs();
+    ptdEditorDefs=ptdEditorDefs.filter(d=>!d.fromTemplate||checkedTitles.has(d.title));
+    checkedTitles.forEach(title=>{
+      if(!ptdEditorDefs.some(d=>d.title===title)){
+        ptdEditorDefs.push({id:'PTD-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),title,owner:state.teams.find(t=>/bd/i.test(t.role||''))?.id||state.teams[0]?.id||'',status:'Schedule',due:'',priority:'Medium',progress:0,fromTemplate:true});
+      }
+    });
+    renderPtdEditor();
+  };
   const refresh=()=>{
     const selected=new Set(checkedValues('taskTemplatesSelect'));
     document.querySelectorAll('[data-template-subtasks]').forEach(card=>{
@@ -2631,8 +2646,10 @@ function bindTaskTemplateSubtaskOptions(){
       const note=card.querySelector('.mini');
       if(note) note.textContent=enabled?'เลือก Sub task ที่ทำในโครงการนี้':'เลือก Task template ก่อน';
     });
+    syncPtd();
   };
   document.querySelectorAll('input[name="taskTemplatesSelect"]').forEach(chk=>chk.onchange=refresh);
+  document.querySelectorAll('input[name="templateSubtaskSelect"]').forEach(chk=>chk.onchange=syncPtd);
   refresh();
 }
 function readTaskTemplateSubtasks(){
