@@ -4822,7 +4822,7 @@ function openTaskDetail(id){
   const subtasks=t.subtasks||[];
   const done=new Set(t.subtasksDone||[]);
   const pct=subtasks.length?Math.round(done.size/subtasks.length*100):Number(t.progress||0);
-  const statusOpts=(state.taskStatuses||['Todo','Doing','Done','Pending']).map(s=>`<option${t.status===s?' selected':''}>${esc(s)}</option>`).join('');
+  const statusOpts=(state.taskStatuses||[]).map(s=>`<option value="${esc(s.name)}" ${t.status===s.name?'selected':''}>${esc(s.name)}</option>`).join('');
   const subRows=subtasks.map((s,i)=>`<div class="td-subtask-row"><input type="checkbox" id="tds-${i}" ${done.has(i)?'checked':''} data-sub="${i}"><label for="tds-${i}" class="td-subtask-row" style="flex:1;border:0;padding:0;cursor:pointer"><span class="${done.has(i)?'done':''}">${esc(s)}</span></label></div>`).join('');
   const ownerChips=owners.map(m=>`<div style="display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:20px;padding:3px 9px 3px 4px;font-size:11.5px;background:var(--surface)">${memberAvatarHtml(m,'')}<span>${esc(m.name)}</span></div>`).join('');
   document.getElementById('tdModalTitle').textContent=t.title||'Task Detail';
