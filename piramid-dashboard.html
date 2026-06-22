@@ -4740,18 +4740,20 @@ function openTeamForm(id){
   if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return}
   editing.team=id||null; const t=state.teams.find(x=>x.id===id)||{id:nextId('tm',state.teams),name:'',username:'',password:'',role:'Manager',level:'Manager',email:'',target:10000000,color:'#5b7cfa'};
   document.getElementById('teamFormTitle').textContent=id?'Edit Member':'New Member';
+  const _isSales=t.role==='Sales';
   document.getElementById('teamForm').innerHTML=`
     <label class="field"><span>ID</span><input name="id" value="${esc(t.id)}" ${id?'readonly':''}></label><label class="field span2"><span>Name</span><input name="name" required value="${esc(t.name)}"></label>
     <label class="field"><span>Username</span><input name="username" required value="${esc(t.username||firstName(t.name))}" placeholder="Auto: first name"></label>
-    <label class="field"><span>Passcode</span><input name="password" class="masked-entry" type="text" autocomplete="off" required value="${esc(t.password||lastName(t.name))}" placeholder="Auto: surname"></label>
-    <label class="field"><span>Role</span><select name="role">${['Manager','BD Lead','Presales','Sales'].map(v=>`<option ${t.role===v?'selected':''}>${v}</option>`).join('')}</select></label>
+    <label class="field"><span>Passcode</span><div class="pw-wrap"><input id="teamPassInp" name="password" class="masked-entry" type="text" autocomplete="off" required value="${esc(t.password||lastName(t.name))}" placeholder="Auto: surname"><button type="button" class="pw-eye" data-eye="teamPassInp" aria-label="แสดง/ซ่อนรหัสผ่าน">👁</button></div></label>
+    <label class="field"><span>Role</span><select name="role" id="teamRoleSel">${['Manager','BD Lead','Presales','Sales'].map(v=>`<option ${t.role===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Access Role</span><select name="accessRole">${['Admin','Member','Guest'].map(v=>`<option ${accessRole(t)===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Level</span><select name="level">${['Member','Manager','Executive'].map(v=>`<option ${t.level===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Email</span><input name="email" type="email" value="${esc(t.email)}"></label>
-    <label class="field"><span>Reference Value (฿)</span><input name="target" type="number" value="${t.target}" placeholder="มูลค่าอ้างอิง (ไม่ใช่ KPI)"></label>
+    <label class="field" id="teamRefValueRow" ${_isSales?'':'style="display:none"'}><span>Reference Value (฿) <small class="hint">Sales only</small></span><input name="target" type="number" value="${t.target||0}" placeholder="ยอดขายเป้าหมาย Sales"></label>
     <label class="field"><span>Color</span><input name="color" type="color" value="${t.color}"></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Member</button><button class="btn" type="button" data-close-form="team">Cancel</button></div>`;
-  showFormPanel('teamFormPanel'); bindCloseButtons();
+  document.getElementById('teamRoleSel').onchange=function(){document.getElementById('teamRefValueRow').style.display=this.value==='Sales'?'':'none';};
+  showFormPanel('teamFormPanel'); bindCloseButtons(); bindPasswordEyes(document.getElementById('teamForm'));
 }
 function saveTeam(e){e.preventDefault(); if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} const f=Object.fromEntries(new FormData(e.target)); f.target=Number(f.target||0); f.username=String(f.username||firstName(f.name)).trim().toLowerCase(); f.password=String(f.password||lastName(f.name)).trim(); f.accessRole=f.username==='wongwaris'?'Admin':f.role==='Sales'?'Guest':(f.accessRole&&f.accessRole!=='Guest'?f.accessRole:'Member'); const wasEdit=!!editing.team; if(editing.team) state.teams=state.teams.map(t=>t.id===editing.team?f:t); else state.teams.push(f); saveState(); document.getElementById('teamFormPanel').classList.remove('on'); logActivity(wasEdit?'แก้ไขสมาชิกทีม':'เพิ่มสมาชิกทีม','team',f.name||f.id); renderAll(true)}
 function deleteTeam(id){if(!requireLogin()) return; if(!isAdmin()){toast('Team Management ใช้ได้เฉพาะ Admin','error');return} if(state.projects.some(p=>projectInvolves(p,id))||state.tasks.some(t=>ownerIds(t).includes(id))){alert('Cannot delete: member is assigned to projects or tasks. Reassign first.');return} state.teams=state.teams.filter(t=>t.id!==id); saveState(); renderAll(true)}
