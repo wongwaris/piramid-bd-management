@@ -96,6 +96,76 @@ widgetAlign/anaWidgetAlign, customCards/anaCustomCards, layoutCheckpoint/anaChec
 - `cascadeProjectDoneFromTasks(projectId)` — when all sub-tasks are Done, auto-sets project `taskStatus='Done'` and `progress=100`; reverses if any re-opens.
 - Sub-task checklist editor in the Project form uses `ptdEditorDefs` (array of `{label,assignees[],due}`); synced to `state.tasks` via `syncProjectTasks`.
 
+## KPI Activity fields
+
+`state.kpiActivities[]` — each record:
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | string | e.g. `KA-001` |
+| `type` | string | from `state.kpiTypes` / `KPI_TYPES` |
+| `owner` | string | team id / `'All'` / `'role:BD'` / **`'other'`** (external lead) |
+| `otherLead` | string | free-text name when owner=`'other'` (e.g. MD from another company) |
+| `participants` | string[] | team member IDs who joined the activity (multi-select) |
+| `title` | string | activity name |
+| `activityDate` | string | **YYYY-MM-DD** — actual date the activity takes place; drives Calendar display |
+| `startTime` | string | `HH:MM` — activity start time (optional) |
+| `endTime` | string | `HH:MM` — activity end time (optional) |
+| `project` | string | project id (optional) |
+| `dueDate` | string | submission deadline |
+| `submittedAt` | string | actual submission date |
+| `completeness` | number | 0–100 % |
+| `outcome` | string | `''`/`'Positive'`/`'Neutral'`/`'Negative'` |
+| `pass` | string | `''`/`'Pass'`/`'Fail'` |
+
+- `kpiRefDate(a)` → `a.activityDate || a.submittedAt || a.dueDate || a.createdAt` — primary date for KPI period bucketing.
+- `kpiActivitiesIn(period, owner, offset)` matches records where `owner` **or any participant** passes `memberMatchesTeamFilter`.
+- `normalizeState` backfills `activityDate:''`, `startTime:''`, `endTime:''`, `participants:[]`, `otherLead:''` for existing records.
+- Calendar shows KPI activities (Today/Week/Month) when `activityDate` is set; styled with `.cal-kpi-card` / `.cal-kpi-badge` (accent-2). Clicking navigates to KPI page and opens that record.
+
+## Training fields
+
+`state.trainingEvents[]` — each record:
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | string | e.g. `TR-001` |
+| `members` | string[] | **array** of team IDs (multi-select, replaces legacy `member`) |
+| `member` | string | legacy single-member field — `normalizeState` promotes to `members:[member]` |
+| `title` | string | |
+| `type` | string | from `TRAIN_TYPES` |
+| `provider` | string | |
+| `date` | string | YYYY-MM-DD |
+| `hours` | number | |
+| `notes` | string | |
+
+- `trainOwnerFilteredEvents()` → checks `e.members||(e.member?[e.member]:[])` for backward compat.
+- `saveTrainEvent` validates at least 1 member selected before saving.
+
+## Team member fields
+
+`state.teams[]` — notable fields:
+
+| Field | Notes |
+|---|---|
+| `target` | Reference Value (฿) — **shown/saved only for Sales role**; hidden for Manager/BD/Presales in the form |
+| `password` | Passcode — uses `.masked-entry` + `.pw-wrap`/`.pw-eye` eye-toggle pattern |
+| `accessRole` | `'Admin'`/`'Member'`/`'Guest'` — auto-set: wongwaris→Admin, Sales→Guest |
+| `color` | hex color for Calendar member columns and chart identity |
+
+## Calendar — KPI events
+
+- `renderCalendarPage` computes `_kpiEvts` (KPI activities with `activityDate` set, filtered by `calLead`).
+- Passed to all three render functions: `renderCalToday(tasks, viewDate, kpiEvts)`, `renderCalWeek(tasks, weekStart, kpiEvts)`, `renderCalendarMonth(tasks, monthDate, kpiEvts)`.
+- **Today view**: KPI cards appear in the member's column when `memberMatchesTeamFilter(m.id, a.owner)` or `participants.includes(m.id)`.
+- **Week/Month view**: KPI cards/chips appear on the day matching `a.activityDate`.
+- Click → `navigateToView('kpi', ()=>openKpiForm(id))`.
+
+## Navigation helpers
+
+- `navigateToView(name, afterCb)` — clicks the sidebar nav button then calls `afterCb` after 60 ms.
+- `navigateToProject(projectId)` — navigates to Projects view then expands `#sub-{projectId}` sub-row and scrolls to it.
+
 ## UI patterns
 
 ### Modals (`panel-form app-modal`)
