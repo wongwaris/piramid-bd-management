@@ -350,7 +350,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .cal-kpi-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.04em;padding:1px 5px;border-radius:4px;background:var(--accent-2);color:#fff;margin-bottom:3px;vertical-align:middle}
 .cal-today-outer{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .cal-today-time{flex:0 0 48px;border-right:1px solid var(--line);background:var(--panel-2)}
-.cal-today-time-row{height:56px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:9.5px;color:var(--muted)}
+.cal-today-time-row{height:54px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-start;justify-content:center;padding-top:4px;font-size:9.5px;color:var(--muted)}
 .cal-today-cols{display:flex;flex:1;overflow-x:auto}
 .cal-today-col{flex:1;min-width:140px;border-right:1px solid var(--line)}
 .cal-today-col:last-child{border-right:0}
@@ -4246,11 +4246,21 @@ function renderCalToday(tasks,viewDate,kpiEvts=[]){
     const color=m.color||'var(--accent)';
     const cards=myTasks.map(t=>`<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44;cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${statusTag(isOverdue(t)?'Overdue':t.status)}</small></div>`).join('');
     const myKpi=kpiEvts.filter(a=>a.activityDate===todayKey&&(memberMatchesTeamFilter(m.id,a.owner)||(a.participants||[]).includes(m.id)));
-    const kpiCards=myKpi.map(a=>{const t=a.startTime?(a.startTime+(a.endTime?' – '+a.endTime:'')):'';return`<div class="cal-kpi-card" data-cal-kpi="${esc(a.id)}"><span class="cal-kpi-badge">KPI</span><strong>${esc(a.title)}</strong><small>${esc(a.type)}${t?' · '+esc(t):''}</small></div>`;}).join('');
+    const GRID_S=HOURS[0]*60; // 480 min
+    const kpiPlaced=myKpi.filter(a=>a.startTime).map(a=>{
+      const [sh,sm]=a.startTime.split(':').map(Number); const sMin=sh*60+(sm||0);
+      const topPx=Math.max(0,(sMin-GRID_S)/60*ROW_H);
+      let hPx=ROW_H;
+      if(a.endTime){const [eh,em]=a.endTime.split(':').map(Number);hPx=Math.max(ROW_H*0.5,(eh*60+(em||0)-sMin)/60*ROW_H);}
+      const ts=a.startTime+(a.endTime?' – '+a.endTime:'');
+      return `<div class="cal-kpi-card" style="position:absolute;top:${topPx}px;left:2px;right:2px;height:${hPx}px;overflow:hidden;z-index:2" data-cal-kpi="${esc(a.id)}"><span class="cal-kpi-badge">KPI</span><strong>${esc(a.title)}</strong><small>${esc(a.type)} · ${esc(ts)}</small></div>`;
+    }).join('');
+    const kpiFloat=myKpi.filter(a=>!a.startTime).map(a=>`<div class="cal-kpi-card" data-cal-kpi="${esc(a.id)}"><span class="cal-kpi-badge">KPI</span><strong>${esc(a.title)}</strong><small>${esc(a.type)}</small></div>`).join('');
     const nowPct=isToday&&nowMin>=480&&nowMin<=1080?((nowMin-480)/600*100):null;
     const nowLine=nowPct!=null?`<div class="cal-now-line" style="top:${Math.round(HOURS.length*ROW_H*nowPct/100)}px"></div>`:'';
     const slots=HOURS.map(()=>`<div style="height:${ROW_H}px;border-bottom:1px solid var(--line-2)"></div>`).join('');
-    return `<div class="cal-today-col"><div class="cal-today-col-head">${memberAvatarHtml(m)}<span>${esc(m.name)}</span></div><div style="position:relative"><div style="position:absolute;inset:0;pointer-events:none">${slots}${nowLine}</div><div class="cal-today-body">${kpiCards}${cards||(!kpiCards?'<div class="hint" style="font-size:11px;padding:6px 0">ไม่มีงานวันนี้</div>':'')}</div></div></div>`;
+    const gridH=HOURS.length*ROW_H;
+    return `<div class="cal-today-col"><div class="cal-today-col-head">${memberAvatarHtml(m)}<span>${esc(m.name)}</span></div><div style="position:relative;height:${gridH}px"><div style="position:absolute;inset:0;pointer-events:none">${slots}${nowLine}</div>${kpiPlaced}<div class="cal-today-body">${kpiFloat}${cards||(!kpiFloat?'<div class="hint" style="font-size:11px;padding:6px 0">ไม่มีงานวันนี้</div>':'')}</div></div></div>`;
   }).join('');
   host.innerHTML=`<div class="cal-today-outer">${timeCol}<div class="cal-today-cols">${memberCols||'<div class="hint" style="padding:20px">ไม่พบสมาชิกทีมที่มีงานวันนี้</div>'}</div></div>`;
   host.querySelectorAll('[data-cal-task]').forEach(el=>el.onclick=()=>{const pid=el.dataset.calProject;if(pid)navigateToProject(pid);else openTaskDetail(el.dataset.calTask);});
@@ -4466,8 +4476,7 @@ function openKpiForm(id){
     <label class="field" id="kpiOtherLeadRow" ${a.owner==='other'?'':'style="display:none"'}><span>ชื่อ Lead ภายนอก</span><input name="otherLead" value="${esc(a.otherLead||'')}" placeholder="เช่น คุณสมชาย (MD), Partner Sales…"></label>
     <label class="field span3"><span>ชื่องาน</span><input name="title" required value="${esc(a.title)}"></label>
     <label class="field"><span>วันที่ทำกิจกรรม <small class="hint">— แสดงใน Calendar</small></span><input type="date" name="activityDate" value="${esc(a.activityDate||'')}"></label>
-    <label class="field"><span>เวลาเริ่ม</span><input type="time" name="startTime" value="${esc(a.startTime||'')}"></label>
-    <label class="field"><span>เวลาสิ้นสุด</span><input type="time" name="endTime" value="${esc(a.endTime||'')}"></label>
+    <div class="field span2"><span>ช่วงเวลา <small class="hint">— เริ่ม → สิ้นสุด</small></span><div style="display:flex;gap:8px;align-items:center"><input type="time" name="startTime" value="${esc(a.startTime||'')}" style="flex:1"><span style="color:var(--muted);font-size:13px">→</span><input type="time" name="endTime" value="${esc(a.endTime||'')}" style="flex:1"></div></div>
     <div class="field span3"><span>ผู้เข้าร่วม <small class="hint">— เลือกได้หลายคน</small></span><div class="checklist mini-checklist">${_partChks||'<span class="hint">ยังไม่มีสมาชิกในทีม</span>'}</div></div>
     <label class="field"><span>โครงการ (ถ้ามี)</span><select name="project"><option value="">—</option>${state.projects.map(p=>`<option value="${p.id}" ${a.project===p.id?'selected':''}>${esc(p.id+' '+p.name)}</option>`).join('')}</select></label>
     <label class="field"><span>วันกำหนดส่ง</span><input type="date" name="dueDate" value="${esc(a.dueDate||'')}"></label>
