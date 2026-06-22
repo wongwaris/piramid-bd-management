@@ -3464,8 +3464,9 @@ function openInternalTaskForm(id){
     <div class="field span2"><span>Owner(s) <span class="hint">— เลือกได้หลายคน</span></span><div class="owners-check-grid">${itOwnerChecks}</div></div>
     <label class="field"><span>Status</span><select name="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${(t?.status||'Schedule')===s.name?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
     <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(t?.due||'')}"></label>
-    <label class="field"><span>Progress %</span><input type="number" name="progress" min="0" max="100" value="${t?.progress||0}"></label>
+    <div class="field"><span>ช่วงเวลา <small class="hint">— แสดงใน Calendar</small></span><div style="display:flex;gap:6px;align-items:center"><input type="time" name="startTime" value="${esc(t?.startTime||'')}" style="flex:1"><span style="color:var(--muted);font-size:12px">→</span><input type="time" name="endTime" value="${esc(t?.endTime||'')}" style="flex:1"></div></div>
     <label class="field span2"><span>Sub tasks (1 per line)</span><textarea name="subtasksText" placeholder="Sub task 1&#10;Sub task 2">${esc((t?.subtasks||[]).join('\n'))}</textarea></label>
+    <label class="field"><span>Progress %</span><input type="number" name="progress" min="0" max="100" value="${t?.progress||0}"></label>
     <input type="hidden" name="_id" value="${esc(id||'')}">
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Task</button><button class="btn" type="button" data-close-form="internalTask">Cancel</button></div>`;
   showFormPanel('internalTaskFormPanel');
@@ -4244,7 +4245,6 @@ function renderCalToday(tasks,viewDate,kpiEvts=[]){
   const memberCols=members.map(m=>{
     const myTasks=tasks.filter(t=>t.due===todayKey&&ownerIds(t).includes(m.id));
     const color=m.color||'var(--accent)';
-    const cards=myTasks.map(t=>`<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44;cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${statusTag(isOverdue(t)?'Overdue':t.status)}</small></div>`).join('');
     const myKpi=kpiEvts.filter(a=>a.activityDate===todayKey&&(memberMatchesTeamFilter(m.id,a.owner)||(a.participants||[]).includes(m.id)));
     const GRID_S=HOURS[0]*60; // 480 min
     const kpiPlaced=myKpi.filter(a=>a.startTime).map(a=>{
@@ -4256,11 +4256,20 @@ function renderCalToday(tasks,viewDate,kpiEvts=[]){
       return `<div class="cal-kpi-card" style="position:absolute;top:${topPx}px;left:2px;right:2px;height:${hPx}px;overflow:hidden;z-index:2" data-cal-kpi="${esc(a.id)}"><span class="cal-kpi-badge">KPI</span><strong>${esc(a.title)}</strong><small>${esc(a.type)} · ${esc(ts)}</small></div>`;
     }).join('');
     const kpiFloat=myKpi.filter(a=>!a.startTime).map(a=>`<div class="cal-kpi-card" data-cal-kpi="${esc(a.id)}"><span class="cal-kpi-badge">KPI</span><strong>${esc(a.title)}</strong><small>${esc(a.type)}</small></div>`).join('');
+    const taskPlaced=myTasks.filter(t=>t.startTime).map(t=>{
+      const [sh,sm]=t.startTime.split(':').map(Number); const sMin=sh*60+(sm||0);
+      const topPx=Math.max(0,(sMin-GRID_S)/60*ROW_H);
+      let hPx=ROW_H;
+      if(t.endTime){const [eh,em]=t.endTime.split(':').map(Number);hPx=Math.max(ROW_H*0.5,(eh*60+(em||0)-sMin)/60*ROW_H);}
+      const ts=t.startTime+(t.endTime?' – '+t.endTime:'');
+      return `<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44;position:absolute;top:${topPx}px;left:2px;right:2px;height:${hPx}px;overflow:hidden;z-index:1;cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${esc(ts)}</small></div>`;
+    }).join('');
+    const taskFloat=myTasks.filter(t=>!t.startTime).map(t=>`<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44;cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${statusTag(isOverdue(t)?'Overdue':t.status)}</small></div>`).join('');
     const nowPct=isToday&&nowMin>=480&&nowMin<=1080?((nowMin-480)/600*100):null;
     const nowLine=nowPct!=null?`<div class="cal-now-line" style="top:${Math.round(HOURS.length*ROW_H*nowPct/100)}px"></div>`:'';
     const slots=HOURS.map(()=>`<div style="height:${ROW_H}px;border-bottom:1px solid var(--line-2)"></div>`).join('');
     const gridH=HOURS.length*ROW_H;
-    return `<div class="cal-today-col"><div class="cal-today-col-head">${memberAvatarHtml(m)}<span>${esc(m.name)}</span></div><div style="position:relative;height:${gridH}px"><div style="position:absolute;inset:0;pointer-events:none">${slots}${nowLine}</div>${kpiPlaced}<div class="cal-today-body">${kpiFloat}${cards||(!kpiFloat?'<div class="hint" style="font-size:11px;padding:6px 0">ไม่มีงานวันนี้</div>':'')}</div></div></div>`;
+    return `<div class="cal-today-col"><div class="cal-today-col-head">${memberAvatarHtml(m)}<span>${esc(m.name)}</span></div><div style="position:relative;height:${gridH}px"><div style="position:absolute;inset:0;pointer-events:none">${slots}${nowLine}</div>${kpiPlaced}${taskPlaced}<div class="cal-today-body">${kpiFloat}${taskFloat||(!kpiFloat&&!taskPlaced?'<div class="hint" style="font-size:11px;padding:6px 0">ไม่มีงานวันนี้</div>':'')}</div></div></div>`;
   }).join('');
   host.innerHTML=`<div class="cal-today-outer">${timeCol}<div class="cal-today-cols">${memberCols||'<div class="hint" style="padding:20px">ไม่พบสมาชิกทีมที่มีงานวันนี้</div>'}</div></div>`;
   host.querySelectorAll('[data-cal-task]').forEach(el=>el.onclick=()=>{const pid=el.dataset.calProject;if(pid)navigateToProject(pid);else openTaskDetail(el.dataset.calTask);});
