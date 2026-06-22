@@ -3716,7 +3716,7 @@ function certExpiryBadge(expiresAt){
   return `<span class="cert-exp ok">Valid · ${expiresAt}</span>`;
 }
 function trainOwnerFilteredCerts(){return state.certifications.filter(c=>memberMatchesTeamFilter(c.member,trainOwner))}
-function trainOwnerFilteredEvents(){return state.trainingEvents.filter(e=>memberMatchesTeamFilter(e.member,trainOwner))}
+function trainOwnerFilteredEvents(){return state.trainingEvents.filter(e=>{const _ms=e.members||(e.member?[e.member]:[]);return _ms.some(m=>memberMatchesTeamFilter(m,trainOwner));})}
 function renderTrainMetrics(){
   const el=document.getElementById('trainMetrics'); if(!el) return;
   const now=dateKey(today);
@@ -3757,9 +3757,11 @@ function deleteCert(id){if(!confirm('Delete certification?'))return; state.certi
 function openTrainEventForm(id){
   const e2=id?state.trainingEvents.find(x=>x.id===id):null;
   document.getElementById('trainEventFormTitle').textContent=id?'Edit Training':'New Training';
+  const _savedMembers=e2?.members||(e2?.member?[e2.member]:[state.teams[0]?.id||'']);
+  const _memberChks=state.teams.map(t=>`<label><input type="checkbox" name="trainMember" value="${esc(t.id)}" ${_savedMembers.includes(t.id)?'checked':''}>${esc(t.name)} <small class="hint">${esc(t.role||'')}</small></label>`).join('');
   document.getElementById('trainEventForm').innerHTML=`
-    <label class="field"><span>Member</span><select name="member">${state.teams.map(t=>`<option value="${esc(t.id)}" ${(e2?.member||state.teams[0]?.id)===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}</select></label>
-    <label class="field span2"><span>Title</span><input name="title" required value="${esc(e2?.title||'')}"></label>
+    <div class="field span3"><span>ผู้เข้าอบรม <small class="hint">— เลือกได้หลายคน</small></span><div class="checklist mini-checklist">${_memberChks||'<span class="hint">ยังไม่มีสมาชิกในทีม</span>'}</div></div>
+    <label class="field span3"><span>Title</span><input name="title" required value="${esc(e2?.title||'')}"></label>
     <label class="field"><span>Type</span><select name="type">${TRAIN_TYPES.map(v=>`<option ${(e2?.type||'External')===v?'selected':''}>${v}</option>`).join('')}</select></label>
     <label class="field"><span>Provider</span><input name="provider" value="${esc(e2?.provider||'')}"></label>
     <label class="field"><span>Date</span><input type="date" name="date" value="${esc(e2?.date||'')}"></label>
@@ -3774,6 +3776,8 @@ function saveTrainEvent(e){
   const f=Object.fromEntries(new FormData(e.target));
   const wasId=f._id; delete f._id;
   f.hours=Number(f.hours||0);
+  f.members=[...e.target.querySelectorAll('input[name="trainMember"]:checked')].map(c=>c.value);
+  if(!f.members.length){toast('กรุณาเลือกผู้เข้าอบรมอย่างน้อย 1 คน','error');return;}
   if(wasId) state.trainingEvents=state.trainingEvents.map(x=>x.id===wasId?{...x,...f,id:wasId}:x);
   else state.trainingEvents.push({id:nextId('TR',state.trainingEvents),...f});
   saveState(); document.getElementById('trainEventFormPanel').classList.remove('on'); renderTraining();
@@ -3801,7 +3805,7 @@ function renderTraining(){
   }
   if(trainEl){
     if(trainLbl) trainLbl.textContent=`${events.length} of ${state.trainingEvents.length} events`;
-    trainEl.innerHTML=events.map(ev=>`<tr><td>${esc(byId(ev.member).name)}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรมตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Training')+'</td></tr>';
+    trainEl.innerHTML=events.map(ev=>{const _mn=(ev.members||(ev.member?[ev.member]:[])).map(id=>byId(id).name||id).filter(Boolean).join(', ');return`<tr><td>${esc(_mn||'-')}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`;}).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรมตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Training')+'</td></tr>';
     trainEl.querySelectorAll('[data-edit-trainev]').forEach(b=>b.onclick=()=>openTrainEventForm(b.dataset.editTrainev));
     trainEl.querySelectorAll('[data-del-trainev]').forEach(b=>b.onclick=()=>deleteTrainEvent(b.dataset.delTrainev));
   }
@@ -4311,7 +4315,9 @@ function kpiRefDate(a){return a.submittedAt||a.dueDate||a.createdAt||''}
 function kpiActivitiesIn(period, owner, offset=0){
   const w=kpiWindow(period,offset);
   return state.kpiActivities.filter(a=>{
-    if(!memberMatchesTeamFilter(a.owner,owner)) return false;
+    const _ownerOk=memberMatchesTeamFilter(a.owner,owner);
+    const _partOk=(a.participants||[]).some(pid=>memberMatchesTeamFilter(pid,owner));
+    if(!_ownerOk&&!_partOk) return false;
     const r=kpiRefDate(a); if(!r) return false;
     const dt=new Date(r+'T12:00:00'); return dt>=w.start && dt<=w.end;
   });
@@ -4380,7 +4386,9 @@ function renderKpiActivities(acts){
     const ot=onTime===null?'<span class="hint">—</span>':(onTime?'<span class="tag done">ทันเวลา</span>':`<span class="tag overdue">ช้า ${daysBetween(a.submittedAt,a.dueDate)}d</span>`);
     const out=a.outcome?`<span class="tag ${a.outcome==='Positive'?'done':a.outcome==='Negative'?'overdue':'doing'}">${esc(a.outcome)}</span>`:'';
     const passB=a.pass?`<span class="tag ${a.pass==='Pass'?'done':'overdue'}">${esc(a.pass)}</span>`:'';
-    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(ownerLabel(a.owner))}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
+    const _leadLbl=a.owner==='other'?(a.otherLead||'Other Team'):ownerLabel(a.owner);
+    const _parts=(a.participants||[]).map(pid=>byId(pid).name||pid).filter(Boolean).join(', ');
+    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(_leadLbl)}${_parts?`<br><small class="muted">+${esc(_parts)}</small>`:''}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
   }).join('')||'<tr><td colspan="9">'+emptyState('ยังไม่มี Activity ในงวดนี้','กด + Add Activity เพื่อบันทึกงาน BD แล้ว KPI จะคำนวณให้อัตโนมัติ')+'</td></tr>';
   el.querySelectorAll('[data-edit-kpi]').forEach(b=>b.onclick=()=>openKpiForm(b.dataset.editKpi));
   el.querySelectorAll('[data-del-kpi]').forEach(b=>b.onclick=()=>deleteKpiActivity(b.dataset.delKpi));
@@ -4427,12 +4435,17 @@ function openKpiForm(id){
     `<option value="All" ${a.owner==='All'?'selected':''}>All — ทั้งบริษัท</option>`,
     `<optgroup label="ทั้งแผนก">${roles.map(r=>`<option value="role:${esc(r)}" ${a.owner===`role:${r}`?'selected':''}>ทุกคนใน ${esc(r)}</option>`).join('')}</optgroup>`,
     `<optgroup label="รายบุคคล">${state.teams.map(t=>`<option value="${esc(t.id)}" ${a.owner===t.id?'selected':''}>${esc(t.name)} (${esc(t.role||'')})</option>`).join('')}</optgroup>`,
+    `<option value="other" ${a.owner==='other'?'selected':''}>ผู้อื่น / Other Team</option>`,
   ].join('');
+  const _savedParts=a.participants||[];
+  const _partChks=state.teams.map(t=>`<label><input type="checkbox" name="kpiParticipant" value="${esc(t.id)}" ${_savedParts.includes(t.id)?'checked':''}>${esc(t.name)} <small class="hint">${esc(t.role||'')}</small></label>`).join('');
   document.getElementById('kpiForm').innerHTML=`
     <label class="field"><span>ID</span><input name="id" value="${esc(a.id)}" ${id?'readonly':''}></label>
     <label class="field"><span>ประเภทงาน</span><select name="type">${types.map(t=>`<option ${a.type===t?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
-    <label class="field"><span>ผู้รับผิดชอบ / Lead</span><select name="owner">${ownerOpts}</select><span class="hint">เลือก All · แผนก · หรือรายบุคคล</span></label>
+    <label class="field"><span>Lead (ผู้รับผิดชอบ)</span><select name="owner" id="kpiOwnerSel">${ownerOpts}</select><span class="hint">เลือก All · แผนก · รายบุคคล · หรือ ผู้อื่น</span></label>
+    <label class="field" id="kpiOtherLeadRow" ${a.owner==='other'?'':'style="display:none"'}><span>ชื่อ Lead ภายนอก</span><input name="otherLead" value="${esc(a.otherLead||'')}" placeholder="เช่น คุณสมชาย (MD), Partner Sales…"></label>
     <label class="field span3"><span>ชื่องาน</span><input name="title" required value="${esc(a.title)}"></label>
+    <div class="field span3"><span>ผู้เข้าร่วม <small class="hint">— เลือกได้หลายคน</small></span><div class="checklist mini-checklist">${_partChks||'<span class="hint">ยังไม่มีสมาชิกในทีม</span>'}</div></div>
     <label class="field"><span>โครงการ (ถ้ามี)</span><select name="project"><option value="">—</option>${state.projects.map(p=>`<option value="${p.id}" ${a.project===p.id?'selected':''}>${esc(p.id+' '+p.name)}</option>`).join('')}</select></label>
     <label class="field"><span>วันกำหนดส่ง</span><input type="date" name="dueDate" value="${esc(a.dueDate||'')}"></label>
     <label class="field"><span>วันส่งจริง</span><input type="date" name="submittedAt" value="${esc(a.submittedAt||'')}"></label>
@@ -4440,6 +4453,7 @@ function openKpiForm(id){
     <label class="field"><span>Feedback (เฉพาะ Demo)</span><select name="outcome"><option value="">—</option>${['Positive','Neutral','Negative'].map(o=>`<option ${a.outcome===o?'selected':''}>${o}</option>`).join('')}</select></label>
     <label class="field"><span>Pass / Fail (เฉพาะ Demo)</span><select name="pass"><option value="">—</option>${['Pass','Fail'].map(o=>`<option ${a.pass===o?'selected':''}>${o}</option>`).join('')}</select></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Activity</button><button class="btn" type="button" data-close-form="kpi">Cancel</button></div>`;
+  document.getElementById('kpiOwnerSel').onchange=function(){document.getElementById('kpiOtherLeadRow').style.display=this.value==='other'?'':'none';};
   showFormPanel('kpiFormPanel'); bindCloseButtons();
 }
 function saveKpiActivity(e){
@@ -4447,6 +4461,7 @@ function saveKpiActivity(e){
   if(!canEditModule('kpi')){toast('คุณไม่มีสิทธิ์แก้ไข KPI','error');return}
   const f=Object.fromEntries(new FormData(e.target));
   f.completeness = f.completeness===''?'':Number(f.completeness);
+  f.participants=[...e.target.querySelectorAll('input[name="kpiParticipant"]:checked')].map(c=>c.value);
   const wasEdit=editing.kpi;
   if(wasEdit) state.kpiActivities=state.kpiActivities.map(x=>x.id===wasEdit?{...x,...f}:x);
   else state.kpiActivities.push(f);
