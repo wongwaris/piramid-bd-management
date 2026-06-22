@@ -4234,14 +4234,14 @@ function renderCalToday(tasks,viewDate){
   const memberCols=members.map(m=>{
     const myTasks=tasks.filter(t=>t.due===todayKey&&ownerIds(t).includes(m.id));
     const color=m.color||'var(--accent)';
-    const cards=myTasks.map(t=>`<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44" data-open-task="${t.id}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${statusTag(isOverdue(t)?'Overdue':t.status)}</small></div>`).join('');
+    const cards=myTasks.map(t=>`<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44;cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))} · ${statusTag(isOverdue(t)?'Overdue':t.status)}</small></div>`).join('');
     const nowPct=isToday&&nowMin>=480&&nowMin<=1080?((nowMin-480)/600*100):null;
     const nowLine=nowPct!=null?`<div class="cal-now-line" style="top:${Math.round(HOURS.length*ROW_H*nowPct/100)}px"></div>`:'';
     const slots=HOURS.map(()=>`<div style="height:${ROW_H}px;border-bottom:1px solid var(--line-2)"></div>`).join('');
     return `<div class="cal-today-col"><div class="cal-today-col-head">${memberAvatarHtml(m)}<span>${esc(m.name)}</span></div><div style="position:relative"><div style="position:absolute;inset:0;pointer-events:none">${slots}${nowLine}</div><div class="cal-today-body">${cards||'<div class="hint" style="font-size:11px;padding:6px 0">ไม่มีงานวันนี้</div>'}</div></div></div>`;
   }).join('');
   host.innerHTML=`<div class="cal-today-outer">${timeCol}<div class="cal-today-cols">${memberCols||'<div class="hint" style="padding:20px">ไม่พบสมาชิกทีมที่มีงานวันนี้</div>'}</div></div>`;
-  host.querySelectorAll('[data-open-task]').forEach(el=>el.onclick=()=>openTaskDetail(el.dataset.openTask));
+  host.querySelectorAll('[data-cal-task]').forEach(el=>el.onclick=()=>{const pid=el.dataset.calProject;if(pid)navigateToProject(pid);else openTaskDetail(el.dataset.calTask);});
 }
 function renderCalWeek(tasks,weekStart){
   const host=document.getElementById('taskCalendar'); if(!host) return;
@@ -4256,12 +4256,12 @@ function renderCalWeek(tasks,weekStart){
     const cards=dayTasks.map(t=>{
       const m=state.teams.find(x=>ownerIds(t).includes(x.id));
       const color=m?.color||'var(--accent)';
-      return `<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44" data-open-task="${t.id}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))}</small></div>`;
+      return `<div class="cal-event-card" style="background:${color}1a;outline:1px solid ${color}44;cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pjOf(t))}</small></div>`;
     }).join('');
     return `<div class="cal-week-col"><div class="cal-week-head${isToday?' today-col':''}"><span>${DAYS[i]}</span><b>${d.getDate()}</b><span style="font-size:10px">${d.toLocaleDateString('en-US',{month:'short'})}</span></div><div class="cal-week-events">${cards||'<div class="hint" style="font-size:11px">-</div>'}</div></div>`;
   }).join('');
   host.innerHTML=`<div class="cal-week-grid" style="grid-template-columns:repeat(7,minmax(0,1fr))">${cols}</div>`;
-  host.querySelectorAll('[data-open-task]').forEach(el=>el.onclick=()=>openTaskDetail(el.dataset.openTask));
+  host.querySelectorAll('[data-cal-task]').forEach(el=>el.onclick=()=>{const pid=el.dataset.calProject;if(pid)navigateToProject(pid);else openTaskDetail(el.dataset.calTask);});
 }
 function renderCalendarMonth(tasks, monthDate){
   const host=document.getElementById('taskCalendar'); if(!host) return;
@@ -4279,11 +4279,12 @@ function renderCalendarMonth(tasks, monthDate){
     const isToday=key===todayKey;
     const shown=items.slice(0,3);
     const more=items.length-shown.length;
-    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>{const pj=state.projects.find(x=>x.id===t.project);return `<div class="cal-item"><strong>${esc(t.title)}</strong><small>${esc(pj?.name||(t.project?t.project:'Internal'))} · ${esc(ownerNames(t).join(', '))}</small></div>`}).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
+    cells+=`<div class="cal-day ${isToday?'today':''}"><div class="cal-head"><span></span><b>${d}</b></div><div class="cal-items">${shown.map(t=>{const pj=state.projects.find(x=>x.id===t.project);return `<div class="cal-item" style="cursor:pointer" data-cal-task="${esc(t.id)}" data-cal-project="${esc(t.project||'')}"><strong>${esc(t.title)}</strong><small>${esc(pj?.name||(t.project?t.project:'Internal'))} · ${esc(ownerNames(t).join(', '))}</small></div>`}).join('')}${more>0?`<div class="cal-more">+${more} more</div>`:''}</div></div>`;
   }
   const trail=(7-((startWd+daysInMonth)%7))%7;
   for(let i=0;i<trail;i++) cells+='<div class="cal-day empty" aria-hidden="true"></div>';
   host.innerHTML=`<div class="cal-weekdays">${wd.map(w=>`<div class="cal-wd">${esc(w)}</div>`).join('')}</div><div class="cal-month-grid">${cells}</div>`;
+  host.querySelectorAll('[data-cal-task]').forEach(el=>el.onclick=()=>{const pid=el.dataset.calProject;if(pid)navigateToProject(pid);else openTaskDetail(el.dataset.calTask);});
   const dueCount=tasks.filter(t=>inWindow(t.due,new Date(y,m,1,0,0,0,0),new Date(y,m+1,0,23,59,59,999))).length;
   if(label) label.textContent=`${monthDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})} · ${dueCount} tasks due`;
 }
@@ -5310,6 +5311,13 @@ const dirtyViews=new Set();
 function activeViewName(){const v=document.querySelector('.view.on'); return v?v.id.replace(/^v-/,''):null;}
 function renderView(name){const fn=VIEW_RENDERERS[name]; if(!fn) return; try{fn();}catch(e){console.warn('Render failed for view "'+name+'"',e);}}
 function navigateToView(name,afterCb){const btn=document.querySelector(`.nav button[data-view="${name}"]`); if(btn){btn.click();if(afterCb) setTimeout(afterCb,60);}}
+function navigateToProject(projectId){
+  if(!projectId){toast('งานนี้ไม่ได้อยู่ในโครงการ','error');return;}
+  navigateToView('projects',()=>{
+    const sub=document.getElementById('sub-'+projectId);
+    if(sub){sub.classList.add('on');sub.scrollIntoView({behavior:'smooth',block:'center'});}
+  });
+}
 // Show a deferred view on demand: render it only if data changed since it was last drawn.
 function ensureViewRendered(name){ if(dirtyViews.has(name)){ dirtyViews.delete(name); renderView(name); } }
 function renderAll(rebuildFilters=false){
