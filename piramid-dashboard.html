@@ -110,6 +110,21 @@ html.theme-anim,html.theme-anim *{transition:background-color .3s ease,color .3s
 .kpi-card.na{opacity:.65}.kpi-card.na .kpi-bar i{background:var(--line-2)}
 .kpi-tgt-input{width:52px;border:1px solid var(--line);border-radius:6px;padding:2px 5px;font-size:12px;font-weight:600;background:var(--panel-2);color:var(--text)}
 .kpi-tgt-input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.kpi-mtgt-member-hd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--soft);margin:14px 0 6px;display:flex;align-items:center;gap:8px}
+.kpi-mtgt-member-hd::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-2);flex:0 0 auto}
+.kpi-mtgt-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12px}
+.kpi-mtgt-row:last-child{border-bottom:none}
+.kpi-mtgt-body{flex:1;min-width:0}
+.kpi-mtgt-ref{font-size:10px;color:var(--muted);font-style:italic;margin-top:2px;line-height:1.4}
+.kpi-mtgt-vals{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.kpi-mtgt-bar{height:4px;width:70px;border-radius:999px;background:var(--panel-2);overflow:hidden}
+.kpi-mtgt-bar i{display:block;height:100%;border-radius:999px;background:var(--accent);transform-origin:left;transform:scaleX(0);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.kpi-mtgt-bar.good i{background:var(--green)}.kpi-mtgt-bar.warn i{background:var(--amber)}.kpi-mtgt-bar.bad i{background:var(--red)}
+.kpi-act-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.kpi-act-chip{padding:3px 11px;border-radius:20px;font-size:11px;border:1px solid var(--line);background:var(--panel-2);cursor:pointer;color:var(--text);transition:background .15s,border-color .15s}
+.kpi-act-chip:hover{border-color:var(--accent);background:var(--panel)}
+.kpi-act-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+#kpiActWrap{max-height:420px;overflow-y:auto}
 .kpi-alert{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:14px;font-size:12px;color:var(--muted)}
 .kpi-alert-ok{color:var(--green);font-weight:700}.kpi-alert-warn{color:var(--soft);font-weight:600}.kpi-alert-sep{color:var(--line-2)}
 :where(a,button,select,[tabindex],summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:5px}
@@ -718,7 +733,9 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
         <div class="grid g4" id="kpiSummary"></div>
         <div id="kpiAlert"></div>
         <div id="kpiScorecard"></div>
-        <div class="card"><div class="ch"><h2>BD Activities</h2><small>บันทึกงานที่ใช้คำนวณ KPI</small></div><div class="table-wrap"><table class="tbl"><thead><tr><th>ประเภท</th><th>ชื่องาน</th><th>เจ้าของ</th><th>กำหนดส่ง</th><th>ส่งจริง</th><th>ตรงเวลา</th><th>ครบถ้วน</th><th>ผล</th><th>Actions</th></tr></thead><tbody id="kpiActivityRows"></tbody></table></div></div>
+        <div class="card" id="kpiMemberTargetsCard" style="display:none"></div>
+        <div class="panel-form card" id="kpiMemberTargetFormPanel"><div class="ch"><h2>เป้าหมาย KPI รายบุคคล</h2><button class="btn icon" data-close-form="kpiMemberTarget" aria-label="Close">×</button></div><div class="cb"><form class="form-grid" id="kpiMemberTargetForm"></form></div></div>
+        <div class="card"><div class="ch"><h2>BD Activities</h2><small id="kpiActLabel">บันทึกงานที่ใช้คำนวณ KPI</small></div><div class="cb" style="padding-bottom:0"><div class="kpi-act-chips" id="kpiActChips"></div></div><div class="table-wrap" id="kpiActWrap"><table class="tbl"><thead><tr><th>ประเภท</th><th>วันที่ทำ</th><th>ชื่องาน</th><th>เจ้าของ</th><th>กำหนดส่ง</th><th>ส่งจริง</th><th>ตรงเวลา</th><th>ครบถ้วน</th><th>ผล</th><th>Actions</th></tr></thead><tbody id="kpiActivityRows"></tbody></table></div></div>
       </div>
     </section>
 
@@ -1513,6 +1530,7 @@ function normalizeState(data){
   data.kpiActivities = data.kpiActivities?.length ? data.kpiActivities.map(a=>({activityDate:'',startTime:'',endTime:'',...a,participants:a.participants||[],otherLead:a.otherLead||''})) : structuredClone(DEFAULT_KPI_ACTIVITIES);
   data.kpiTypes = Array.isArray(data.kpiTypes)&&data.kpiTypes.length ? data.kpiTypes : [...KPI_TYPES];
   data.kpiTargets = {...DEFAULT_KPI_TARGETS, ...(data.kpiTargets||{})};
+  data.kpiMemberTargets = (data.kpiMemberTargets||[]).map(t=>({active:true,...t}));
   // #6 Internal tasks: tasks without a project are allowed
   // #4 BD Work Queue: ordered list of taskIds for personal queue
   data.taskQueue = (data.taskQueue||[]).filter(id=>data.tasks.some(t=>t.id===id));
@@ -4426,6 +4444,126 @@ const KPI_CATALOG=[
   {id:'winRate',dim:'E',name:'Win Rate งานที่ BD สนับสนุน',unit:'%',fromProjects:true}
 ];
 function kpiTarget(id){return state.kpiTargets?.[id] ?? DEFAULT_KPI_TARGETS[id] ?? 0}
+const KPI_MEMBER_METRIC_KEYS=[
+  {v:'activity_count',  label:'จำนวนกิจกรรมรวม',                          unit:'ครั้ง'},
+  {v:'on_time_docs',    label:'Proposal/BOQ/Design ส่งตรงเวลา',           unit:'%'},
+  {v:'avg_completeness',label:'ความครบถ้วนเฉลี่ย',                        unit:'%'},
+  {v:'positive_rate',   label:'Positive Outcome Rate',                    unit:'%'},
+  {v:'pass_rate',       label:'Demo/Technical Pass Rate',                 unit:'%'},
+  {v:'sales_support',   label:'Support ทีมขาย (Demo/Presentation/Visit)', unit:'ครั้ง'},
+  {v:'proposal_count',  label:'Proposal/BOQ ที่ส่งแล้ว',                  unit:'ฉบับ'},
+  {v:'custom',          label:'กำหนดเอง / Custom Metric',                 unit:''},
+];
+function calcMemberMetric(metricKey,acts){
+  if(!acts||!acts.length){
+    if(metricKey==='activity_count') return {v:0,na:false,sub:'0 รายการ'};
+    return {v:0,na:true,sub:'ยังไม่มีข้อมูล'};
+  }
+  switch(metricKey){
+    case 'activity_count':   return countKpi(acts,'รายการ');
+    case 'on_time_docs':     return onTimeRate(acts.filter(x=>['Proposal','BOQ','Solution Design'].includes(x.type)));
+    case 'avg_completeness': return avgCompleteness(acts);
+    case 'positive_rate':    return pctOf(acts,x=>x.outcome==='Positive','กิจกรรม');
+    case 'pass_rate':        return pctOf(acts,x=>x.pass==='Pass','กิจกรรม');
+    case 'sales_support':    return countKpi(acts.filter(x=>['Demo','Presentation','Site Visit'].includes(x.type)),'ครั้ง');
+    case 'proposal_count':   return countKpi(acts.filter(x=>['Proposal','BOQ'].includes(x.type)),'ฉบับ');
+    default: return {v:0,na:true,sub:'manual metric'};
+  }
+}
+let bdActMember=''; // filter for BD Activities chips ('' = show all)
+function renderKpiMemberTargets(acts){
+  const el=document.getElementById('kpiMemberTargetsCard'); if(!el) return;
+  const allT=(state.kpiMemberTargets||[]).filter(t=>t.active!==false);
+  if(!allT.length&&!isAdmin()){el.style.display='none';return;}
+  el.style.display='';
+  const addBtn=isAdmin()?`<button class="btn small" id="kpiMtgtAddBtn">+ เพิ่มเป้าหมาย</button>`:'';
+  const candidates=kpiOwner==='All'?state.teams:state.teams.filter(m=>memberMatchesTeamFilter(m.id,kpiOwner));
+  let bodyHtml='';
+  candidates.forEach(m=>{
+    const mT=allT.filter(t=>t.memberId===m.id||t.memberId==='All');
+    if(!mT.length) return;
+    const mActs=kpiOwner==='All'?kpiActivitiesIn(kpiPeriod,m.id):acts;
+    bodyHtml+=`<div class="kpi-mtgt-member-hd"><span>${esc(m.name)}</span><span class="hint">${esc(m.role||'')}</span></div>`;
+    bodyHtml+=mT.map(t=>{
+      const km=KPI_MEMBER_METRIC_KEYS.find(k=>k.v===t.metricKey);
+      const label=t.metricKey==='custom'?(t.customLabel||'Custom'):(km?.label||t.metricKey);
+      const unit=t.unit||(km?.unit||'');
+      const cur=t.metricKey==='custom'?{v:0,na:true,sub:'manual'}:calcMemberMetric(t.metricKey,mActs);
+      const pct=t.target?Math.min((cur.na?0:cur.v)/t.target,1):0;
+      const barCls=cur.na?'':(pct>=1?'good':pct>=0.8?'warn':'bad');
+      const actDisp=cur.na?'—':(unit==='%'?cur.v+'%':cur.v+' '+unit);
+      const tgtDisp=unit==='%'?t.target+'%':t.target+' '+unit;
+      const periodLabel={month:'รายเดือน',quarter:'รายไตรมาส',year:'รายปี'}[t.period]||t.period||'';
+      const editBtns=isAdmin()?`<span style="white-space:nowrap;flex-shrink:0"><button class="btn small" data-edit-mtgt="${esc(t.id)}">Edit</button> <button class="btn small danger" data-del-mtgt="${esc(t.id)}" aria-label="Delete">×</button></span>`:'';
+      return `<div class="kpi-mtgt-row">
+        <div class="kpi-mtgt-body"><strong>${esc(label)}</strong>${t.reference?`<div class="kpi-mtgt-ref">📌 ${esc(t.reference)}</div>`:''}</div>
+        <div class="kpi-mtgt-vals">
+          <span style="font-weight:700;color:${barCls==='good'?'var(--green)':barCls==='bad'?'var(--red)':barCls==='warn'?'var(--amber)':'var(--text)'}">${actDisp}</span>
+          <span class="hint">/</span>
+          <span class="hint">เป้า ${tgtDisp}</span>
+          <div class="kpi-mtgt-bar ${barCls}"><i style="transform:scaleX(${pct.toFixed(3)})"></i></div>
+          <span class="hint" style="font-size:10px">${esc(periodLabel)}</span>
+          ${editBtns}
+        </div>
+      </div>`;
+    }).join('');
+  });
+  el.innerHTML=`<div class="ch"><h2>เป้าหมาย KPI รายบุคคล</h2>${addBtn}</div>
+    <div class="cb">${bodyHtml||`<span class="hint">ยังไม่มีเป้าหมาย${isAdmin()?' — กด "+ เพิ่มเป้าหมาย" เพื่อตั้งเป้า':''}</span>`}</div>`;
+  el.querySelector('#kpiMtgtAddBtn')?.addEventListener('click',()=>openKpiMemberTargetForm(null));
+  el.querySelectorAll('[data-edit-mtgt]').forEach(b=>b.onclick=()=>openKpiMemberTargetForm(b.dataset.editMtgt));
+  el.querySelectorAll('[data-del-mtgt]').forEach(b=>b.onclick=()=>deleteKpiMemberTarget(b.dataset.delMtgt));
+}
+function openKpiMemberTargetForm(id){
+  if(!isAdmin()){toast('Admin เท่านั้นที่สามารถตั้งเป้าหมาย KPI ได้','error');return}
+  const t=id?(state.kpiMemberTargets||[]).find(x=>x.id===id):null;
+  const memberOpts=state.teams.map(m=>`<option value="${esc(m.id)}" ${(t?.memberId||'')===m.id?'selected':''}>${esc(m.name)} (${esc(m.role||'')})</option>`).join('');
+  const metricOpts=KPI_MEMBER_METRIC_KEYS.map(k=>`<option value="${esc(k.v)}" ${(t?.metricKey||'activity_count')===k.v?'selected':''}>${esc(k.label)}</option>`).join('');
+  const periodOpts=[['month','รายเดือน'],['quarter','รายไตรมาส'],['year','รายปี']].map(([v,l])=>`<option value="${v}" ${(t?.period||'month')===v?'selected':''}>${l}</option>`).join('');
+  const curKm=KPI_MEMBER_METRIC_KEYS.find(k=>k.v===(t?.metricKey||'activity_count'));
+  document.getElementById('kpiMemberTargetForm').innerHTML=`
+    <label class="field span2"><span>สมาชิก *</span><select name="memberId" required><option value="">— เลือกสมาชิก —</option>${memberOpts}</select></label>
+    <label class="field"><span>Period</span><select name="period">${periodOpts}</select></label>
+    <label class="field span2"><span>ตัวชี้วัด (Metric) *</span><select name="metricKey" id="mtgtMetricSel" required>${metricOpts}</select></label>
+    <label class="field" id="mtgtCustomLabelRow" style="${(t?.metricKey||'activity_count')==='custom'?'':'display:none'}"><span>ชื่อตัวชี้วัด (Custom)</span><input name="customLabel" value="${esc(t?.customLabel||'')}" placeholder="ระบุชื่อ metric เอง"></label>
+    <label class="field"><span>เป้าหมาย (Target) *</span><input type="number" name="target" min="0" step="any" required value="${t?.target??''}"></label>
+    <label class="field"><span>หน่วย (Unit)</span><input name="unit" id="mtgtUnitInp" value="${esc(t?.unit||(curKm?.unit||''))}" placeholder="ครั้ง / % / ฉบับ"></label>
+    <label class="field span3"><span>อ้างอิง / เหตุผลที่ตั้งเป้า</span><textarea name="reference" rows="2" placeholder="เช่น: BD ต้อง Support ทีมขาย ≥3 ครั้ง/เดือน — มาจากมติประชุมทีม 2026-Q2">${esc(t?.reference||'')}</textarea></label>
+    <label class="field span3"><span>หมายเหตุ (ถ้ามี)</span><input name="note" value="${esc(t?.note||'')}"></label>
+    <input type="hidden" name="_id" value="${esc(id||'')}">
+    <div class="span3 toolbar"><button class="btn primary" type="submit">Save Target</button><button class="btn" type="button" data-close-form="kpiMemberTarget">Cancel</button>${id?`<button class="btn danger" type="button" data-del-mtgt="${esc(id)}">Delete</button>`:''}</div>`;
+  const metSel=document.getElementById('mtgtMetricSel');
+  const unitInp=document.getElementById('mtgtUnitInp');
+  const customRow=document.getElementById('mtgtCustomLabelRow');
+  metSel.onchange=function(){
+    const km=KPI_MEMBER_METRIC_KEYS.find(k=>k.v===this.value);
+    customRow.style.display=this.value==='custom'?'':'none';
+    if(km&&km.v!=='custom') unitInp.value=km.unit;
+  };
+  document.getElementById('kpiMemberTargetForm').querySelector('[data-del-mtgt]')?.addEventListener('click',function(){deleteKpiMemberTarget(this.dataset.delMtgt);});
+  showFormPanel('kpiMemberTargetFormPanel');
+  bindCloseButtons();
+}
+function saveKpiMemberTarget(e){
+  e.preventDefault();
+  if(!isAdmin()){toast('Admin only','error');return}
+  const fd=new FormData(e.target);
+  const d={memberId:fd.get('memberId'),metricKey:fd.get('metricKey'),customLabel:fd.get('customLabel')||'',target:Number(fd.get('target'))||0,unit:fd.get('unit')||'',period:fd.get('period')||'month',reference:fd.get('reference')||'',note:fd.get('note')||''};
+  if(!d.memberId){toast('เลือกสมาชิกก่อน','error');return}
+  const _id=fd.get('_id');
+  if(!state.kpiMemberTargets) state.kpiMemberTargets=[];
+  if(_id){
+    state.kpiMemberTargets=state.kpiMemberTargets.map(t=>t.id===_id?{...t,...d}:t);
+  } else {
+    state.kpiMemberTargets.push({id:nextId('KMT',state.kpiMemberTargets),active:true,createdAt:new Date().toISOString(),createdBy:state.teams.find(t=>t.id===currentUser?.id)?.name||'Admin',...d});
+  }
+  saveState(); closeFormPanel('kpiMemberTargetFormPanel'); renderKpi();
+}
+function deleteKpiMemberTarget(id){
+  if(!isAdmin()||!confirm('ลบเป้าหมายนี้?'))return;
+  state.kpiMemberTargets=(state.kpiMemberTargets||[]).filter(t=>t.id!==id);
+  saveState(); closeFormPanel('kpiMemberTargetFormPanel'); renderKpi();
+}
 function kpiCardHtml(r){
   const {k,cur,pr,target}=r, unitPct=k.unit==='%';
   const valDisp=cur.na?'—':(unitPct?cur.v+'%':String(cur.v));
@@ -4447,7 +4585,18 @@ function renderKpiOwnerFilter(){
 }
 function renderKpiActivities(acts){
   const el=document.getElementById('kpiActivityRows'); if(!el) return;
-  const rows=[...acts].sort((a,b)=>String(kpiRefDate(b)).localeCompare(String(kpiRefDate(a))));
+  // member chips (all unique owners/participants in current acts)
+  const chips=document.getElementById('kpiActChips');
+  if(chips){
+    const involved=uniq(acts.flatMap(a=>[a.owner,...(a.participants||[])]).filter(x=>x&&x!=='All'&&!x.startsWith('role:')&&x!=='other'));
+    const members=state.teams.filter(m=>involved.includes(m.id));
+    chips.innerHTML=(members.length>1?[{id:'',name:'ทุกคน'},...members]:[]).map(m=>`<button class="kpi-act-chip${bdActMember===m.id?' on':''}" data-act-chip="${esc(m.id)}">${esc(m.name)}</button>`).join('');
+    chips.querySelectorAll('[data-act-chip]').forEach(b=>b.onclick=()=>{bdActMember=b.dataset.actChip;renderKpiActivities(acts);});
+  }
+  const filtered=bdActMember?acts.filter(a=>a.owner===bdActMember||(a.participants||[]).includes(bdActMember)):acts;
+  const lbl=document.getElementById('kpiActLabel');
+  if(lbl){const m=bdActMember?state.teams.find(x=>x.id===bdActMember):null; lbl.textContent=m?`${m.name} — ${filtered.length} รายการ`:`บันทึกงานที่ใช้คำนวณ KPI · ${filtered.length} รายการ`;}
+  const rows=[...filtered].sort((a,b)=>String(kpiRefDate(b)).localeCompare(String(kpiRefDate(a))));
   el.innerHTML=rows.map(a=>{
     const onTime=(a.dueDate&&a.submittedAt)?(new Date(a.submittedAt)<=new Date(a.dueDate+'T23:59:59')):null;
     const ot=onTime===null?'<span class="hint">—</span>':(onTime?'<span class="tag done">ทันเวลา</span>':`<span class="tag overdue">ช้า ${daysBetween(a.submittedAt,a.dueDate)}d</span>`);
@@ -4455,13 +4604,14 @@ function renderKpiActivities(acts){
     const passB=a.pass?`<span class="tag ${a.pass==='Pass'?'done':'overdue'}">${esc(a.pass)}</span>`:'';
     const _leadLbl=a.owner==='other'?(a.otherLead||'Other Team'):ownerLabel(a.owner);
     const _parts=(a.participants||[]).map(pid=>byId(pid).name||pid).filter(Boolean).join(', ');
-    return `<tr><td>${esc(a.type)}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(_leadLbl)}${_parts?`<br><small class="muted">+${esc(_parts)}</small>`:''}</td><td>${esc(a.dueDate||'-')}</td><td>${esc(a.submittedAt||'-')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'-'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
-  }).join('')||'<tr><td colspan="9">'+emptyState('ยังไม่มี Activity ในงวดนี้','กด + Add Activity เพื่อบันทึกงาน BD แล้ว KPI จะคำนวณให้อัตโนมัติ')+'</td></tr>';
+    return `<tr><td>${esc(a.type)}</td><td>${esc(a.activityDate||'—')}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(_leadLbl)}${_parts?`<br><small class="muted">+${esc(_parts)}</small>`:''}</td><td>${esc(a.dueDate||'—')}</td><td>${esc(a.submittedAt||'—')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'—'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
+  }).join('')||`<tr><td colspan="10">${emptyState('ยังไม่มี Activity ในงวดนี้','กด + Add Activity เพื่อบันทึกงาน BD แล้ว KPI จะคำนวณให้อัตโนมัติ')}</td></tr>`;
   el.querySelectorAll('[data-edit-kpi]').forEach(b=>b.onclick=()=>openKpiForm(b.dataset.editKpi));
   el.querySelectorAll('[data-del-kpi]').forEach(b=>b.onclick=()=>deleteKpiActivity(b.dataset.delKpi));
 }
 function renderKpi(){
   renderKpiOwnerFilter();
+  bdActMember=''; // reset chip filter when main owner/period changes
   document.querySelectorAll('.kpi-period').forEach(b=>b.classList.toggle('on',b.dataset.kpiPeriod===kpiPeriod));
   const acts=kpiActivitiesIn(kpiPeriod,kpiOwner), prev=kpiActivitiesIn(kpiPeriod,kpiOwner,-1);
   const results=KPI_CATALOG.map(k=>({k,cur:k.fromProjects?winRateKpi(kpiOwner):k.calc(acts),pr:k.fromProjects?null:k.calc(prev),target:kpiTarget(k.id)}));
@@ -4490,6 +4640,7 @@ function renderKpi(){
     return `<div class="kpi-group"><div class="kpi-grouphead">${esc(KPI_DIMS[d])}</div><div class="kpi-grid">${items.map(kpiCardHtml).join('')}</div></div>`;
   }).join('');
   if(sc) sc.querySelectorAll('[data-kpi-target]').forEach(inp=>inp.onchange=()=>{const v=Math.max(0,Number(inp.value)||0); state.kpiTargets={...state.kpiTargets,[inp.dataset.kpiTarget]:v}; saveState(); renderKpi();});
+  renderKpiMemberTargets(acts);
   renderKpiActivities(acts);
 }
 function openKpiForm(id){
@@ -5441,6 +5592,7 @@ function bindAppEvents(){
   on('kpiFormToggle','onclick',()=>openKpiForm());
   on('kpiTypeFormToggle','onclick',()=>openKpiTypeEditor());
   on('kpiForm','onsubmit',saveKpiActivity);
+  on('kpiMemberTargetForm','onsubmit',saveKpiMemberTarget);
   on('internalTaskFormToggle','onclick',()=>openInternalTaskForm());
   on('todoNewProjectBtn','onclick',()=>navigateToView('projects',()=>openProjectForm()));
   on('internalTaskForm','onsubmit',saveInternalTask);
