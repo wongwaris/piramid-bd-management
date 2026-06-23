@@ -687,15 +687,18 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <button class="btn small todo-view" data-todo-view="exec" role="tab">Executive</button>
           <button class="btn small todo-view" data-todo-view="queue" role="tab">BD Queue</button>
         </div>
-        <div class="toolbar todo-filters" style="justify-content:flex-end">
-          <button class="btn small task-scope" data-task-scope="all">Total Task</button>
-          <button class="btn small task-scope" data-task-scope="today">Today</button>
-          <button class="btn small task-scope on" data-task-scope="week">This Week</button>
-          <button class="btn small task-scope" data-task-scope="overdue">Overdue</button>
-          <button class="btn small task-scope" data-task-scope="waiting">Waiting Update</button>
-          <button class="btn small task-scope" data-task-scope="completed">Completed</button>
-          <button class="btn small task-period on" data-task-period="week">Weekly</button>
-          <button class="btn small task-period" data-task-period="month">Monthly</button>
+        <div class="toolbar todo-filters" style="justify-content:flex-start;gap:6px;flex-wrap:wrap">
+          <button class="btn small task-filter" data-filter-scope="all" data-filter-period="week">All Task</button>
+          <button class="btn small task-filter on" data-filter-scope="today" data-filter-period="week">Today</button>
+          <button class="btn small task-filter" data-filter-scope="week" data-filter-period="week">Weekly</button>
+          <button class="btn small task-filter" data-filter-scope="week" data-filter-period="month">Monthly</button>
+          <button class="btn small task-filter" data-filter-scope="custom" data-filter-period="week">📅 ช่วงเวลา</button>
+          <span id="taskCustomRange" style="display:none;align-items:center;gap:4px;flex-shrink:0">
+            <input type="date" id="taskCustomStart" style="border:1px solid var(--line);border-radius:7px;background:var(--panel-2);color:var(--text);padding:3px 7px;font-size:12px;height:30px">
+            <span style="color:var(--muted);font-size:12px">→</span>
+            <input type="date" id="taskCustomEnd" style="border:1px solid var(--line);border-radius:7px;background:var(--panel-2);color:var(--text);padding:3px 7px;font-size:12px;height:30px">
+          </span>
+          <span style="flex:1"></span>
           <input type="search" id="taskSearch" class="task-search" placeholder="ค้นหางาน…" aria-label="ค้นหางาน">
           <label class="field" style="min-width:210px"><span>Owner</span><select id="taskLeadFilter"></select></label>
         </div>
@@ -1090,13 +1093,16 @@ let filters = {...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
 function resetFilters(){ filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}}; initFilters(); initProjectFilters(true); renderAll(false); }
 function resetTaskFilters(){
   filters={...FILTER_DEFAULTS, compareCustom:{start:'',end:''}};
-  taskScope='week';
+  taskScope='today';
   taskPeriod='week';
   taskLeadFilter='All';
   taskSearch='';
+  taskCustomStart=''; taskCustomEnd='';
   const si=document.getElementById('taskSearch'); if(si) si.value='';
-  document.querySelectorAll('.task-scope').forEach(b=>b.classList.toggle('on',b.dataset.taskScope==='week'));
-  document.querySelectorAll('.task-period').forEach(b=>b.classList.toggle('on',b.dataset.taskPeriod==='week'));
+  const cr=document.getElementById('taskCustomRange'); if(cr) cr.style.display='none';
+  const cs=document.getElementById('taskCustomStart'); if(cs) cs.value='';
+  const ce=document.getElementById('taskCustomEnd'); if(ce) ce.value='';
+  document.querySelectorAll('.task-filter').forEach(b=>b.classList.toggle('on',b.dataset.filterScope==='today'&&b.dataset.filterPeriod==='week'));
   initFilters();
   renderAll(false);
 }
@@ -1105,8 +1111,9 @@ let emailAdmin = {settings:null,templates:[],queue:[],logs:[],preferences:[]};
 let activeUser = null;
 let dbReady = false;
 let currentTheme = localStorage.getItem('piramid-theme') || 'dark';
-let taskScope = 'week';
+let taskScope = 'today';
 let taskPeriod = 'week';
+let taskCustomStart = '', taskCustomEnd = '';
 let taskLeadFilter = 'All';
 let taskSearch = '';
 let todoView = (state && state.todoView) || 'table';
@@ -3146,9 +3153,12 @@ function taskPeriodSet(tasks,scope,period,previous=false){
   const scoped = tasks.filter(t=>{
     if(scope==='all') return true;
     if(scope==='today') return t.due===dateKey(shiftDate(today,previous?-1:0));
-    if(scope==='overdue') return isOverdue(t) && inWindow(t.due,w.start,w.end);
-    if(scope==='waiting') return ['Schedule','Review','Pending','Waiting Update'].includes(t.status) && inWindow(t.due,w.start,w.end);
-    if(scope==='completed') return t.status==='Done' && inWindow(t.due,w.start,w.end);
+    if(scope==='custom'){
+      if(!taskCustomStart||!taskCustomEnd) return true;
+      const s=new Date(taskCustomStart); s.setHours(0,0,0,0);
+      const e=new Date(taskCustomEnd); e.setHours(23,59,59,999);
+      return inWindow(t.due,s,e);
+    }
     return inWindow(t.due,w.start,w.end);
   });
   return scoped;
@@ -4241,7 +4251,7 @@ function renderTodo(){
   const overdue=metricValue(currentSet,'overdue'), overduePrev=metricValue(previousSet,'overdue');
   const done=metricValue(currentSet,'completed'), donePrev=metricValue(previousSet,'completed');
   const completion=due?Math.round(done/due*100):0, completionPrev=duePrev?Math.round(donePrev/duePrev*100):0;
-  const dueLabel = taskScope==='all' ? 'Total Tasks' : taskScope==='today' ? 'Due Today' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
+  const dueLabel = taskScope==='all' ? 'Total Tasks' : taskScope==='today' ? 'Due Today' : taskScope==='custom' ? 'Custom Range' : `Due ${taskPeriod==='month'?'This Month':'This Week'}`;
   const mEl=document.getElementById('taskMetrics');
   if(mEl) mEl.innerHTML=[
     metric('Open Tasks',open,trendText(open,openPrev)),
@@ -5652,8 +5662,19 @@ function bindAppEvents(){
     document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));const view=document.getElementById('v-'+b.dataset.view); if(view) view.classList.add('on'); ensureViewRendered(b.dataset.view); sessionViewSeen[b.dataset.view]=Date.now(); updateNavDots(); if(b.dataset.view==='notify'){loadEmailAdmin(); renderActivityLog(); renderProjectEventLog(); renderMyInbox();}
   });
   document.querySelectorAll('[data-toggle-custom]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.toggleCustom+'Customizer')?.classList.toggle('on'));
-  document.querySelectorAll('.task-scope').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-scope').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskScope=b.dataset.taskScope;renderTodo()});
-  document.querySelectorAll('.task-period').forEach(b=>b.onclick=()=>{document.querySelectorAll('.task-period').forEach(x=>x.classList.remove('on'));b.classList.add('on');taskPeriod=b.dataset.taskPeriod;renderTodo()});
+  document.querySelectorAll('.task-filter').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.task-filter').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    taskScope=b.dataset.filterScope;
+    taskPeriod=b.dataset.filterPeriod||'week';
+    const cr=document.getElementById('taskCustomRange');
+    if(cr) cr.style.display=taskScope==='custom'?'flex':'none';
+    if(taskScope!=='custom') renderTodo();
+  });
+  const tcStart=document.getElementById('taskCustomStart');
+  const tcEnd=document.getElementById('taskCustomEnd');
+  if(tcStart) tcStart.oninput=()=>{taskCustomStart=tcStart.value;if(taskCustomEnd) renderTodo();};
+  if(tcEnd) tcEnd.oninput=()=>{taskCustomEnd=tcEnd.value;if(taskCustomStart) renderTodo()};
   document.querySelectorAll('.todo-view').forEach(b=>b.onclick=()=>{todoView=b.dataset.todoView;state.todoView=todoView;saveState();renderTodo()});
   document.querySelectorAll('.cal-period').forEach(b=>b.onclick=()=>{calPeriod=b.dataset.calPeriod;renderCalendarPage()});
   on('calPrevDay','onclick',()=>{calViewDate=calAddDays(calViewDate,-1);renderCalendarPage()});
