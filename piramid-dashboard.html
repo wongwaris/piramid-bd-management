@@ -324,6 +324,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .todo-rank{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--panel-2);color:var(--muted);font-size:11px;font-weight:700}
 .todo-empty{padding:34px 16px;text-align:center;color:var(--soft)}.subtask-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.subtask-row{display:flex;align-items:center;gap:6px}.subtask-row input[type=text]{flex:1;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel-2);color:var(--text);font-size:12px}.subtask-add-row{display:flex;gap:6px;margin-top:4px}.subtask-add-row input{flex:1;border:1px solid var(--line);border-radius:6px;padding:5px 8px;background:var(--panel-2);color:var(--text);font-size:12px}
 .status-cell{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+select[multiple]{padding:4px 6px;height:auto;overflow-y:auto;cursor:pointer}select[multiple] option{padding:5px 8px;border-radius:4px}select[multiple] option:checked{background:rgba(96,136,255,.18);color:var(--text)}
 .task-status-select{border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px;font-weight:600;background:var(--panel-2);color:var(--text);cursor:pointer;min-height:28px;max-width:140px}
 .task-status-select:hover{border-color:var(--line-2)}
 .task-status-select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
@@ -1487,7 +1488,7 @@ function normalizeState(data){
     const brands=Array.isArray(p.brands)&&p.brands.length?p.brands:projectBrands({...p,proposalOptions});
     return {...p,systems:projectSystems(p),proposalOptions,brands,projectTaskDefs:p.projectTaskDefs||[]};
   });
-  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]) }));
+  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]),taskCategory:t.taskCategory||'' }));
   data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
     reportPeriod:r.reportPeriod||periodFromRule(r),
     attachSnapshot:r.attachSnapshot ?? true,
@@ -3456,21 +3457,45 @@ function saveQuickProject(e){
 }
 
 // ===== #6 Internal Tasks =====
+const INTERNAL_TASK_CATS=[
+  {v:'Meeting',       label:'ประชุม / Meeting',       hint:'ประชุมภายในทีม หรือข้ามฝ่าย (ไม่ใช่กับลูกค้า)'},
+  {v:'Admin',         label:'Admin & เอกสาร',          hint:'ทำรายงาน จัดเอกสาร ส่งของ งานบริหารทั่วไป'},
+  {v:'Research',      label:'ศึกษา / Research',        hint:'ค้นคว้าข้อมูล วิเคราะห์ตลาด ที่ไม่นับเป็น KPI Activity'},
+  {v:'Marketing',     label:'การตลาด / Marketing',     hint:'Content, Event, Social Media, Branding'},
+  {v:'Planning',      label:'วางแผน / Planning',       hint:'วางแผนทีม กำหนดเป้า ทบทวนกลยุทธ์'},
+  {v:'Ops & Support', label:'Ops & Support',           hint:'งาน Operations สนับสนุนลูกทีม'},
+  {v:'Other',         label:'อื่นๆ / Other',           hint:'งานที่ไม่เข้าประเภทข้างต้น'},
+];
+const TASK_TYPE_GUIDE=`<div class="notice" style="font-size:11.5px;margin-bottom:4px">
+  <b>บันทึกงานประเภทนี้ที่ไหน?</b>
+  <table style="width:100%;border-collapse:collapse;margin-top:6px">
+    <tr style="color:var(--soft);font-size:10.5px"><th style="text-align:left;padding:3px 6px;font-weight:700">ประเภทงาน</th><th style="text-align:left;padding:3px 6px;font-weight:700">บันทึกที่</th><th style="text-align:left;padding:3px 6px;font-weight:700">ตัวอย่าง</th></tr>
+    <tr><td style="padding:4px 6px;border-top:1px solid var(--line-2)">งานใน Opportunity/Project</td><td style="padding:4px 6px;border-top:1px solid var(--line-2)"><span class="tag phase-presales">Project → Sub-task</span></td><td style="padding:4px 6px;border-top:1px solid var(--line-2);color:var(--soft)">BOQ, Proposal, Negotiation</td></tr>
+    <tr><td style="padding:4px 6px;border-top:1px solid var(--line-2)">กิจกรรมนับ KPI (มักมีลูกค้า)</td><td style="padding:4px 6px;border-top:1px solid var(--line-2)"><span class="tag wapo">KPI Activity</span></td><td style="padding:4px 6px;border-top:1px solid var(--line-2);color:var(--soft)">Demo, Site Visit, Presentation</td></tr>
+    <tr><td style="padding:4px 6px;border-top:1px solid var(--line-2)">อบรม / สัมมนา</td><td style="padding:4px 6px;border-top:1px solid var(--line-2)"><span class="tag pend">Training</span></td><td style="padding:4px 6px;border-top:1px solid var(--line-2);color:var(--soft)">Vendor Training, Online Course</td></tr>
+    <tr style="background:rgba(91,192,255,.06)"><td style="padding:4px 6px;border-top:1px solid var(--line-2)"><b>งานทีมที่ไม่มี Project</b></td><td style="padding:4px 6px;border-top:1px solid var(--line-2)"><span class="tag internal">Internal Task ← ที่นี่</span></td><td style="padding:4px 6px;border-top:1px solid var(--line-2);color:var(--soft)">Meeting, Admin, Research</td></tr>
+  </table>
+</div>`;
 function openInternalTaskForm(id){
   if(!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข Task','error');return}
   const t=id?state.tasks.find(x=>x.id===id):null;
   const itCurOwners=t?.owners?.length?t.owners:(t?.owner?[t.owner]:[state.teams[0]?.id].filter(Boolean));
-  const itOwnerChecks=state.teams.map(m=>`<label><input type="checkbox" name="owners" value="${esc(m.id)}"${itCurOwners.includes(m.id)?' checked':''}> ${esc(m.name)}<span class="tag" style="margin-left:4px;font-size:9.5px">${esc(m.role||'')}</span></label>`).join('');
+  const ownerOpts=state.teams.map(m=>`<option value="${esc(m.id)}"${itCurOwners.includes(m.id)?' selected':''}>${esc(m.name)} — ${esc(m.role||'')}</option>`).join('');
+  const catOpts=INTERNAL_TASK_CATS.map(c=>`<option value="${esc(c.v)}"${(t?.taskCategory||'')===c.v?' selected':''}>${esc(c.label)}</option>`).join('');
+  const catHint=`<div id="itCatHint" class="hint" style="margin-top:4px;min-height:14px">${esc(INTERNAL_TASK_CATS.find(c=>c.v===(t?.taskCategory||''))?.hint||'เลือกประเภทงาน')}</div>`;
   document.getElementById('internalTaskForm').innerHTML=`
+    <div class="span3">${TASK_TYPE_GUIDE}</div>
     <label class="field span3"><span>Task title *</span><input name="title" required value="${esc(t?.title||'')}" placeholder="ชื่องาน"></label>
-    <div class="field span2"><span>Owner(s) <span class="hint">— เลือกได้หลายคน</span></span><div class="owners-check-grid">${itOwnerChecks}</div></div>
+    <label class="field span2"><span>ประเภทงาน (Task Category)</span><select name="taskCategory" id="itCatSel">${catOpts}</select>${catHint}</label>
     <label class="field"><span>Status</span><select name="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${(t?.status||'Schedule')===s.name?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
+    <label class="field span2"><span>Owner(s) <span class="hint">— กด Ctrl/⌘ เพื่อเลือกหลายคน</span></span><select name="owners" id="itOwnersSel" multiple size="${Math.min(state.teams.length,6)}" style="min-height:${Math.min(state.teams.length,6)*30}px">${ownerOpts}</select></label>
     <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(t?.due||'')}"></label>
     <div class="field"><span>ช่วงเวลา <small class="hint">— แสดงใน Calendar</small></span><div style="display:flex;gap:6px;align-items:center"><input type="time" name="startTime" value="${esc(t?.startTime||'')}" style="flex:1"><span style="color:var(--muted);font-size:12px">→</span><input type="time" name="endTime" value="${esc(t?.endTime||'')}" style="flex:1"></div></div>
     <label class="field span2"><span>Sub tasks (1 per line)</span><textarea name="subtasksText" placeholder="Sub task 1&#10;Sub task 2">${esc((t?.subtasks||[]).join('\n'))}</textarea></label>
     <label class="field"><span>Progress %</span><input type="number" name="progress" min="0" max="100" value="${t?.progress||0}"></label>
     <input type="hidden" name="_id" value="${esc(id||'')}">
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Task</button><button class="btn" type="button" data-close-form="internalTask">Cancel</button></div>`;
+  document.getElementById('itCatSel').onchange=function(){const c=INTERNAL_TASK_CATS.find(x=>x.v===this.value);document.getElementById('itCatHint').textContent=c?.hint||'';};
   showFormPanel('internalTaskFormPanel');
   bindCloseButtons();
 }
@@ -4083,7 +4108,8 @@ function renderTodoTable(){
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
   const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small" data-manage-subtasks="${esc(t.id)}" aria-label="Manage sub tasks" title="จัดการ Sub Tasks">Sub Tasks${(t.subtasks?.length)?` (${t.subtasks.length})`:''}</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
   const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
-  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><button class="btn-link" data-open-task="${esc(t.id)}" style="font-weight:600;text-align:left;background:none;border:none;padding:0;cursor:pointer;color:var(--text)">${esc(t.title)}</button></td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
+  const catTag=t=>t.taskCategory?`<span class="tag internal" style="font-size:9px;padding:1px 5px;margin-left:4px">${esc(t.taskCategory)}</span>`:'';
+  body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><button class="btn-link" data-open-task="${esc(t.id)}" style="font-weight:600;text-align:left;background:none;border:none;padding:0;cursor:pointer;color:var(--text)">${esc(t.title)}</button>${catTag(t)}</td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
   body.querySelectorAll('[data-todo-sort]').forEach(th=>th.onclick=()=>setTodoSort(th.dataset.todoSort));
   body.querySelector('#clearManualSort')?.addEventListener('click',()=>{todoSort={key:'due',dir:'asc'};renderTodoTable();});
   body.querySelectorAll('[data-open-task]').forEach(b=>b.onclick=()=>openTaskDetail(b.dataset.openTask));
