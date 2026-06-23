@@ -344,7 +344,23 @@ select[multiple]{padding:4px 6px;height:auto;overflow-y:auto;cursor:pointer}sele
 .task-status-select:hover{border-color:var(--line-2)}
 .task-status-select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .task-status-select.done{color:var(--green)}.task-status-select.doing{color:var(--amber)}.task-status-select.review{color:var(--blue)}.task-status-select.schedule,.task-status-select.pend{color:var(--purple)}.task-status-select.overdue{color:var(--red)}
-.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.lane{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:280px;box-shadow:var(--shadow)}.lane h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:8px}.lane h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 auto}.lane.schedule h3::before{background:var(--purple)}.lane.doing h3::before{background:var(--amber)}.lane.review h3::before{background:var(--blue)}.lane.overdue h3::before{background:var(--red)}.lane.done h3::before{background:var(--green)}.task{margin:10px;padding:12px;background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:9px;transition:transform .15s,box-shadow .15s,border-color .15s}.task:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--line-2)}.task strong{display:block;margin-bottom:5px}.task p{margin:0;color:var(--muted);font-size:11.5px}.task footer{margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--soft);font-size:11px}
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.lane{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-height:280px;box-shadow:var(--shadow)}.lane h3{margin:0;padding:12px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:8px}.lane h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:0 0 auto}.lane.schedule h3::before{background:var(--purple)}.lane.doing h3::before{background:var(--amber)}.lane.review h3::before{background:var(--blue)}.lane.overdue h3::before{background:var(--red)}.lane.done h3::before{background:var(--green)}.lane.cancel h3::before{background:var(--muted)}.lane h3 .lane-count{margin-left:auto;background:var(--panel-2);color:var(--muted);border-radius:10px;padding:1px 7px;font-size:10.5px;font-weight:700}.task{margin:10px;padding:12px;background-color:var(--panel);background-image:var(--card-grad);border:1px solid var(--line);border-radius:9px;transition:transform .15s,box-shadow .15s,border-color .15s}.task:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:var(--line-2)}.task.cancelled{opacity:.6}.task strong{display:block;margin-bottom:5px}.task p{margin:0;color:var(--muted);font-size:11.5px}.task footer{margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--soft);font-size:11px}
+.task-hd{display:flex;align-items:center;gap:5px;margin-bottom:7px;flex-wrap:wrap}
+.task-src{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:4px;font-size:8.5px;font-weight:800;flex:0 0 auto}
+.task-src.src-project{background:rgba(37,99,235,.15);color:var(--accent)}
+.task-src.src-internal{background:rgba(91,192,255,.15);color:var(--accent-2)}
+.pri-icon{font-size:13px;font-weight:800;line-height:1;flex:0 0 auto}
+.pri-icon.high{color:var(--red)}.pri-icon.medium{color:var(--amber)}.pri-icon.low{color:var(--green)}.pri-icon.alert{color:var(--red);font-size:11px}
+.task-av-row{display:flex;align-items:center}
+.task-av{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:8.5px;font-weight:700;color:#fff;border:2px solid var(--panel);margin-right:-5px;flex:0 0 auto}
+.task-av-row .task-av:last-child{margin-right:0}
+.task-date{font-size:10.5px;color:var(--soft);white-space:nowrap}
+.task-cancel-remark{font-size:10px;color:var(--muted);font-style:italic;margin-top:4px;padding:4px 6px;background:var(--panel-2);border-radius:5px;line-height:1.4}
+.task-search{border:1px solid var(--line);border-radius:7px;background:var(--panel-2);color:var(--text);padding:4px 10px;font-size:12px;width:170px;height:30px}
+.task-search:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+#cancelRemarkModal{position:fixed;inset:0;z-index:9990;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}
+#cancelRemarkModal.on{display:flex}
+.cancel-remark-box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px;max-width:400px;width:90%;box-shadow:var(--shadow-hover);display:flex;flex-direction:column;gap:12px}
 .calendar{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px}.cal-day{min-height:132px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px;display:flex;flex-direction:column;gap:6px}.cal-day.today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(37,99,235,.18)}.cal-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px}.cal-head b{color:var(--text);font-size:15px}.cal-items{display:flex;flex-direction:column;gap:5px}.cal-item{position:relative;border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 6px 6px 15px;color:var(--text);font-size:11px}.cal-item::before{content:"";position:absolute;left:6px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}.cal-item small{display:block;color:var(--soft);margin-top:2px}.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--soft)}
 .cal-nav{display:flex;align-items:center;gap:6px}.cal-nav strong{min-width:150px;text-align:center;font-size:13px;font-weight:700}
 .cal-weekdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:8px}.cal-wd{color:var(--soft);font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center;padding:2px 0}
@@ -680,6 +696,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <button class="btn small task-scope" data-task-scope="completed">Completed</button>
           <button class="btn small task-period on" data-task-period="week">Weekly</button>
           <button class="btn small task-period" data-task-period="month">Monthly</button>
+          <input type="search" id="taskSearch" class="task-search" placeholder="ค้นหางาน…" aria-label="ค้นหางาน">
           <label class="field" style="min-width:210px"><span>Owner</span><select id="taskLeadFilter"></select></label>
         </div>
         <div class="grid g4" id="taskMetrics"></div>
@@ -922,7 +939,8 @@ const DEFAULT_TASK_STATUSES = [
   {id:'TS-002',name:'Doing',description:'กำลังทำ'},
   {id:'TS-003',name:'Review',description:'กำลังตรวจสอบ รีเช็ค'},
   {id:'TS-004',name:'Overdue',description:'เกินกำหนด Due date มาแล้ว'},
-  {id:'TS-005',name:'Done',description:'เสร็จแล้ว'}
+  {id:'TS-005',name:'Done',description:'เสร็จแล้ว'},
+  {id:'TS-006',name:'Cancelled',description:'ยกเลิกงาน: ต้องระบุเหตุผล'}
 ];
 // ===== BD KPI: one central activity record feeds every KPI =====
 const KPI_TYPES = ['Proposal','BOQ','Solution Design','Demo','Research','Partner Onboard','Monthly Report','Quotation','Vendor Contact','Distributor Contact','BOQ Revision','Site Survey'];
@@ -1075,6 +1093,8 @@ function resetTaskFilters(){
   taskScope='week';
   taskPeriod='week';
   taskLeadFilter='All';
+  taskSearch='';
+  const si=document.getElementById('taskSearch'); if(si) si.value='';
   document.querySelectorAll('.task-scope').forEach(b=>b.classList.toggle('on',b.dataset.taskScope==='week'));
   document.querySelectorAll('.task-period').forEach(b=>b.classList.toggle('on',b.dataset.taskPeriod==='week'));
   initFilters();
@@ -1088,6 +1108,7 @@ let currentTheme = localStorage.getItem('piramid-theme') || 'dark';
 let taskScope = 'week';
 let taskPeriod = 'week';
 let taskLeadFilter = 'All';
+let taskSearch = '';
 let todoView = (state && state.todoView) || 'table';
 let kpiPeriod = 'month';
 let kpiOwner = 'All';
@@ -1505,7 +1526,8 @@ function normalizeState(data){
     const brands=Array.isArray(p.brands)&&p.brands.length?p.brands:projectBrands({...p,proposalOptions});
     return {...p,systems:projectSystems(p),proposalOptions,brands,projectTaskDefs:p.projectTaskDefs||[]};
   });
-  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]),taskCategory:t.taskCategory||'' }));
+  data.tasks = (data.tasks||[]).map(t=>({revision:Number(t.revision||1),subtasks:Array.isArray(t.subtasks)?t.subtasks:parseCsv(t.subtasks||''),...t,level:t.level==='Staff'?'Member':t.level,owners:t.owners||(t.owner?[t.owner]:[]),taskCategory:t.taskCategory||'',cancelRemark:t.cancelRemark||'' }));
+  if(!data.taskStatuses.some(s=>/cancel/i.test(s.name))) data.taskStatuses.push({id:'TS-006',name:'Cancelled',description:'ยกเลิกงาน: ต้องระบุเหตุผล'});
   data.rules = mergeNotificationRules(data.rules||[]).map(r=>({
     reportPeriod:r.reportPeriod||periodFromRule(r),
     attachSnapshot:r.attachSnapshot ?? true,
@@ -1819,14 +1841,16 @@ function filteredProjects(){
 function filteredTasks(leadOverride){
   const lead = leadOverride!==undefined ? leadOverride : taskLeadFilter;
   const ids = new Set(filteredProjects().map(p=>p.id));
+  const q=taskSearch.trim().toLowerCase();
   // Internal tasks (no project) pass the project filter; otherwise task must belong to a filtered project
   return state.tasks.filter(t=>{
     const passProject = !t.project || ids.has(t.project);
-    return passProject && taskMatchesTeamFilter(t,filters.team) && taskMatchesTeamFilter(t,lead);
+    const passSearch = !q || t.title.toLowerCase().includes(q) || (t.project&&state.projects.find(p=>p.id===t.project)?.name.toLowerCase().includes(q));
+    return passProject && passSearch && taskMatchesTeamFilter(t,filters.team) && taskMatchesTeamFilter(t,lead);
   });
 }
 function pct(v,max){return max?Math.max(3,Math.round(v/max*100)):0}
-function statusClass(s){const m={Win:'win',Quotation:'quot',Budgetary:'budg','Waiting PO':'wapo',Pending:'pend',Lost:'lost',Schedule:'schedule',Doing:'doing',Review:'review',Done:'done',Overdue:'overdue'};return m[s]||'pend'}
+function statusClass(s){const m={Win:'win',Quotation:'quot',Budgetary:'budg','Waiting PO':'wapo',Pending:'pend',Lost:'lost',Schedule:'schedule',Doing:'doing',Review:'review',Done:'done',Overdue:'overdue',Cancelled:'cancel'};return m[s]||(/cancel/i.test(s)?'cancel':'pend')}
 function statusTag(s){return `<span class="tag ${statusClass(s)}">${esc(s)}</span>`}
 function priTag(s){return `<span class="tag ${String(s).toLowerCase()}">${esc(s)}</span>`}
 function renderBars(elId,obj,opts={}){
@@ -3366,16 +3390,32 @@ function cascadeProjectDoneFromTasks(projectId){
     proj.progress=averageProjectProgress(projectId);
   }
 }
-function setTaskStatus(taskId, newStatus){
+function setTaskStatus(taskId, newStatus, cancelRemark){
   const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  if(/cancel/i.test(newStatus) && cancelRemark===undefined){
+    askCancelRemark(taskId, newStatus); return;
+  }
   if(!applyTaskStatus(t, newStatus, new Date().toISOString())) return;
+  if(cancelRemark!==undefined) t.cancelRemark=cancelRemark;
   // Notify task owner if someone else changed it
   if(activeUser) ownerIds(t).filter(id=>id!==activeUser.id).forEach(id=>logUserNotification(id,'task_update',`งาน "${t.title}" ถูกเปลี่ยนสถานะเป็น ${newStatus} โดย ${activeUser.name}`,{taskId}));
   cascadeProjectDoneFromTasks(t.project);
   saveState();
   logActivity('อัปเดตสถานะงาน','tasks',`${t.title} → ${newStatus}`);
   if(newStatus==='Done'){ const d=taskDelta(t); const tail=d==null?'':(d>0?` · ช้า ${d} วัน`:d<0?` · เร็ว ${-d} วัน`:' · ตรงเวลา'); toast(`${t.title} เสร็จแล้ว${tail}`, d>0?'info':'success'); }
+  if(/cancel/i.test(newStatus)) toast(`ยกเลิกงาน: ${t.title}`,'info');
   refreshAfterTaskChange();
+}
+let _pendingCancel={taskId:null,status:null};
+function askCancelRemark(taskId, newStatus){
+  const t=state.tasks.find(x=>x.id===taskId); if(!t) return;
+  _pendingCancel={taskId,status:newStatus};
+  const modal=document.getElementById('cancelRemarkModal');
+  const titleEl=document.getElementById('cancelRemarkTaskTitle');
+  const inp=document.getElementById('cancelRemarkInput');
+  if(titleEl) titleEl.textContent=t.title;
+  if(inp) inp.value=t.cancelRemark||'';
+  if(modal){ modal.classList.add('on'); inp?.focus(); }
 }
 function refreshAfterTaskChange(){
   const active=activeViewName();
@@ -4141,7 +4181,10 @@ function renderTodoKanban(){
   const body=document.getElementById('todoBody'); if(!body) return;
   const set=taskPeriodSet(filteredTasks(),taskScope,taskPeriod);
   const groups=state.taskStatuses.map(s=>s.name);
-  body.innerHTML=`<div class="kanban">${groups.map(g=>`<div class="lane ${statusClass(g)}" data-lane-status="${esc(g)}"><h3>${esc(g)}</h3>${set.filter(x=>g==='Overdue'?(isOverdue(x)||x.status==='Overdue'):x.status===g&&!isOverdue(x)).map(taskCard).join('')||'<div class="task hint">No task</div>'}</div>`).join('')}</div>`;
+  body.innerHTML=`<div class="kanban" style="grid-template-columns:repeat(${Math.max(3,groups.length)},minmax(240px,1fr))">${groups.map(g=>{
+    const cards=set.filter(x=>g==='Overdue'?(isOverdue(x)&&!/cancel/i.test(x.status)):x.status===g&&!isOverdue(x));
+    return `<div class="lane ${statusClass(g)}" data-lane-status="${esc(g)}"><h3>${esc(g)}<span class="lane-count">${cards.length}</span></h3>${cards.map(taskCard).join('')||'<div class="task hint" style="color:var(--muted);text-align:center;padding:18px 0">ไม่มีงาน</div>'}</div>`;
+  }).join('')}</div>`;
   initKanbanDnd(body);
 }
 function renderTodoProjects(){
@@ -4372,7 +4415,44 @@ function renderCalendarMonth(tasks, monthDate, kpiEvts=[]){
   const dueCount=tasks.filter(t=>inWindow(t.due,new Date(y,m,1,0,0,0,0),new Date(y,m+1,0,23,59,59,999))).length;
   if(label) label.textContent=`${monthDate.toLocaleDateString('en-US',{month:'long',year:'numeric'})} · ${dueCount} tasks due`;
 }
-function taskCard(t){const p=state.projects.find(x=>x.id===t.project);return `<article class="task" draggable="true" data-task-id="${esc(t.id)}"><strong>${esc(t.title)}</strong><p>${esc(p?.name||t.project)}</p><div class="chips" style="margin-top:8px">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">No sub task</span>'}</div><footer><span>${esc(ownerNames(t).join(', ')||'-')}</span>${statusTag(isOverdue(t)?'Overdue':t.status)}</footer><footer><span>Due ${t.due}</span><span>Rev ${t.revision||1} / ${t.progress}%</span></footer></article>`}
+function taskSourceBadge(t){
+  if(t.project) return `<span class="task-src src-project" title="Project Task">P</span>`;
+  const abbr={'Meeting':'M','Admin':'A','Research':'R','Marketing':'Mkt','Planning':'Pln','Ops & Support':'Ops','Other':'?'}[t.taskCategory||'']||'I';
+  return `<span class="task-src src-internal" title="Internal: ${esc(t.taskCategory||'Task')}">${esc(abbr)}</span>`;
+}
+function priIcon(pri){
+  const c={High:{s:'↑',cls:'high'},Medium:{s:'→',cls:'medium'},Low:{s:'↓',cls:'low'}}[pri]||{s:'·',cls:''};
+  return `<span class="pri-icon ${c.cls}" title="Priority: ${esc(pri||'—')}">${c.s}</span>`;
+}
+function memberAvatar(id){
+  const m=byId(id); if(!m) return '';
+  const init=(m.name||'?').split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()||'').join('');
+  return `<span class="task-av" style="background:${m.color||'var(--accent)'}" title="${esc(m.name)}">${esc(init)}</span>`;
+}
+function taskCard(t){
+  const p=state.projects.find(x=>x.id===t.project);
+  const pri=taskPriority(t);
+  const isCancel=/cancel/i.test(t.status);
+  const overdue=isOverdue(t)&&!isCancel;
+  const owners=ownerIds(t);
+  const showOwners=owners.slice(0,4);
+  const extra=owners.length>4?owners.length-4:0;
+  const dateDisp=t.startTime?(t.activityDate||t.due||'')+' '+t.startTime:t.due||'';
+  const subline=p
+    ?`<p>${esc(p.name)}</p>`
+    :`<p><span class="tag internal" style="font-size:9px;padding:1px 5px;display:inline-block">${esc(t.taskCategory||'Internal')}</span></p>`;
+  return `<article class="task${isCancel?' cancelled':''}" draggable="true" data-task-id="${esc(t.id)}">
+    <div class="task-hd">${taskSourceBadge(t)}${priIcon(pri)}${overdue?'<span class="pri-icon alert" title="Overdue">!</span>':''}</div>
+    <strong style="${isCancel?'text-decoration:line-through;opacity:.5':''}">${esc(t.title)}</strong>
+    ${subline}
+    ${isCancel&&t.cancelRemark?`<div class="task-cancel-remark">🚫 ${esc(t.cancelRemark)}</div>`:''}
+    <footer>
+      <div class="task-av-row">${showOwners.map(memberAvatar).join('')}${extra?`<span class="task-av" style="background:var(--line-2);color:var(--text);font-size:8px">+${extra}</span>`:''}</div>
+      ${dateDisp?`<span class="task-date">📅 ${esc(dateDisp)}</span>`:''}
+    </footer>
+    <footer style="margin-top:4px">${statusTag(overdue?'Overdue':t.status)}<span class="hint" style="font-size:10px">${t.progress||0}%</span></footer>
+  </article>`;
+}
 function openTaskForm(id){
   editing.task=id||null; const t=state.taskTemplates.find(x=>x.id===id)||{id:nextId('TT',state.taskTemplates),title:'',subtasks:[]};
   const taskTitle=document.getElementById('taskFormTitle'); if(taskTitle) taskTitle.textContent=id?'Edit Task':'New Task';
@@ -4528,7 +4608,7 @@ function openKpiMemberTargetForm(id){
     <label class="field" id="mtgtCustomLabelRow" style="${(t?.metricKey||'activity_count')==='custom'?'':'display:none'}"><span>ชื่อตัวชี้วัด (Custom)</span><input name="customLabel" value="${esc(t?.customLabel||'')}" placeholder="ระบุชื่อ metric เอง"></label>
     <label class="field"><span>เป้าหมาย (Target) *</span><input type="number" name="target" min="0" step="any" required value="${t?.target??''}"></label>
     <label class="field"><span>หน่วย (Unit)</span><input name="unit" id="mtgtUnitInp" value="${esc(t?.unit||(curKm?.unit||''))}" placeholder="ครั้ง / % / ฉบับ"></label>
-    <label class="field span3"><span>อ้างอิง / เหตุผลที่ตั้งเป้า</span><textarea name="reference" rows="2" placeholder="เช่น: BD ต้อง Support ทีมขาย ≥3 ครั้ง/เดือน — มาจากมติประชุมทีม 2026-Q2">${esc(t?.reference||'')}</textarea></label>
+    <label class="field span3"><span>อ้างอิง / เหตุผลที่ตั้งเป้า</span><textarea name="reference" rows="2" placeholder="เช่น: BD ต้อง Support ทีมขาย 3 ครั้ง/เดือน (มาจากมติประชุมทีม 2026-Q2)">${esc(t?.reference||'')}</textarea></label>
     <label class="field span3"><span>หมายเหตุ (ถ้ามี)</span><input name="note" value="${esc(t?.note||'')}"></label>
     <input type="hidden" name="_id" value="${esc(id||'')}">
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save Target</button><button class="btn" type="button" data-close-form="kpiMemberTarget">Cancel</button>${id?`<button class="btn danger" type="button" data-del-mtgt="${esc(id)}">Delete</button>`:''}</div>`;
@@ -5660,6 +5740,24 @@ function bindAppEvents(){
   on('addCardBtn','onclick',()=>openCardEditor('exec',null));
   on('filterResetBtn','onclick',resetFilters);
   on('taskResetFilterBtn','onclick',resetTaskFilters);
+  // Task search
+  const tsInp=document.getElementById('taskSearch');
+  if(tsInp){tsInp.oninput=()=>{taskSearch=tsInp.value;renderTodo();};}
+  // Cancel remark modal
+  on('cancelRemarkConfirm','onclick',()=>{
+    const inp=document.getElementById('cancelRemarkInput');
+    const remark=(inp?.value||'').trim();
+    const modal=document.getElementById('cancelRemarkModal');
+    modal?.classList.remove('on');
+    if(_pendingCancel.taskId) setTaskStatus(_pendingCancel.taskId,_pendingCancel.status,remark);
+    _pendingCancel={taskId:null,status:null};
+  });
+  on('cancelRemarkCancel','onclick',()=>{
+    document.getElementById('cancelRemarkModal')?.classList.remove('on');
+    _pendingCancel={taskId:null,status:null};
+    refreshAfterTaskChange();
+  });
+  document.getElementById('cancelRemarkModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget){document.getElementById('cancelRemarkModal').classList.remove('on');_pendingCancel={taskId:null,status:null};}});
   on('anaLockBtn','onclick',()=>toggleExecLock('ana'));
   on('anaResetLayout','onclick',()=>resetExecLayout('ana'));
   on('anaCheckpointBtn','onclick',()=>saveLayoutCheckpoint('ana'));
@@ -5729,5 +5827,16 @@ else bootApp();
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',showBanner); else showBanner();
 })();
 </script>
+<div id="cancelRemarkModal" role="dialog" aria-modal="true" aria-label="ระบุเหตุผลยกเลิก">
+  <div class="cancel-remark-box">
+    <h2 style="margin:0;font-size:16px">ยกเลิกงาน: ระบุเหตุผล</h2>
+    <p style="margin:0;font-size:13px;color:var(--muted)" id="cancelRemarkTaskTitle"></p>
+    <textarea id="cancelRemarkInput" rows="3" style="border:1px solid var(--line);border-radius:8px;background:var(--panel-2);color:var(--text);padding:8px 10px;font-size:13px;resize:vertical;width:100%;box-sizing:border-box" placeholder="เช่น: BD ติดประชุม ไม่สามารถเข้าร่วม Presentation กับทีมขายได้"></textarea>
+    <div class="toolbar" style="justify-content:flex-end;padding:0">
+      <button class="btn" id="cancelRemarkCancel">ยกเลิก</button>
+      <button class="btn danger" id="cancelRemarkConfirm">ยืนยันยกเลิกงาน</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
