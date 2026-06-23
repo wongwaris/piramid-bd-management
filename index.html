@@ -3480,7 +3480,7 @@ function openInternalTaskForm(id){
   if(!canEditModule('tasks')){toast('คุณไม่มีสิทธิ์แก้ไข Task','error');return}
   const t=id?state.tasks.find(x=>x.id===id):null;
   const itCurOwners=t?.owners?.length?t.owners:(t?.owner?[t.owner]:[state.teams[0]?.id].filter(Boolean));
-  const ownerOpts=state.teams.map(m=>`<option value="${esc(m.id)}"${itCurOwners.includes(m.id)?' selected':''}>${esc(m.name)} — ${esc(m.role||'')}</option>`).join('');
+  const ownerChks=state.teams.map(m=>`<label><input type="checkbox" name="owners" value="${esc(m.id)}"${itCurOwners.includes(m.id)?' checked':''}>${esc(m.name)} <small class="hint">${esc(m.role||'')}</small></label>`).join('');
   const catOpts=INTERNAL_TASK_CATS.map(c=>`<option value="${esc(c.v)}"${(t?.taskCategory||'')===c.v?' selected':''}>${esc(c.label)}</option>`).join('');
   const catHint=`<div id="itCatHint" class="hint" style="margin-top:4px;min-height:14px">${esc(INTERNAL_TASK_CATS.find(c=>c.v===(t?.taskCategory||''))?.hint||'เลือกประเภทงาน')}</div>`;
   document.getElementById('internalTaskForm').innerHTML=`
@@ -3488,7 +3488,7 @@ function openInternalTaskForm(id){
     <label class="field span3"><span>Task title *</span><input name="title" required value="${esc(t?.title||'')}" placeholder="ชื่องาน"></label>
     <label class="field span2"><span>ประเภทงาน (Task Category)</span><select name="taskCategory" id="itCatSel">${catOpts}</select>${catHint}</label>
     <label class="field"><span>Status</span><select name="status">${state.taskStatuses.map(s=>`<option value="${esc(s.name)}" ${(t?.status||'Schedule')===s.name?'selected':''}>${esc(s.name)}</option>`).join('')}</select></label>
-    <label class="field span2"><span>Owner(s) <span class="hint">— กด Ctrl/⌘ เพื่อเลือกหลายคน</span></span><select name="owners" id="itOwnersSel" multiple size="${Math.min(state.teams.length,6)}" style="min-height:${Math.min(state.teams.length,6)*30}px">${ownerOpts}</select></label>
+    <div class="field span2"><span>Owner(s) <small class="hint">— เลือกได้หลายคน</small></span><div class="checklist mini-checklist">${ownerChks||'<span class="hint">ยังไม่มีสมาชิก</span>'}</div></div>
     <label class="field"><span>Due date</span><input type="date" name="due" value="${esc(t?.due||'')}"></label>
     <div class="field"><span>ช่วงเวลา <small class="hint">— แสดงใน Calendar</small></span><div style="display:flex;gap:6px;align-items:center"><input type="time" name="startTime" value="${esc(t?.startTime||'')}" style="flex:1"><span style="color:var(--muted);font-size:12px">→</span><input type="time" name="endTime" value="${esc(t?.endTime||'')}" style="flex:1"></div></div>
     <label class="field span2"><span>Sub tasks (1 per line)</span><textarea name="subtasksText" placeholder="Sub task 1&#10;Sub task 2">${esc((t?.subtasks||[]).join('\n'))}</textarea></label>
