@@ -647,7 +647,6 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="content">
         <div class="filters" id="globalFilters"></div>
         <div class="customizer switches" id="execCustomizer"></div>
-        <div class="panel-form card app-modal" id="quotaSplitFormPanel"><div class="ch"><h2 id="quotaSplitTitle">แบ่งยอดขายรายไตรมาส</h2><button class="btn icon" data-close-form="quotaSplit" aria-label="Close">×</button></div><div class="cb"><form class="form-grid" id="quotaSplitForm"></form></div></div>
         <div class="hint edit-hint" data-edit-tools="exec" style="margin:0 0 2px">✏️ โหมดแก้ไข: ลากที่จับ ⠿ ย้ายการ์ด · ลากมุมขวาล่างปรับขนาด · ▦ จัดตำแหน่ง · เปิด/ปิดที่ Customize · บันทึกอัตโนมัติ</div>
         <div class="dash-grid" id="execGrid">
           <div class="card widget" data-widget="execSummary"><div class="cb" id="execSummaryPanel"></div></div>
@@ -807,6 +806,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
         <div class="grid g4" id="teamTaskMetrics"></div>
         <div class="card" id="resetApprovalCard" style="display:none"><div class="ch"><div class="ch-t"><h2>Access Reset Approvals</h2><small>Admin: Wongwaris</small></div><div class="toolbar" style="margin-left:auto"><span class="hint">โหมดรีเซ็ตรหัส:</span><button class="btn small" id="resetModeAuto" data-reset-mode="auto">Auto</button><button class="btn small" id="resetModeManual" data-reset-mode="manual">Manual</button></div></div><div class="table-wrap"><table class="tbl"><thead><tr><th>User</th><th>Requested</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resetRequestRows"></tbody></table></div></div>
         <div class="panel-form card" id="teamFormPanel"><div class="ch"><h2 id="teamFormTitle">New Member</h2><button class="btn icon" data-close-form="team">x</button></div><div class="cb"><form class="form-grid" id="teamForm"></form></div></div>
+        <div class="panel-form card app-modal" id="quotaSplitFormPanel"><div class="ch"><h2 id="quotaSplitTitle">แบ่งยอดขายรายไตรมาส</h2><button class="btn icon" data-close-form="quotaSplit" aria-label="Close">×</button></div><div class="cb"><form class="form-grid" id="quotaSplitForm"></form></div></div>
         <div class="grid g4 team-cols" id="teamCards"></div>
       </div>
     </section>
@@ -3664,7 +3664,7 @@ function renderSalesQuotaInto(hostId){
   // exact role match — /sales/i would also match "Presales"
   const sales=state.teams.filter(m=>String(m.role||'').trim().toLowerCase()==='sales'&&Number(m.target)>0);
   if(!sales.length){host.innerHTML=emptyState('ยังไม่มี Sales ที่ได้รับเป้ายอดขาย','Manager/Admin ตั้งเป้ารายปีได้ที่ Team → Edit member (role Sales)');return;}
-  host.innerHTML=`<div class="pipe-sum"><span>ปี <b>${yr}</b></span><span>ไตรมาสที่ <b>${q}</b>/4</span><span class="hint" style="font-size:10.5px;align-self:center">เป้าปี: Manager กำหนด · แบ่งไตรมาส: Sales จัดการเอง</span></div>`+sales.map(m=>{
+  host.innerHTML=`<div class="pipe-sum"><span>ปี <b>${yr}</b></span><span>ไตรมาสที่ <b>${q}</b>/4</span><span class="hint" style="font-size:10.5px;align-self:center">คลิกชื่อดูโครงการ · แบ่งยอดไตรมาสได้ที่หน้า Team</span></div>`+sales.map(m=>{
     const target=Number(m.target);
     const split=(Array.isArray(m.quotaSplit)&&m.quotaSplit.length===4&&m.quotaSplit.some(v=>Number(v)>0))?m.quotaSplit.map(Number):[target/4,target/4,target/4,target/4];
     const wonQ=[0,0,0,0];
@@ -3684,15 +3684,29 @@ function renderSalesQuotaInto(hostId){
     const perQ=remain/(4-q+1);
     const cls=won>=pace?'var(--green)':won>=pace*0.7?'var(--amber)':'var(--red)';
     const note=won>=target?'ถึงเป้าปีแล้ว 🎉':(behind>0?`ตามหลัง pace ${shortMoney(behind)} · ต้องทำ ~${shortMoney(perQ)}/ไตรมาสที่เหลือ`:`นำ pace อยู่ · เหลือ ${shortMoney(remain)}`);
-    const canEdit=activeUser&&(isAdmin()||activeUser.id===m.id||String(activeUser.role||'').trim().toLowerCase()==='manager');
     const qCells=[0,1,2,3].map(i=>{
       const t=split[i]||0, a=wonQ[i];
       const col=t>0&&a>=t?'var(--green)':(i+1<q?'var(--red)':i+1===q?'var(--amber)':'var(--soft)');
       return `<div style="flex:1;min-width:0;text-align:center;padding:5px 3px;border:1px solid ${i+1===q?'var(--line-2)':'var(--line)'};border-radius:7px;background:${i+1===q?'var(--panel-2)':'transparent'}"><div style="font-size:9.5px;color:var(--soft);font-weight:700">Q${i+1}</div><div style="font-size:11px;font-weight:700;color:${col}">${a?shortMoney(a):'–'}</div><div style="font-size:9px;color:var(--muted)">เป้า ${shortMoney(t)}</div></div>`;
     }).join('');
-    return `<div class="quota-row"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="display:flex;align-items:center;gap:6px"><strong>${esc(m.name)}</strong>${canEdit?iconBtn('edit',`data-quota-split="${esc(m.id)}"`,'แบ่งยอดรายไตรมาส'):''}</span><span style="font-weight:700;color:${cls}">${pctTxt}%</span></div><div class="quota-bar"><i style="background:${cls};transform:scaleX(${pct.toFixed(3)})"></i></div><div style="display:flex;gap:5px;margin:6px 0 4px">${qCells}</div><div style="display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px"><span>ทำได้ ${shortMoney(won)} / เป้า ${shortMoney(target)}</span><span>${note}</span></div></div>`;
+    // drill-down: projects this sales is working on / closed this year
+    const myOpen=state.projects.filter(p=>p.sales===m.id&&p.status!=='Win'&&p.status!=='Lost');
+    const myWon=state.projects.filter(p=>{
+      if(p.status!=='Win'||p.sales!==m.id) return false;
+      const d=p.wonAt||p.statusChangedAt||p.createdAt||'';
+      return !d||String(d).startsWith(String(yr));
+    });
+    const openVal=myOpen.reduce((s,p)=>s+Number(p.val||0),0);
+    const chips=[...myOpen.map(p=>`<button class="pipe-chip" data-pipe-open="${esc(p.id)}">${esc(p.name||p.id)} · ${shortMoney(Number(p.val||0))} ${statusTag(p.status)}</button>`),
+                 ...myWon.map(p=>`<button class="pipe-chip" data-pipe-open="${esc(p.id)}" style="border-color:var(--green)">${esc(p.name||p.id)} · ${shortMoney(Number(p.val||0))} ${statusTag('Win')}</button>`)].join('');
+    return `<div class="quota-row"><button class="pipe-row" type="button" data-quota-toggle="${esc(m.id)}" aria-expanded="false" style="border-bottom:0;padding:0 0 2px"><strong>${esc(m.name)}</strong><small class="hint">กำลังทำ ${myOpen.length} · ${shortMoney(openVal)}</small><span class="pipe-count" style="color:${cls}">${pctTxt}%</span></button><div class="quota-bar"><i style="background:${cls};transform:scaleX(${pct.toFixed(3)})"></i></div><div style="display:flex;gap:5px;margin:6px 0 4px">${qCells}</div><div style="display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px"><span>ทำได้ ${shortMoney(won)} / เป้า ${shortMoney(target)}</span><span>${note}</span></div><div class="pipe-list" data-quota-list="${esc(m.id)}" style="border-bottom:0;padding-left:2px">${chips||'<span class="hint">ยังไม่มีโครงการที่ถือ</span>'}</div></div>`;
   }).join('');
-  host.querySelectorAll('[data-quota-split]').forEach(b=>b.onclick=()=>openQuotaSplitForm(b.dataset.quotaSplit));
+  host.querySelectorAll('[data-quota-toggle]').forEach(btn=>btn.onclick=()=>{
+    const list=host.querySelector(`[data-quota-list="${btn.dataset.quotaToggle}"]`);
+    const open=list.classList.toggle('on');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  host.querySelectorAll('[data-pipe-open]').forEach(ch=>ch.onclick=e=>{e.stopPropagation();navigateToProject(ch.dataset.pipeOpen);});
 }
 function openQuotaSplitForm(memberId){
   const m=state.teams.find(x=>x.id===memberId); if(!m) return;
@@ -3724,7 +3738,7 @@ function saveQuotaSplit(e){
   if(!canEdit){toast('ไม่มีสิทธิ์แก้ยอดนี้','error');return}
   m.quotaSplit=[1,2,3,4].map(i=>Number(fd.get('q'+i))||0);
   saveState(); logActivity('แบ่งยอดขายรายไตรมาส','team',m.name);
-  closeFormPanel('quotaSplitFormPanel'); renderDashboard();
+  closeFormPanel('quotaSplitFormPanel'); renderTeam(); renderDashboard();
 }
 // Team Involvement Value: non-Sales members vs มูลค่ายอดขายที่เขามีส่วนร่วม
 function renderTeamValueInto(hostId){
@@ -3736,10 +3750,19 @@ function renderTeamValueInto(hostId){
     return {m,count:inv.length,openCount:open.length,
       pipeline:open.reduce((s,p)=>s+Number(p.val||0),0),
       wonV:inv.filter(p=>p.status==='Win').reduce((s,p)=>s+Number(p.val||0),0)};
-  }).filter(r=>r.count>0).sort((a,b)=>b.pipeline-a.pipeline);
+  }).filter(r=>r.count>0);
   if(!rows.length){host.innerHTML=emptyState('ยังไม่มีสมาชิกที่มีส่วนร่วมในโครงการ','Assign BD / Presales ในหน้า Project');return;}
   const max=Math.max(...rows.map(r=>r.pipeline),1);
-  host.innerHTML=rows.map(r=>`<div class="quota-row"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="display:flex;align-items:center;gap:7px">${memberAvatarHtml(r.m,'')}<strong>${esc(r.m.name)}</strong><small class="hint">${esc(r.m.role||'')}</small></span><span style="font-weight:700">${shortMoney(r.pipeline)}</span></div><div class="quota-bar"><i style="background:${r.m.color||'var(--accent)'};transform:scaleX(${(r.pipeline/max).toFixed(3)})"></i></div><div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted)"><span>${r.openCount} โครงการเปิด · ${r.count} ทั้งหมด</span><span>ปิดได้แล้ว ${shortMoney(r.wonV)}</span></div></div>`).join('');
+  const groups=[
+    {label:'Group BD',      items:rows.filter(r=>r.m.role==='BD Lead')},
+    {label:'Group Presales',items:rows.filter(r=>r.m.role==='Presales')},
+    {label:'Manager / Others',items:rows.filter(r=>!['BD Lead','Presales'].includes(r.m.role))},
+  ].filter(g=>g.items.length);
+  host.innerHTML=groups.map(g=>{
+    const gTotal=g.items.reduce((s,r)=>s+r.pipeline,0);
+    const body=g.items.sort((a,b)=>b.pipeline-a.pipeline).map(r=>`<div class="quota-row"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="display:flex;align-items:center;gap:7px">${memberAvatarHtml(r.m,'')}<strong>${esc(r.m.name)}</strong></span><span style="font-weight:700">${shortMoney(r.pipeline)}</span></div><div class="quota-bar"><i style="background:${r.m.color||'var(--accent)'};transform:scaleX(${(r.pipeline/max).toFixed(3)})"></i></div><div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted)"><span>${r.openCount} โครงการเปิด · ${r.count} ทั้งหมด</span><span>ปิดได้แล้ว ${shortMoney(r.wonV)}</span></div></div>`).join('');
+    return `<div class="kpi-mtgt-member-hd"><span>${esc(g.label)}</span><span class="hint">${g.items.length} คน · pipeline ${shortMoney(gTotal)}</span></div>${body}`;
+  }).join('');
 }
 
 // ===== #2 Quick-Add Project Widget (Executive Dashboard) =====
@@ -5282,11 +5305,15 @@ function renderTeam(){
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
     const owned=state.projects.filter(p=>projectInvolves(p,t.id)), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
     const locked = !isAdmin();
-    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar">${iconBtn('edit',`data-edit-team="${t.id}"`,'Edit member',locked?'disabled':'')}${iconBtn('del',`data-del-team="${t.id}"`,'Delete member',locked?'disabled':'')}</div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">${memberAvatarHtml(t)}<div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
+    const isSalesQuota=String(t.role||'').trim().toLowerCase()==='sales'&&Number(t.target)>0;
+    const canSplit=activeUser&&(isAdmin()||activeUser.id===t.id||String(activeUser.role||'').trim().toLowerCase()==='manager');
+    const quotaBtn=isSalesQuota?`<button class="btn small" data-quota-split="${esc(t.id)}" title="แบ่งยอดขายรายไตรมาส" ${canSplit?'':'disabled'}>🎯 แบ่งยอด</button>`:'';
+    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar">${quotaBtn}${iconBtn('edit',`data-edit-team="${t.id}"`,'Edit member',locked?'disabled':'')}${iconBtn('del',`data-del-team="${t.id}"`,'Delete member',locked?'disabled':'')}</div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">${memberAvatarHtml(t)}<div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
   updateLoginState();
   document.querySelectorAll('[data-edit-team]').forEach(b=>b.onclick=()=>openTeamForm(b.dataset.editTeam));
   document.querySelectorAll('[data-del-team]').forEach(b=>b.onclick=()=>deleteTeam(b.dataset.delTeam));
+  document.querySelectorAll('#teamCards [data-quota-split]').forEach(b=>b.onclick=()=>openQuotaSplitForm(b.dataset.quotaSplit));
   renderResetApprovals();
 }
 function renderResetApprovals(){
