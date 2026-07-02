@@ -144,6 +144,7 @@ html.theme-anim,html.theme-anim *{transition:background-color .3s ease,color .3s
 .quota-row:last-child{border-bottom:0}
 .quota-bar{height:6px;border-radius:999px;background:var(--panel-2);overflow:hidden;margin:6px 0 4px}
 .quota-bar i{display:block;height:100%;border-radius:999px;transform-origin:left}
+.btn.icon-act{width:27px;height:27px;padding:0;display:inline-flex;align-items:center;justify-content:center;vertical-align:middle}
 .kpi-alert{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:14px;font-size:12px;color:var(--muted)}
 .kpi-alert-ok{color:var(--green);font-weight:700}.kpi-alert-warn{color:var(--soft);font-weight:600}.kpi-alert-sep{color:var(--line-2)}
 :where(a,button,select,[tabindex],summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:5px}
@@ -835,6 +836,16 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>SETTINGS</div><h1>Settings</h1><p>Data List ที่ใช้ในฟอร์มโครงการ — เพิ่ม/แก้ไขได้จากปุ่มในแต่ละการ์ด</p></div></div>
       <div class="content">
         <div class="set-group">
+          <div class="set-section">Appearance <span>ธีมสีของโปรแกรม (ตั้งค่าเฉพาะเครื่องนี้ ไม่กระทบผู้ใช้คนอื่น)</span></div>
+          <div class="settings-grid">
+            <div class="card" id="themeStudioCard">
+              <div class="ch"><div class="ch-t"><h2>Theme Studio</h2><small>Dark · Light · Custom: เลือกธีมและปรับสีเองได้</small></div></div>
+              <div class="cb" id="themeStudioBody"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card" id="settingsAdminNote" style="display:none"><div class="cb hint">ส่วน Data Lists และ Status ใช้ได้เฉพาะ Admin (Wongwaris)</div></div>
+        <div class="set-group" data-admin-setting>
           <div class="set-section">Project Data Lists <span>ตัวเลือกที่ใช้กรอกในหน้า Project</span></div>
           <div class="settings-grid">
             <div class="card">
@@ -855,7 +866,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
             </div>
           </div>
         </div>
-        <div class="set-group">
+        <div class="set-group" data-admin-setting>
           <div class="set-section">Status Vocabulary <span>สถานะที่ใช้ทั้งระบบ Project และ Task</span></div>
           <div class="settings-grid">
             <div class="card">
@@ -1158,10 +1169,53 @@ let idleTimer = null;
 const REMEMBER_LOGIN_COOKIE = 'piramid-remember-login';
 const REMEMBER_LOGIN_DAYS = 30;
 
+// Custom theme: per-device (localStorage), base dark/light + user color overrides
+const CUSTOM_THEME_VARS=[
+  {k:'--accent',  label:'Accent หลัก'},
+  {k:'--accent-2',label:'Accent รอง'},
+  {k:'--bg',      label:'พื้นหลัง'},
+  {k:'--surface', label:'Surface'},
+  {k:'--panel',   label:'การ์ด'},
+  {k:'--panel-2', label:'การ์ดรอง'},
+];
+let customTheme=(()=>{try{return JSON.parse(localStorage.getItem('piramid-theme-custom'))||{base:'dark',colors:{}}}catch{return {base:'dark',colors:{}}}})();
+function saveCustomTheme(){localStorage.setItem('piramid-theme-custom',JSON.stringify(customTheme));}
 function applyTheme(){
-  document.documentElement.dataset.theme = currentTheme;
+  const root=document.documentElement;
+  const base=currentTheme==='custom'?(customTheme.base==='light'?'light':'dark'):currentTheme;
+  root.dataset.theme=base;
+  CUSTOM_THEME_VARS.forEach(o=>root.style.removeProperty(o.k));
+  if(currentTheme==='custom') CUSTOM_THEME_VARS.forEach(o=>{const v=customTheme.colors[o.k]; if(v) root.style.setProperty(o.k,v);});
   const btn=document.getElementById('themeToggle');
-  if(btn) btn.textContent = currentTheme==='light' ? 'Dark Theme' : 'Light Theme';
+  if(btn) btn.textContent={dark:'☀ Light Theme',light:'🎨 Custom Theme',custom:'🌙 Dark Theme'}[currentTheme]||'☀ Light Theme';
+}
+function renderThemeStudio(){
+  const body=document.getElementById('themeStudioBody'); if(!body) return;
+  const cs=getComputedStyle(document.documentElement);
+  const curVal=k=>customTheme.colors[k]||cs.getPropertyValue(k).trim()||'#000000';
+  const themeBtn=(v,l)=>`<button class="btn small${currentTheme===v?' primary':''}" data-set-theme="${v}">${l}</button>`;
+  body.innerHTML=`
+    <div class="toolbar" style="margin-bottom:12px">${themeBtn('dark','🌙 Dark')}${themeBtn('light','☀ Light')}${themeBtn('custom','🎨 Custom')}</div>
+    <div id="themeCustomEditor" style="display:${currentTheme==='custom'?'block':'none'}">
+      <label class="field" style="margin-bottom:10px"><span>Base theme</span><select id="themeBaseSel"><option value="dark"${customTheme.base!=='light'?' selected':''}>Dark base</option><option value="light"${customTheme.base==='light'?' selected':''}>Light base</option></select></label>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+        ${CUSTOM_THEME_VARS.map(o=>`<label class="field"><span>${esc(o.label)}</span><input type="color" data-theme-var="${esc(o.k)}" value="${esc(curVal(o.k))}" style="width:100%;height:34px;padding:2px;border:1px solid var(--line);border-radius:7px;background:var(--panel-2);cursor:pointer"></label>`).join('')}
+      </div>
+      <div class="toolbar" style="margin-top:12px"><button class="btn" id="themeResetColors">↺ Reset สีทั้งหมด</button><span class="hint">ธีมบันทึกเฉพาะเครื่องนี้ (localStorage)</span></div>
+    </div>`;
+  body.querySelectorAll('[data-set-theme]').forEach(b=>b.onclick=()=>{
+    currentTheme=b.dataset.setTheme;localStorage.setItem('piramid-theme',currentTheme);
+    applyTheme();loadChartColors();renderAll(false);renderThemeStudio();
+  });
+  const baseSel=document.getElementById('themeBaseSel');
+  if(baseSel) baseSel.onchange=()=>{customTheme.base=baseSel.value;saveCustomTheme();applyTheme();loadChartColors();renderAll(false);renderThemeStudio();};
+  body.querySelectorAll('[data-theme-var]').forEach(inp=>inp.oninput=()=>{
+    customTheme.colors[inp.dataset.themeVar]=inp.value;saveCustomTheme();
+    if(currentTheme==='custom'){applyTheme();}
+  });
+  body.querySelectorAll('[data-theme-var]').forEach(inp=>inp.onchange=()=>{if(currentTheme==='custom'){loadChartColors();renderAll(false);renderThemeStudio();}});
+  const rst=document.getElementById('themeResetColors');
+  if(rst) rst.onclick=()=>{customTheme.colors={};saveCustomTheme();applyTheme();loadChartColors();renderAll(false);renderThemeStudio();};
 }
 function findUser(username,password){
   const userKey=String(username||'').trim().toLowerCase();
@@ -1300,8 +1354,8 @@ function canAccessView(view){
   const role=accessRole();
   const map={
     Admin:['exec','analytics','projects','tasks','calendar','kpi','training','team','notify','settings'],
-    Member:['exec','analytics','projects','tasks','calendar','kpi','training','notify'],
-    Guest:['exec','analytics','projects','calendar','notify']
+    Member:['exec','analytics','projects','tasks','calendar','kpi','training','notify','settings'],
+    Guest:['exec','analytics','projects','calendar','notify','settings']
   };
   return (map[role]||map.Guest).includes(view);
 }
@@ -1904,7 +1958,14 @@ function filteredTasks(leadOverride){
 function pct(v,max){return max?Math.max(3,Math.round(v/max*100)):0}
 function statusClass(s){const m={Win:'win',Quotation:'quot',Budgetary:'budg','Waiting PO':'wapo',Pending:'pend',Lost:'lost',Schedule:'schedule',Doing:'doing',Review:'review',Done:'done',Overdue:'overdue',Cancelled:'cancel'};return m[s]||(/cancel/i.test(s)?'cancel':'pend')}
 function statusTag(s){return `<span class="tag ${statusClass(s)}">${esc(s)}</span>`}
-function priTag(s){return `<span class="tag ${String(s).toLowerCase()}">${esc(s)}</span>`}
+const PRI_GLYPH={critical:'‼',high:'↑',medium:'→',low:'↓'};
+function priTag(s){const k=String(s).toLowerCase();return `<span class="tag ${k}">${PRI_GLYPH[k]?`<span aria-hidden="true" style="margin-right:3px;font-weight:800">${PRI_GLYPH[k]}</span>`:''}${esc(s)}</span>`}
+// Compact icon action buttons — text replaced by SVG, label kept for screen readers/tooltip
+const ICO={
+  edit:'<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>',
+  del:'<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'
+};
+function iconBtn(kind,dataAttr,label,extra=''){return `<button class="btn small icon-act${kind==='del'?' danger':''}" ${dataAttr} aria-label="${esc(label)}" title="${esc(label)}"${extra?' '+extra:''}>${ICO[kind]}</button>`}
 function renderBars(elId,obj,opts={}){
   const el=document.getElementById(elId); if(!el) return;
   const entries=Array.isArray(obj)?obj:Object.entries(obj).map(([label,value])=>({label,value}));
@@ -4025,13 +4086,13 @@ function renderTraining(){
   const trainLbl=document.getElementById('trainEventCountLabel');
   if(certEl){
     if(certLbl) certLbl.textContent=`${certs.length} of ${state.certifications.length} certifications`;
-    certEl.innerHTML=certs.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td><button class="btn small" data-edit-cert="${esc(c.id)}">Edit</button> <button class="btn small danger" data-del-cert="${esc(c.id)}">Delete</button></td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรองตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Certification')+'</td></tr>';
+    certEl.innerHTML=certs.map(c=>`<tr><td>${esc(byId(c.member).name)}</td><td><strong>${esc(c.certName)}</strong></td><td>${esc(c.issuer||'-')}</td><td>${esc(c.category||'-')}</td><td>${esc(c.issuedAt||'-')}</td><td>${esc(c.expiresAt||'-')}</td><td>${certExpiryBadge(c.expiresAt)}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-cert="${esc(c.id)}"`,'Edit certification')} ${iconBtn('del',`data-del-cert="${esc(c.id)}"`,'Delete certification')}</td></tr>`).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีใบรับรองตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Certification')+'</td></tr>';
     certEl.querySelectorAll('[data-edit-cert]').forEach(b=>b.onclick=()=>openCertForm(b.dataset.editCert));
     certEl.querySelectorAll('[data-del-cert]').forEach(b=>b.onclick=()=>deleteCert(b.dataset.delCert));
   }
   if(trainEl){
     if(trainLbl) trainLbl.textContent=`${events.length} of ${state.trainingEvents.length} events`;
-    trainEl.innerHTML=events.map(ev=>{const _mn=(ev.members||(ev.member?[ev.member]:[])).map(id=>byId(id).name||id).filter(Boolean).join(', ');return`<tr><td>${esc(_mn||'-')}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td><button class="btn small" data-edit-trainev="${esc(ev.id)}">Edit</button> <button class="btn small danger" data-del-trainev="${esc(ev.id)}">Delete</button></td></tr>`;}).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรมตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Training')+'</td></tr>';
+    trainEl.innerHTML=events.map(ev=>{const _mn=(ev.members||(ev.member?[ev.member]:[])).map(id=>byId(id).name||id).filter(Boolean).join(', ');return`<tr><td>${esc(_mn||'-')}</td><td><strong>${esc(ev.title)}</strong></td><td>${esc(ev.type||'-')}</td><td>${esc(ev.provider||'-')}</td><td>${esc(ev.date||'-')}</td><td>${ev.hours||0}h</td><td class="ellipsis">${esc(ev.notes||'-')}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-trainev="${esc(ev.id)}"`,'Edit training')} ${iconBtn('del',`data-del-trainev="${esc(ev.id)}"`,'Delete training')}</td></tr>`;}).join('')||'<tr><td colspan="8">'+emptyState('ยังไม่มีข้อมูลการอบรมตาม filter','ลองเปลี่ยน Owner หรือเพิ่มจากปุ่ม + Training')+'</td></tr>';
     trainEl.querySelectorAll('[data-edit-trainev]').forEach(b=>b.onclick=()=>openTrainEventForm(b.dataset.editTrainev));
     trainEl.querySelectorAll('[data-del-trainev]').forEach(b=>b.onclick=()=>deleteTrainEvent(b.dataset.delTrainev));
   }
@@ -4304,7 +4365,7 @@ function renderTodoTable(){
     return `<th class="sortable" data-todo-sort="${key}"><button class="sort-head" type="button">${esc(label)}<span class="sort-mark">${mark}</span></button></th>`;
   }).join('')+'<th>Actions</th></tr>';
   const statusCell=t=>{const b=timelinessBadge(t);return `<td><div class="status-cell">${taskStatusDropdown(t)}${b?`<span>${b}</span>`:''}</div></td>`;};
-  const actCell=t=>`<td class="actions-cell" style="white-space:nowrap"><button class="btn small" data-edit-todo="${esc(t.id)}" aria-label="Edit task">Edit</button> <button class="btn small" data-manage-subtasks="${esc(t.id)}" aria-label="Manage sub tasks" title="จัดการ Sub Tasks">Sub Tasks${(t.subtasks?.length)?` (${t.subtasks.length})`:''}</button> <button class="btn small danger" data-del-todo="${esc(t.id)}" aria-label="Delete task">Del</button></td>`;
+  const actCell=t=>`<td class="actions-cell" style="white-space:nowrap">${iconBtn('edit',`data-edit-todo="${esc(t.id)}"`,'Edit task')} <button class="btn small" data-manage-subtasks="${esc(t.id)}" aria-label="Manage sub tasks" title="จัดการ Sub Tasks">Sub${(t.subtasks?.length)?` (${t.subtasks.length})`:''}</button> ${iconBtn('del',`data-del-todo="${esc(t.id)}"`,'Delete task')}</td>`;
   const subtitle=rows.length+' tasks · '+(isManual?'เรียงตาม Drag · ':'ฐานข้อมูลกลาง (sync จาก Projects) · ')+'เปลี่ยนสถานะได้ในตาราง'+(isManual?' · <button class="btn small" id="clearManualSort" style="margin-left:6px;font-size:10.5px">Reset sort</button>':'');
   const catTag=t=>t.taskCategory?`<span class="tag internal" style="font-size:9px;padding:1px 5px;margin-left:4px">${esc(t.taskCategory)}</span>`:'';
   body.innerHTML=`<div class="card"><div class="ch"><h2>Master Table</h2><small>${subtitle}</small></div><div class="table-wrap"><table class="tbl" id="todoTableEl"><thead>${head}</thead><tbody id="todoTbody">${rows.map(t=>`<tr class="todo-dnd-row" draggable="true" data-task-id="${esc(t.id)}"><td class="grip-col"><span class="todo-grip" aria-hidden="true">⠿</span></td><td>${esc(t.id)}</td><td><button class="btn-link" data-open-task="${esc(t.id)}" style="font-weight:600;text-align:left;background:none;border:none;padding:0;cursor:pointer;color:var(--text)">${esc(t.title)}</button>${catTag(t)}</td><td class="ellipsis">${!t.project?'<span class="tag internal">Internal</span>':esc(projectOf(t)?.name||t.project)}</td><td>${phaseTag(taskPhase(t))}</td><td><div class="owner-chips">${ownerIds(t).map(id=>`<span class="owner-chip">${esc(byId(id).name||id)}</span>`).join('')}</div></td>${statusCell(t)}<td>${priTag(taskPriority(t))}</td><td>${esc(t.due||'-')}</td><td>${Number(t.progress||0)}%</td>${actCell(t)}</tr>`).join('')||'<tr><td colspan="11">'+emptyState('ยังไม่มีงานตรงกับตัวกรอง','ลองปรับ scope หรือ Owner ด้านบนเพื่อดูงานเพิ่ม')+'</td></tr>'}</tbody></table></div></div>`;
@@ -4717,7 +4778,7 @@ function renderKpiMemberTargets(acts){
       const actDisp=cur.na?'—':(unit==='%'?cur.v+'%':cur.v+' '+unit);
       const tgtDisp=unit==='%'?t.target+'%':t.target+' '+unit;
       const periodLabel={month:'รายเดือน',quarter:'รายไตรมาส',year:'รายปี'}[t.period]||t.period||'';
-      const editBtns=isAdmin()?`<span style="white-space:nowrap;flex-shrink:0"><button class="btn small" data-edit-mtgt="${esc(t.id)}">Edit</button> <button class="btn small danger" data-del-mtgt="${esc(t.id)}" aria-label="Delete">×</button></span>`:'';
+      const editBtns=isAdmin()?`<span style="white-space:nowrap;flex-shrink:0">${iconBtn('edit',`data-edit-mtgt="${esc(t.id)}"`,'Edit target')} ${iconBtn('del',`data-del-mtgt="${esc(t.id)}"`,'Delete target')}</span>`:'';
       return `<div class="kpi-mtgt-row">
         <div class="kpi-mtgt-body"><strong>${esc(label)}</strong>${t.reference?`<div class="kpi-mtgt-ref">📌 ${esc(t.reference)}</div>`:''}</div>
         <div class="kpi-mtgt-vals">
@@ -4832,7 +4893,7 @@ function renderKpiActivities(acts){
     const passB=a.pass?`<span class="tag ${a.pass==='Pass'?'done':'overdue'}">${esc(a.pass)}</span>`:'';
     const _leadLbl=a.owner==='other'?(a.otherLead||'Other Team'):ownerLabel(a.owner);
     const _parts=(a.participants||[]).map(pid=>byId(pid).name||pid).filter(Boolean).join(', ');
-    return `<tr><td>${esc(a.type)}</td><td>${esc(a.activityDate||'—')}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(_leadLbl)}${_parts?`<br><small class="muted">+${esc(_parts)}</small>`:''}</td><td>${esc(a.dueDate||'—')}</td><td>${esc(a.submittedAt||'—')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'—'}</td><td>${out} ${passB}</td><td><button class="btn small" data-edit-kpi="${esc(a.id)}">Edit</button> <button class="btn small danger" data-del-kpi="${esc(a.id)}">Delete</button></td></tr>`;
+    return `<tr><td>${esc(a.type)}</td><td>${esc(a.activityDate||'—')}</td><td><strong>${esc(a.title)}</strong></td><td>${esc(_leadLbl)}${_parts?`<br><small class="muted">+${esc(_parts)}</small>`:''}</td><td>${esc(a.dueDate||'—')}</td><td>${esc(a.submittedAt||'—')}</td><td>${ot}</td><td>${a.completeness!=null&&a.completeness!==''?a.completeness+'%':'—'}</td><td>${out} ${passB}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-kpi="${esc(a.id)}"`,'Edit activity')} ${iconBtn('del',`data-del-kpi="${esc(a.id)}"`,'Delete activity')}</td></tr>`;
   }).join('')||`<tr><td colspan="10">${emptyState('ยังไม่มี Activity ในงวดนี้','กด + Add Activity เพื่อบันทึกงาน BD แล้ว KPI จะคำนวณให้อัตโนมัติ')}</td></tr>`;
   el.querySelectorAll('[data-edit-kpi]').forEach(b=>b.onclick=()=>openKpiForm(b.dataset.editKpi));
   el.querySelectorAll('[data-del-kpi]').forEach(b=>b.onclick=()=>deleteKpiActivity(b.dataset.delKpi));
@@ -4956,7 +5017,11 @@ function openKpiTypeEditor(){
 }
 
 function renderSettings(){
-  if(!isAdmin()){document.querySelector('#v-settings .content').innerHTML='<div class="card"><div class="cb hint">Admin only: Settings ใช้ได้เฉพาะ Wongwaris</div></div>';return}
+  const admin=isAdmin();
+  document.querySelectorAll('#v-settings .set-group[data-admin-setting]').forEach(g=>g.style.display=admin?'':'none');
+  const note=document.getElementById('settingsAdminNote'); if(note) note.style.display=admin?'none':'';
+  renderThemeStudio();
+  if(!admin) return;
   renderProjectStatuses();
   renderTaskStatuses();
   renderSolutions();
@@ -4965,7 +5030,7 @@ function renderSettings(){
   renderSizeRows();
 }
 function renderSolutions(){
-  document.getElementById('solutionRows').innerHTML=state.solutionGroups.map(s=>`<tr><td>${esc(s.group)}</td><td>${esc(s.system)}</td><td><button class="btn small" data-edit-solution="${s.id}">Edit</button> <button class="btn small danger" data-del-solution="${s.id}">Delete</button></td></tr>`).join('');
+  document.getElementById('solutionRows').innerHTML=state.solutionGroups.map(s=>`<tr><td>${esc(s.group)}</td><td>${esc(s.system)}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-solution="${s.id}"`,'Edit solution')} ${iconBtn('del',`data-del-solution="${s.id}"`,'Delete solution')}</td></tr>`).join('');
   document.querySelectorAll('[data-edit-solution]').forEach(b=>b.onclick=()=>openSolutionForm(b.dataset.editSolution));
   document.querySelectorAll('[data-del-solution]').forEach(b=>b.onclick=()=>deleteSolution(b.dataset.delSolution));
 }
@@ -5000,7 +5065,7 @@ function deleteSolution(id){
 }
 function renderBrands(){
   const scopeTag=s=>s==='PIRAMID Scope'?'<span class="tag" style="background:rgba(19,184,166,.16);color:var(--accent-2)">PIRAMID</span>':'<span class="tag" style="background:rgba(96,136,255,.16);color:#8fa4ff">Brand</span>';
-  const row=b=>`<tr><td>${scopeTag(scopeOfCategory(b.category))}</td><td>${esc(b.category)}</td><td>${esc(b.name)}</td><td><button class="btn small" data-edit-brand="${b.id}">Edit</button> <button class="btn small danger" data-del-brand="${b.id}">Delete</button></td></tr>`;
+  const row=b=>`<tr><td>${scopeTag(scopeOfCategory(b.category))}</td><td>${esc(b.category)}</td><td>${esc(b.name)}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-brand="${b.id}"`,'Edit brand')} ${iconBtn('del',`data-del-brand="${b.id}"`,'Delete brand')}</td></tr>`;
   const groupHead=(t,n,c)=>`<tr><td colspan="4" style="background:var(--surface);font-weight:700;color:${c};letter-spacing:.4px">${t} · ${n} รายการ</td></tr>`;
   const brandItems=state.brandCatalog.filter(b=>scopeOfCategory(b.category)==='Brand Scope');
   const piramidItems=state.brandCatalog.filter(b=>scopeOfCategory(b.category)==='PIRAMID Scope');
@@ -5041,14 +5106,14 @@ function deleteBrand(id){
 }
 function renderTaskRows(){
   const rows=state.taskTemplates.map(t=>{
-    return `<tr><td class="ellipsis">${esc(t.title)}</td><td><div class="chips">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td><button class="btn small" data-edit-task="${t.id}">Edit</button> <button class="btn small danger" data-del-task="${t.id}">Delete</button></td></tr>`;
+    return `<tr><td class="ellipsis">${esc(t.title)}</td><td><div class="chips">${(t.subtasks||[]).map(s=>`<span class="chip">${esc(s)}</span>`).join('')||'<span class="hint">-</span>'}</div></td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-task="${t.id}"`,'Edit template')} ${iconBtn('del',`data-del-task="${t.id}"`,'Delete template')}</td></tr>`;
   }).join('');
   document.getElementById('taskRows').innerHTML=rows;
   document.querySelectorAll('[data-edit-task]').forEach(b=>b.onclick=()=>openTaskForm(b.dataset.editTask));
   document.querySelectorAll('[data-del-task]').forEach(b=>b.onclick=()=>deleteTask(b.dataset.delTask));
 }
 function renderSizeRows(){
-  document.getElementById('sizeRows').innerHTML=[...state.sizeRanges].sort((a,b)=>Number(a.min)-Number(b.min)).map(r=>`<tr><td>${esc(r.size)}</td><td>${money(r.min)}</td><td>${Number(r.max)>9000000000?'∞':money(r.max)}</td><td><button class="btn small" data-edit-size="${r.id}">Edit</button> <button class="btn small danger" data-del-size="${r.id}">Delete</button></td></tr>`).join('');
+  document.getElementById('sizeRows').innerHTML=[...state.sizeRanges].sort((a,b)=>Number(a.min)-Number(b.min)).map(r=>`<tr><td>${esc(r.size)}</td><td>${money(r.min)}</td><td>${Number(r.max)>9000000000?'∞':money(r.max)}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-size="${r.id}"`,'Edit size range')} ${iconBtn('del',`data-del-size="${r.id}"`,'Delete size range')}</td></tr>`).join('');
   document.querySelectorAll('[data-edit-size]').forEach(b=>b.onclick=()=>openSizeForm(b.dataset.editSize));
   document.querySelectorAll('[data-del-size]').forEach(b=>b.onclick=()=>deleteSizeRange(b.dataset.delSize));
 }
@@ -5086,7 +5151,7 @@ function deleteSizeRange(id){
 }
 
 function renderProjectStatuses(){
-  document.getElementById('projectStatusRows').innerHTML=state.projectStatuses.map(s=>`<tr><td>${esc(s.name)}</td><td><button class="btn small" data-edit-project-status="${s.id}">Edit</button> <button class="btn small danger" data-del-project-status="${s.id}">Delete</button></td></tr>`).join('');
+  document.getElementById('projectStatusRows').innerHTML=state.projectStatuses.map(s=>`<tr><td>${esc(s.name)}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-project-status="${s.id}"`,'Edit status')} ${iconBtn('del',`data-del-project-status="${s.id}"`,'Delete status')}</td></tr>`).join('');
   document.querySelectorAll('[data-edit-project-status]').forEach(b=>b.onclick=()=>openProjectStatusForm(b.dataset.editProjectStatus));
   document.querySelectorAll('[data-del-project-status]').forEach(b=>b.onclick=()=>deleteProjectStatus(b.dataset.delProjectStatus));
 }
@@ -5108,7 +5173,7 @@ function deleteProjectStatus(id){
   state.projectStatuses=state.projectStatuses.filter(s=>s.id!==id); saveState(); renderAll(true);
 }
 function renderTaskStatuses(){
-  document.getElementById('taskStatusRows').innerHTML=state.taskStatuses.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.description||'')}</td><td><button class="btn small" data-edit-task-status="${s.id}">Edit</button> <button class="btn small danger" data-del-task-status="${s.id}">Delete</button></td></tr>`).join('');
+  document.getElementById('taskStatusRows').innerHTML=state.taskStatuses.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.description||'')}</td><td style="white-space:nowrap">${iconBtn('edit',`data-edit-task-status="${s.id}"`,'Edit status')} ${iconBtn('del',`data-del-task-status="${s.id}"`,'Delete status')}</td></tr>`).join('');
   document.querySelectorAll('[data-edit-task-status]').forEach(b=>b.onclick=()=>openTaskStatusForm(b.dataset.editTaskStatus));
   document.querySelectorAll('[data-del-task-status]').forEach(b=>b.onclick=()=>deleteTaskStatus(b.dataset.delTaskStatus));
 }
@@ -5141,7 +5206,7 @@ function renderTeam(){
   document.getElementById('teamCards').innerHTML=groups.map(g=>`<div class="group-block"><div class="group-title">${g.label}</div>${g.items.map(t=>{
     const owned=state.projects.filter(p=>projectInvolves(p,t.id)), value=owned.reduce((s,p)=>s+p.val,0), tasks=state.tasks.filter(x=>ownerIds(x).includes(t.id));
     const locked = !isAdmin();
-    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar"><button class="btn small" data-edit-team="${t.id}" ${locked?'disabled':''}>Edit</button><button class="btn small danger" data-del-team="${t.id}" ${locked?'disabled':''}>Delete</button></div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">${memberAvatarHtml(t)}<div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
+    return `<div class="card ${locked?'lock':''}"><div class="ch"><h2>${esc(t.name)}</h2><div class="toolbar">${iconBtn('edit',`data-edit-team="${t.id}"`,'Edit member',locked?'disabled':'')}${iconBtn('del',`data-del-team="${t.id}"`,'Delete member',locked?'disabled':'')}</div></div><div class="cb"><div style="display:flex;gap:10px;align-items:center;margin-bottom:12px">${memberAvatarHtml(t)}<div><b>${esc(t.role)}</b><div class="hint">${esc(t.level)} - ${esc(t.email)}</div><div class="mini">Username: ${esc(t.username)}</div></div></div><div class="bars"><div class="bar-row"><span>Projects</span><div class="track"><div class="fill" style="transform:scaleX(${pct(owned.length,Math.max(1,state.projects.length))/100});background-color:${t.color}"></div></div><b>${owned.length}</b></div><div class="bar-row"><span>Value</span><div class="track"><div class="fill" style="transform:scaleX(${pct(value,t.target)/100});background-color:${t.color}"></div></div><b>${shortMoney(value)}</b></div><div class="bar-row"><span>Tasks</span><div class="track"><div class="fill" style="transform:scaleX(${pct(tasks.length,Math.max(1,state.tasks.length))/100});background-color:${t.color}"></div></div><b>${tasks.length}</b></div></div></div></div>`
   }).join('') || '<div class="card"><div class="cb hint">No members</div></div>'}</div>`).join('');
   updateLoginState();
   document.querySelectorAll('[data-edit-team]').forEach(b=>b.onclick=()=>openTeamForm(b.dataset.editTeam));
@@ -5395,7 +5460,7 @@ function updateLoginState(){}
 
 function renderRules(){
   document.getElementById('ruleCountLabel').textContent=state.rules.length+' rules';
-  document.getElementById('ruleRows').innerHTML=state.rules.map(r=>`<tr><td>${esc(r.level)}</td><td>${esc(r.name)}<span class="mini">Scope: ${esc(r.recipientScope||'Group')}</span></td><td>${esc(r.reportPeriod||'Daily')}</td><td>${r.attachSnapshot?'On':'Off'}<span class="mini">${esc(r.snapshotView||'-')} · ${esc(r.format||'PNG')}</span></td><td>${esc(r.channel)}</td><td>${esc(r.time)}</td><td>${esc(r.recipients)}</td><td>${r.enabled?statusTag('Done'):statusTag('Pending')}</td><td><button class="btn small" data-preview-rule="${r.id}">Preview</button> <button class="btn small" data-trigger-rule="${r.id}">Trigger</button> <button class="btn small" data-edit-rule="${r.id}">Edit</button> <button class="btn small danger" data-del-rule="${r.id}">Delete</button></td></tr>`).join('');
+  document.getElementById('ruleRows').innerHTML=state.rules.map(r=>`<tr><td>${esc(r.level)}</td><td>${esc(r.name)}<span class="mini">Scope: ${esc(r.recipientScope||'Group')}</span></td><td>${esc(r.reportPeriod||'Daily')}</td><td>${r.attachSnapshot?'On':'Off'}<span class="mini">${esc(r.snapshotView||'-')} · ${esc(r.format||'PNG')}</span></td><td>${esc(r.channel)}</td><td>${esc(r.time)}</td><td>${esc(r.recipients)}</td><td>${r.enabled?statusTag('Done'):statusTag('Pending')}</td><td style="white-space:nowrap"><button class="btn small" data-preview-rule="${r.id}">Preview</button> <button class="btn small" data-trigger-rule="${r.id}">Trigger</button> ${iconBtn('edit',`data-edit-rule="${r.id}"`,'Edit rule')} ${iconBtn('del',`data-del-rule="${r.id}"`,'Delete rule')}</td></tr>`).join('');
   document.querySelectorAll('[data-preview-rule]').forEach(b=>b.onclick=()=>previewRule(b.dataset.previewRule));
   document.querySelectorAll('[data-trigger-rule]').forEach(b=>b.onclick=()=>triggerRule(b.dataset.triggerRule));
   document.querySelectorAll('[data-edit-rule]').forEach(b=>b.onclick=()=>openRuleForm(b.dataset.editRule));
@@ -5874,7 +5939,9 @@ function bindAppEvents(){
     const root=document.documentElement;
     const smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
     if(smooth){ root.classList.add('theme-anim'); clearTimeout(root._themeAnimT); root._themeAnimT=setTimeout(()=>root.classList.remove('theme-anim'),340); }
-    currentTheme=currentTheme==='light'?'dark':'light';localStorage.setItem('piramid-theme',currentTheme);applyTheme();loadChartColors();renderAll(false);
+    currentTheme={dark:'light',light:'custom',custom:'dark'}[currentTheme]||'dark';
+    localStorage.setItem('piramid-theme',currentTheme);applyTheme();loadChartColors();renderAll(false);
+    if(document.getElementById('themeStudioBody')?.innerHTML) renderThemeStudio();
   });
   on('projectForm','onsubmit',saveProject);
   on('taskForm','onsubmit',saveTask);
