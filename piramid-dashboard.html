@@ -125,6 +125,25 @@ html.theme-anim,html.theme-anim *{transition:background-color .3s ease,color .3s
 .kpi-act-chip:hover{border-color:var(--accent);background:var(--panel)}
 .kpi-act-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
 #kpiActWrap{max-height:420px;overflow-y:auto}
+.pipe-sum{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:10px;font-size:11.5px;color:var(--muted)}
+.pipe-sum b{color:var(--text);font-size:16px;margin-right:4px}
+.pipe-row{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);padding:8px 2px;cursor:pointer;color:var(--text);font-size:12px;text-align:left;font-family:inherit}
+.pipe-row:hover{background:var(--panel-2)}
+.pipe-dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+.pipe-count{margin-left:auto;font-weight:700;font-size:13px}
+.pipe-bar{height:5px;border-radius:999px;background:var(--panel-2);overflow:hidden;flex:0 0 90px}
+.pipe-bar i{display:block;height:100%;border-radius:999px;transform-origin:left}
+.pipe-list{display:none;padding:6px 0 10px 18px;border-bottom:1px solid var(--line)}
+.pipe-list.on{display:flex;flex-wrap:wrap;gap:6px}
+.pipe-chip{font-size:10.5px;padding:3px 10px;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);cursor:pointer;color:var(--text);font-family:inherit}
+.pipe-chip:hover{border-color:var(--accent)}
+.pipe-wl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pipe-wl-chip{font-size:10.5px;padding:4px 10px;border-radius:14px;border:1px solid var(--line);background:var(--panel-2);color:var(--muted)}
+.pipe-wl-chip b{color:var(--text)}
+.quota-row{padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}
+.quota-row:last-child{border-bottom:0}
+.quota-bar{height:6px;border-radius:999px;background:var(--panel-2);overflow:hidden;margin:6px 0 4px}
+.quota-bar i{display:block;height:100%;border-radius:999px;transform-origin:left}
 .kpi-alert{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:14px;font-size:12px;color:var(--muted)}
 .kpi-alert-ok{color:var(--green);font-weight:700}.kpi-alert-warn{color:var(--soft);font-weight:600}.kpi-alert-sep{color:var(--line-2)}
 :where(a,button,select,[tabindex],summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:5px}
@@ -239,7 +258,7 @@ body.exec-editing .edit-hint[data-edit-tools="exec"],body.ana-editing .edit-hint
 .dash-grid>.widget.metric:hover{box-shadow:none;border-color:var(--line-2);transform:none}
 .dash-grid>.widget>.cb{flex:1;min-height:0;overflow:auto}
 .dash-grid>.widget.metric{grid-column:span 3;grid-row:span 4;justify-content:center}
-.dash-grid>.widget[data-widget="execWorkload"],.dash-grid>.widget[data-widget="execHighPriority"],.dash-grid>.widget[data-widget="execTaskAlert"],.dash-grid>.widget[data-widget="execTimeliness"],.dash-grid>.widget[data-widget="anaTrend"],.dash-grid>.widget[data-widget="anaConvFunnel"],.dash-grid>.widget[data-widget="anaTable"]{grid-column:span 6;grid-row:span 10}
+.dash-grid>.widget[data-widget="execWorkload"],.dash-grid>.widget[data-widget="execHighPriority"],.dash-grid>.widget[data-widget="execTaskAlert"],.dash-grid>.widget[data-widget="execTimeliness"],.dash-grid>.widget[data-widget="execPipeline"],.dash-grid>.widget[data-widget="execSalesQuota"],.dash-grid>.widget[data-widget="anaPipeline"],.dash-grid>.widget[data-widget="anaTrend"],.dash-grid>.widget[data-widget="anaConvFunnel"],.dash-grid>.widget[data-widget="anaTable"]{grid-column:span 6;grid-row:span 10}
 #anaGrid{column-gap:18px;row-gap:18px;grid-auto-rows:28px}
 #anaGrid>.widget.metric{background:var(--surface);border-color:var(--line);grid-column:span 3;grid-row:span 4}
 #anaGrid>.widget[data-widget="anaSummary"]{grid-column:span 12;grid-row:span 5;background:linear-gradient(135deg,rgba(96,136,255,.12),rgba(22,198,178,.06)),var(--panel);border-color:var(--line-2)}
@@ -655,6 +674,8 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <div class="card widget" data-widget="execActiveByOwner"><div class="ch"><h2>Active Tasks by Owner</h2><small>งาน open (Doing/Review/Schedule/Overdue) ต่อสมาชิก</small></div><div class="cb"><div class="bars" id="activeByOwnerBars"></div></div></div>
           <div class="card widget" data-widget="execBuildingType"><div class="ch"><h2>Building Type</h2><small>โครงการสร้างใหม่ vs ปรับปรุงตึกเดิม · มูลค่า</small></div><div class="cb" id="buildingTypeDonut"></div></div>
           <div class="card widget" data-widget="execTimeliness"><div class="ch"><h2>Delivery Timeliness</h2><small>งานย่อยส่งทันกำหนดแค่ไหน</small></div><div class="cb"><div id="timelinessBox"></div></div></div>
+          <div class="card widget" data-widget="execPipeline"><div class="ch"><h2>Sales → BD → Presales Pipeline</h2><small>ใครถืองานอยู่ · คลิกดูรายโครงการ</small></div><div class="cb"><div id="pipelineBox"></div></div></div>
+          <div class="card widget" data-widget="execSalesQuota"><div class="ch"><h2>Sales Quota Pace</h2><small>ยอดขายเทียบเป้ารายปี · แตกรายไตรมาส</small></div><div class="cb"><div id="salesQuotaBox"></div></div></div>
           <div class="card widget" data-widget="execQuickAdd"><div class="ch"><h2>Quick Add Project</h2><small>เพิ่มโครงการใหม่เร็ว ๆ</small></div><div class="cb" id="quickAddBox"></div></div>
         </div>
         <div class="grid g2" id="executiveInsights"></div>
@@ -742,10 +763,14 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
     <section id="v-kpi" class="view">
       <div class="topbar"><div class="title"><div class="kicker"><span class="kdot"></span>KPI ACTIVITY</div><h1>KPI Activity Scorecard</h1><p>ประเมินผลงานทีม: ตรงเวลา · ครบถ้วน · คุณภาพ · ปริมาณ · Conversion — คำนวณจาก Activity</p></div><div class="actions"><button class="btn primary" id="kpiFormToggle">+ Add Activity</button><button class="btn" id="kpiTypeFormToggle" data-admin-only>⚙ Activity Types</button><button class="btn" data-export="kpi">Export</button></div></div>
       <div class="content">
-        <div class="toolbar" style="justify-content:flex-end">
+        <div class="toolbar" style="justify-content:flex-end;flex-wrap:wrap">
           <button class="btn small kpi-period on" data-kpi-period="month">This Month</button>
           <button class="btn small kpi-period" data-kpi-period="quarter">This Quarter</button>
+          <button class="btn small kpi-period" data-kpi-period="year">This Year</button>
+          <button class="btn small kpi-period" data-kpi-period="all">ทั้งหมด</button>
           <button class="btn small" id="kpiTargetBtn">🎯 ตั้งเป้า</button>
+          <input type="search" id="kpiSearch" class="task-search" placeholder="ค้นหา Activity…" aria-label="ค้นหา KPI Activity">
+          <label class="field" style="min-width:150px"><span>ประเภท</span><select id="kpiTypeFilter"><option value="All">ทุกประเภท</option></select></label>
           <label class="field" style="min-width:210px"><span>BD Member</span><select id="kpiOwnerFilter"></select></label>
         </div>
         <div class="panel-form card" id="kpiFormPanel"><div class="ch"><h2>KPI Activity</h2><button class="btn icon" data-close-form="kpi">x</button></div><div class="cb"><form class="form-grid" id="kpiForm"></form></div></div>
@@ -866,6 +891,7 @@ th.grip-col,td.grip-col{width:22px;padding:0!important}
           <div class="card widget" data-widget="anaSize"><div class="ch"><h2>Value Distribution by Size</h2><small>เชิงวิเคราะห์</small></div><div class="cb"><div class="bars" id="sizeBars"></div></div></div>
           <div class="card widget" data-widget="anaSystems"><div class="ch"><h2>Top System Types</h2><small>ความถี่ของระบบ</small></div><div class="cb"><div class="bars" id="systemBars"></div></div></div>
           <div class="card widget" data-widget="anaSales"><div class="ch"><h2>Sales Performance</h2><small>มูลค่าและจำนวนโครงการ</small></div><div class="cb"><div class="bars" id="salesBars"></div></div></div>
+          <div class="card widget" data-widget="anaPipeline"><div class="ch"><h2>Sales → BD → Presales Pipeline</h2><small>ใครถืองานอยู่ · คลิกดูรายโครงการ</small></div><div class="cb"><div id="anaPipelineBox"></div></div></div>
           <div class="card widget" data-widget="anaTable"><div class="ch"><h2>High Priority Watchlist</h2><small>งานที่ควรติดตาม</small></div><div class="cb"><div class="table-wrap"><table class="tbl"><thead><tr><th>Project</th><th>Status</th><th>Value</th><th>Owner</th><th>Tasks</th></tr></thead><tbody id="watchRows"></tbody></table></div></div></div>
         </div>
       </div>
@@ -1020,10 +1046,10 @@ const seed = {
   taskStatuses: DEFAULT_TASK_STATUSES,
   kpiActivities: DEFAULT_KPI_ACTIVITIES,
   kpiTargets: DEFAULT_KPI_TARGETS,
-  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execPresalesTeam:true,execPresalesWorkload:true,execPresalesTasks:true,execActiveByOwner:true,execBuildingType:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execQuickAdd:true,anaSummary:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
+  layout:{execSummary:true,mTotal:true,mValue:true,mWin:true,mWinValue:true,mWinPct:true,mHigh:true,mOverdue:true,mTaskTotal:true,mTaskDoing:true,execStatus:true,execBrand:true,execTeam:true,execPresalesTeam:true,execPresalesWorkload:true,execPresalesTasks:true,execActiveByOwner:true,execBuildingType:true,execSolutions:true,execTopSystems:true,execSegments:true,execTasks:true,execWorkload:true,execHighPriority:true,execTaskAlert:true,execTimeliness:true,execPipeline:true,execSalesQuota:true,execQuickAdd:true,anaSummary:true,anaPipeline:true,anaTotalValue:true,anaAvgValue:true,anaLargest:true,anaBrandCount:true,anaTrend:true,anaConvFunnel:true,anaFunnel:true,anaWinLoss:true,anaScopeSplit:true,anaPiramidScope:true,anaSize:true,anaSystems:true,anaSales:true,anaTable:true}
 };
 const SYSTEM_GROUPS = ['IT and Communication','Security Solutions','IOT and Platform','BMS and Energy'];
-const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execQuickAdd'];
+const DEFAULT_EXEC_ORDER = ['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execWorkload','execSolutions','execTopSystems','execSegments','execTasks','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execPipeline','execSalesQuota','execQuickAdd'];
 const DEFAULT_EXEC_WIDGET_SIZE = {
   execSummary:{cols:12,rows:5},
   mTotal:{cols:3,rows:4},
@@ -1051,9 +1077,11 @@ const DEFAULT_EXEC_WIDGET_SIZE = {
   execHighPriority:{cols:6,rows:10},
   execTaskAlert:{cols:6,rows:10},
   execTimeliness:{cols:6,rows:10},
+  execPipeline:{cols:6,rows:10},
+  execSalesQuota:{cols:6,rows:10},
   execQuickAdd:{cols:5,rows:8}
 };
-const DEFAULT_ANA_ORDER = ['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaFunnel','anaSize','anaSystems','anaSales','anaTable'];
+const DEFAULT_ANA_ORDER = ['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaFunnel','anaSize','anaSystems','anaSales','anaPipeline','anaTable'];
 const DEFAULT_ANA_WIDGET_SIZE = {
   anaSummary:{cols:12,rows:5},
   anaTotalValue:{cols:3,rows:4},
@@ -1069,6 +1097,7 @@ const DEFAULT_ANA_WIDGET_SIZE = {
   anaSize:{cols:4,rows:9},
   anaSystems:{cols:4,rows:9},
   anaSales:{cols:4,rows:9},
+  anaPipeline:{cols:6,rows:10},
   anaTable:{cols:12,rows:10}
 };
 const PIRAMID_SCOPE = ['Installation','Cabling','Maintenance','Project management fee'];
@@ -1601,12 +1630,28 @@ function normalizeState(data){
     if(data.layout[key]===undefined) data.layout[key]=true;
   });
   if(data.layout.execQuickAdd===undefined){ data.layout.execQuickAdd=true; }
+  // Additive: MD pipeline + sales quota widgets
+  ['execPipeline','execSalesQuota'].forEach(key=>{
+    if(!data.layoutOrder.includes(key)){
+      const idx=data.layoutOrder.indexOf('execQuickAdd');
+      if(idx>=0) data.layoutOrder.splice(idx,0,key); else data.layoutOrder.push(key);
+    }
+    if(!data.widgetSize[key]) data.widgetSize[key]=structuredClone(DEFAULT_EXEC_WIDGET_SIZE[key]);
+    if(data.layout[key]===undefined) data.layout[key]=true;
+  });
   if(data.anaLayoutVersion !== 2){
     data.anaOrder = [...DEFAULT_ANA_ORDER];
     data.anaWidgetSize = structuredClone(DEFAULT_ANA_WIDGET_SIZE);
     data.anaWidgetAlign = {};
     data.anaLayoutVersion = 2;
   }
+  // Additive: pipeline widget on Insights
+  if(!data.anaOrder.includes('anaPipeline')){
+    const ti=data.anaOrder.indexOf('anaTable');
+    if(ti>=0) data.anaOrder.splice(ti,0,'anaPipeline'); else data.anaOrder.push('anaPipeline');
+  }
+  if(!data.anaWidgetSize.anaPipeline) data.anaWidgetSize.anaPipeline={cols:6,rows:10};
+  if(data.layout.anaPipeline===undefined) data.layout.anaPipeline=true;
   return data;
 }
 const money = n => n ? '฿'+Number(n).toLocaleString('th-TH') : '-';
@@ -2006,11 +2051,11 @@ function initProjectFilters(force=false){
   return true;
 }
 function renderCustomizers(){
-  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execPresalesTeam:'Presales Involvement',execPresalesWorkload:'Presales Workflow',execPresalesTasks:'Presales Task Health',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execActiveByOwner:'Active Tasks by Owner',execBuildingType:'Building Type',execTimeliness:'Delivery Timeliness',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
+  const labels={execSummary:'Executive Summary',mTotal:'Total Projects',mValue:'Pipeline Value',mWin:'Win Projects',mWinValue:'Win Value',mWinPct:'Win Value %',mHigh:'High Priority',mOverdue:'Overdue Tasks',mTaskTotal:'Total Task',mTaskDoing:'Doing Task',execStatus:'Project Status',execBrand:'Brand Compare',execTeam:'Team Involvement',execPresalesTeam:'Presales Involvement',execPresalesWorkload:'Presales Workflow',execPresalesTasks:'Presales Task Health',execSolutions:'Solutions Mix',execTopSystems:'Top 5 Systems',execSegments:'Segment Value',execTasks:'Task Health',execWorkload:'Team Workload',execHighPriority:'High Priority Table',execTaskAlert:'Task Alert Table',execActiveByOwner:'Active Tasks by Owner',execBuildingType:'Building Type',execTimeliness:'Delivery Timeliness',execPipeline:'BD → Presales Pipeline',execSalesQuota:'Sales Quota Pace',execQuickAdd:'Quick Add Project',anaSummary:'Insight Summary',anaPipeline:'BD → Presales Pipeline',anaTotalValue:'Total Pipeline',anaAvgValue:'Avg Value',anaLargest:'Largest Project',anaBrandCount:'Brand Count',anaFunnel:'Pipeline Funnel',anaWinLoss:'Win / Loss',anaScopeSplit:'Brand vs PIRAMID',anaPiramidScope:'PIRAMID Scope',anaTrend:'Monthly Trends',anaConvFunnel:'Conversion Funnel',anaSize:'Size Distribution',anaSystems:'System Types',anaSales:'Sales Performance',anaTable:'Watchlist'};
   const build=(id,keys)=>document.getElementById(id).innerHTML=keys.map(k=>`<label class="switch"><input type="checkbox" data-layout="${k}" ${state.layout[k]?'checked':''}>${labels[k]}</label>`).join('');
-  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execQuickAdd']);
+  build('execCustomizer',['execSummary','mTotal','mValue','mWin','mWinValue','mWinPct','mHigh','mOverdue','mTaskTotal','mTaskDoing','execStatus','execBrand','execTeam','execPresalesTeam','execPresalesWorkload','execPresalesTasks','execSolutions','execTopSystems','execSegments','execTasks','execWorkload','execHighPriority','execTaskAlert','execActiveByOwner','execBuildingType','execTimeliness','execPipeline','execSalesQuota','execQuickAdd']);
   (state.customCards||[]).forEach(c=>document.getElementById('execCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
-  build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaTable']);
+  build('analyticsCustomizer',['anaSummary','anaTotalValue','anaAvgValue','anaLargest','anaBrandCount','anaTrend','anaConvFunnel','anaFunnel','anaWinLoss','anaScopeSplit','anaPiramidScope','anaSize','anaSystems','anaSales','anaPipeline','anaTable']);
   (state.anaCustomCards||[]).forEach(c=>document.getElementById('analyticsCustomizer').insertAdjacentHTML('beforeend','<label class="switch"><input type="checkbox" data-layout="cc-'+c.id+'" '+(state.layout['cc-'+c.id]!==false?'checked':'')+'>'+esc(c.title||'Custom')+'</label>'));
   document.querySelectorAll('[data-layout]').forEach(x=>x.onchange=()=>{state.layout[x.dataset.layout]=x.checked;saveState();applyLayout()});
 }
@@ -2571,6 +2616,8 @@ function renderDashboard(){
   const ta=t.filter(x=>isOverdue(x)||x.status==='Doing').sort((a,b)=>(isOverdue(b)?1:0)-(isOverdue(a)?1:0)).slice(0,25);
   const taEl=document.getElementById('taskAlertTable'); if(taEl) taEl.innerHTML='<div class="table-wrap"><table class="tbl"><thead><tr><th>Task</th><th>Project</th><th>Owner</th><th>Status</th><th>Due</th></tr></thead><tbody>'+(ta.map(x=>{const pr=state.projects.find(z=>z.id===x.project); return '<tr><td class="ellipsis">'+esc(x.title)+'</td><td class="ellipsis">'+esc(pr?pr.name:x.project)+'</td><td>'+esc(ownerNames(x).join(', ')||'-')+'</td><td>'+statusTag(isOverdue(x)?'Overdue':x.status)+'</td><td>'+esc(x.due||'-')+'</td></tr>';}).join('')||'<tr><td colspan="5" class="hint">No data</td></tr>')+'</tbody></table></div>';
   renderTimelinessInto('timelinessBox', t);
+  renderPipelineInto('pipelineBox', p);
+  renderSalesQuotaInto('salesQuotaBox');
   // Active Tasks by Owner: open task count per BD/Presales member so executives can see each member's current load
   const activeMembers=state.teams.filter(tm=>/bd|presales/i.test(tm.role||''));
   const activeBars=activeMembers.map(tm=>({label:tm.name+(/presales/i.test(tm.role||'')?' · PS':' · BD'),color:tm.color||CHART[0],value:t.filter(task=>task.status!=='Done'&&ownerIds(task).includes(tm.id)).length})).sort((a,b)=>b.value-a.value);
@@ -2642,6 +2689,7 @@ function renderAnalytics(){
   renderBars('salesBars',state.teams.filter(t=>t.role==='Sales').map(t=>({label:t.name,color:t.color,value:p.filter(x=>x.sales===t.id).reduce((s,x)=>s+x.val,0)})).sort((a,b)=>b.value-a.value),{money:true});
   const taskByProject=grouped(state.tasks,x=>x.project);
   document.getElementById('watchRows').innerHTML=p.filter(x=>x.pri==='High').sort((a,b)=>b.val-a.val).map(x=>`<tr><td class="ellipsis">${esc(x.name)}</td><td>${statusTag(x.status)}</td><td>${money(x.val)}</td><td>${esc(byId(x.bd).name)}</td><td>${taskByProject[x.id]||0}</td></tr>`).join('');
+  renderPipelineInto('anaPipelineBox', p);
   renderCustomCards('ana');
   applyExecOrder('ana'); ensureGuides('ana'); initExecDrag('ana'); initExecResize('ana'); initExecAlign('ana'); applyExecSizes('ana'); applyExecAlign('ana'); applyExecEdit('ana');
 }
@@ -3480,6 +3528,83 @@ function emptyState(title,hint){
   return `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><b>${esc(title)}</b>${hint?`<span>${esc(hint)}</span>`:''}</div>`;
 }
 
+// ===== Sales → BD → Presales pipeline (MD view): who holds each open project right now =====
+function memberRoleOf(id){return state.teams.find(m=>m.id===id)?.role||''}
+function projectPipelineState(p){
+  const tasks=state.tasks.filter(t=>t.project===p.id&&t.status!=='Cancelled');
+  const bdT=tasks.filter(t=>ownerIds(t).some(id=>/^bd/i.test(memberRoleOf(id))));
+  const psT=tasks.filter(t=>ownerIds(t).some(id=>/presales/i.test(memberRoleOf(id))));
+  const bdOpen=bdT.filter(t=>t.status!=='Done'), psOpen=psT.filter(t=>t.status!=='Done');
+  const viaBD=bdT.length>0;
+  let stage;
+  if(!tasks.length) stage='none';
+  else if(bdOpen.length) stage=bdOpen.some(t=>['Doing','Review'].includes(t.status)||isOverdue(t))?'bdDoing':'bdQueue';
+  else if(psOpen.length) stage='presales';
+  else stage='done';
+  const psWaiting=(stage==='bdDoing'||stage==='bdQueue')&&(psT.length>0||!!p.presales);
+  return {stage,viaBD,psWaiting,bdOpen,psOpen};
+}
+function renderPipelineInto(hostId, projects){
+  const host=document.getElementById(hostId); if(!host) return;
+  const act=projects.filter(p=>p.status!=='Win'&&p.status!=='Lost');
+  if(!act.length){host.innerHTML=emptyState('ยังไม่มีโครงการเปิดอยู่','เพิ่มโครงการใหม่เพื่อเห็น flow Sales → BD → Presales');return;}
+  const st=act.map(p=>({p,s:projectPipelineState(p)}));
+  const buckets=[
+    {key:'bdDoing', label:'BD กำลังทำ',        color:CHART[3], items:st.filter(x=>x.s.stage==='bdDoing')},
+    {key:'bdQueue', label:'BD รอคิว',           color:CHART[6], items:st.filter(x=>x.s.stage==='bdQueue')},
+    {key:'presales',label:'Presales กำลังทำ',   color:CHART[0], items:st.filter(x=>x.s.stage==='presales')},
+    {key:'psWait',  label:'Presales รอ BD ส่งต่อ',color:CHART[1], items:st.filter(x=>x.s.psWaiting)},
+    {key:'done',    label:'งานย่อยเสร็จครบ',    color:CHART[2], items:st.filter(x=>x.s.stage==='done')},
+    {key:'none',    label:'ยังไม่มี Task',       color:'var(--muted)', items:st.filter(x=>x.s.stage==='none')},
+  ].filter(b=>b.items.length);
+  const viaBD=st.filter(x=>x.s.viaBD).length, direct=st.length-viaBD;
+  const rows=buckets.map(b=>{
+    const pct=st.length?b.items.length/st.length:0;
+    const chips=b.items.map(x=>`<button class="pipe-chip" data-pipe-open="${esc(x.p.id)}">${esc(x.p.name||x.p.id)}</button>`).join('');
+    return `<button class="pipe-row" type="button" data-pipe-bucket="${b.key}" aria-expanded="false"><span class="pipe-dot" style="background:${b.color}"></span>${esc(b.label)}<div class="pipe-bar"><i style="background:${b.color};transform:scaleX(${pct.toFixed(3)})"></i></div><span class="pipe-count">${b.items.length}</span></button><div class="pipe-list" data-pipe-list="${b.key}">${chips}</div>`;
+  }).join('');
+  const bdMembers=state.teams.filter(m=>/^bd/i.test(m.role||''));
+  const wl=bdMembers.map(m=>{
+    const doing=st.filter(x=>x.s.bdOpen.some(t=>ownerIds(t).includes(m.id)&&t.status!=='Schedule')).length;
+    const queue=st.filter(x=>x.s.bdOpen.some(t=>ownerIds(t).includes(m.id)&&t.status==='Schedule')).length;
+    return {m,doing,queue};
+  }).filter(x=>x.doing||x.queue);
+  const wlHtml=wl.length?`<div class="pipe-wl">${wl.map(x=>`<span class="pipe-wl-chip"><b>${esc(x.m.name)}</b> ทำอยู่ ${x.doing}${x.queue?` · คิว ${x.queue}`:''}</span>`).join('')}</div>`:'';
+  host.innerHTML=`<div class="pipe-sum"><span><b>${st.length}</b>โครงการเปิด</span><span><b>${viaBD}</b>ผ่าน BD</span><span><b>${direct}</b>Presales ทำเอง</span></div>${rows}${wlHtml}`;
+  host.querySelectorAll('[data-pipe-bucket]').forEach(btn=>btn.onclick=()=>{
+    const list=host.querySelector(`[data-pipe-list="${btn.dataset.pipeBucket}"]`);
+    const open=list.classList.toggle('on');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+  host.querySelectorAll('[data-pipe-open]').forEach(ch=>ch.onclick=e=>{e.stopPropagation();navigateToProject(ch.dataset.pipeOpen);});
+}
+// ===== Sales Quota Pace: yearly target split by quarter, actual vs pace =====
+function renderSalesQuotaInto(hostId){
+  const host=document.getElementById(hostId); if(!host) return;
+  const yr=today.getFullYear();
+  const q=Math.floor(today.getMonth()/3)+1; // 1..4
+  const sales=state.teams.filter(m=>/sales/i.test(m.role||'')&&Number(m.target)>0);
+  if(!sales.length){host.innerHTML=emptyState('ยังไม่มี Sales ที่ตั้ง Reference Value','ตั้งค่า target ได้ที่ Team → Edit member (role Sales)');return;}
+  host.innerHTML=`<div class="pipe-sum"><span>ปี <b>${yr}</b></span><span>ไตรมาสที่ <b>${q}</b>/4</span></div>`+sales.map(m=>{
+    const target=Number(m.target);
+    const won=state.projects.filter(p=>{
+      if(p.status!=='Win'||p.sales!==m.id) return false;
+      const d=p.wonAt||p.statusChangedAt||p.createdAt||''; // legacy wins may lack wonAt — fall back, count if undatable
+      return !d||String(d).startsWith(String(yr));
+    }).reduce((s,p)=>s+Number(p.val||0),0);
+    const pct=Math.min(won/target,1);
+    const pctTxt=Math.round(won/target*100);
+    const pace=target*q/4;                       // ควรทำได้ถึงสิ้นไตรมาสนี้
+    const behind=Math.max(0,pace-won);
+    const remain=Math.max(0,target-won);
+    const qLeft=4-q+1;                           // ไตรมาสที่เหลือรวมปัจจุบัน
+    const perQ=remain/qLeft;
+    const cls=won>=pace?'var(--green)':won>=pace*0.7?'var(--amber)':'var(--red)';
+    const note=won>=target?'ถึงเป้าปีแล้ว 🎉':(behind>0?`ตามหลัง pace ${shortMoney(behind)} · เหลือ ${shortMoney(remain)} → ต้องทำ ~${shortMoney(perQ)}/ไตรมาส`:`นำ pace อยู่ · เหลือ ${shortMoney(remain)}`);
+    return `<div class="quota-row"><div style="display:flex;justify-content:space-between;gap:8px"><strong>${esc(m.name)}</strong><span style="font-weight:700;color:${cls}">${pctTxt}%</span></div><div class="quota-bar"><i style="background:${cls};transform:scaleX(${pct.toFixed(3)})"></i></div><div style="display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px"><span>ทำได้ ${shortMoney(won)} / เป้า ${shortMoney(target)}</span><span>${note}</span></div></div>`;
+  }).join('');
+}
+
 // ===== #2 Quick-Add Project Widget (Executive Dashboard) =====
 function renderQuickAddWidget(){
   const host=document.getElementById('quickAddBox'); if(!host) return;
@@ -4039,6 +4164,8 @@ function openTodoTaskForm(id){
     <label class="field"><span>Priority</span><select name="priority">${priOpts}</select></label>
     <label class="field"><span>Due Date</span><input name="due" type="date" value="${esc(t.due||'')}"></label>
     <label class="field"><span>Progress (%)</span><input name="progress" type="number" min="0" max="100" value="${Number(t.progress||0)}"></label>
+    <label class="field"><span>วันรับงาน <small class="hint">— แก้ย้อนหลังได้</small></span><input name="createdAtDate" type="date" value="${esc(String(t.createdAt||'').slice(0,10))}"></label>
+    <label class="field"><span>วันส่งจริง <small class="hint">— วันที่งานเสร็จจริง</small></span><input name="completedAtDate" type="date" value="${esc(String(t.completedAt||'').slice(0,10))}"></label>
     ${templateChecks}
     <label class="field span3"><span>Additional Sub Tasks <span class="hint">— 1 รายการต่อบรรทัด · sync กับ Project อัตโนมัติ</span></span><textarea name="subtasksText" rows="4" placeholder="Revise BOQ round 1&#10;Revise BOQ round 2">${esc(customSubtasks.join('\n'))}</textarea></label>
     <div class="span3 toolbar"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-close-form="todoTask">Cancel</button>${t.project?`<span class="hint">Project: ${esc(state.projects.find(p=>p.id===t.project)?.name||t.project)} · Sub Tasks จะ sync กลับ Project</span>`:''}</div>`;
@@ -4071,6 +4198,9 @@ function saveTodoTask(e){
     ...(f.status==='Done'&&prev.status!=='Done'?{completedAt:now,progress:100}:{}),
     ...(f.status!=='Done'&&prev.status==='Done'?{completedAt:null}:{}),
   };
+  // Manual date overrides — users can backfill received/delivered dates for work updated late
+  if(f.createdAtDate) state.tasks[idx].createdAt=new Date(f.createdAtDate+'T09:00:00').toISOString();
+  if(f.completedAtDate&&f.status==='Done') state.tasks[idx].completedAt=new Date(f.completedAtDate+'T18:00:00').toISOString();
   if(statusChanged){
     state.tasks[idx].statusLog=[...(prev.statusLog||[]),{status:f.status,at:now}].slice(-30);
   }
@@ -4479,6 +4609,8 @@ function deleteTask(id){if(state.projects.some(p=>(p.taskTemplateIds||[]).includ
 // ===== BD KPI engine — every KPI is a filter/aggregation over state.kpiActivities (+ projects for Win rate) =====
 function kpiWindow(period, offset=0){
   const d=new Date(today);
+  if(period==='all') return {start:new Date(2000,0,1), end:new Date(2100,0,1)};
+  if(period==='year') return {start:new Date(d.getFullYear()+offset,0,1,0,0,0,0), end:new Date(d.getFullYear()+offset,11,31,23,59,59,999)};
   if(period==='quarter'){
     const qAbs=Math.floor(d.getMonth()/3)+offset+d.getFullYear()*4;
     const y=Math.floor(qAbs/4), q=((qAbs%4)+4)%4;
@@ -4561,6 +4693,7 @@ function calcMemberMetric(metricKey,acts){
   }
 }
 let bdActMember=''; // filter for BD Activities chips ('' = show all)
+let kpiSearch='', kpiTypeFilter='All', _kpiActsCache=[];
 function renderKpiMemberTargets(acts){
   const el=document.getElementById('kpiMemberTargetsCard'); if(!el) return;
   const allT=(state.kpiMemberTargets||[]).filter(t=>t.active!==false);
@@ -4683,7 +4816,12 @@ function renderKpiActivities(acts){
     chips.innerHTML=(members.length>1?[{id:'',name:'ทุกคน'},...members]:[]).map(m=>`<button class="kpi-act-chip${bdActMember===m.id?' on':''}" data-act-chip="${esc(m.id)}">${esc(m.name)}</button>`).join('');
     chips.querySelectorAll('[data-act-chip]').forEach(b=>b.onclick=()=>{bdActMember=b.dataset.actChip;renderKpiActivities(acts);});
   }
-  const filtered=bdActMember?acts.filter(a=>a.owner===bdActMember||(a.participants||[]).includes(bdActMember)):acts;
+  let filtered=bdActMember?acts.filter(a=>a.owner===bdActMember||(a.participants||[]).includes(bdActMember)):acts;
+  if(kpiTypeFilter!=='All') filtered=filtered.filter(a=>a.type===kpiTypeFilter);
+  if(kpiSearch.trim()){
+    const q=kpiSearch.trim().toLowerCase();
+    filtered=filtered.filter(a=>[a.title,a.id,a.type,a.otherLead,state.projects.find(p=>p.id===a.project)?.name].filter(Boolean).some(s=>String(s).toLowerCase().includes(q)));
+  }
   const lbl=document.getElementById('kpiActLabel');
   if(lbl){const m=bdActMember?state.teams.find(x=>x.id===bdActMember):null; lbl.textContent=m?`${m.name} — ${filtered.length} รายการ`:`บันทึกงานที่ใช้คำนวณ KPI · ${filtered.length} รายการ`;}
   const rows=[...filtered].sort((a,b)=>String(kpiRefDate(b)).localeCompare(String(kpiRefDate(a))));
@@ -4704,6 +4842,14 @@ function renderKpi(){
   bdActMember=''; // reset chip filter when main owner/period changes
   document.querySelectorAll('.kpi-period').forEach(b=>b.classList.toggle('on',b.dataset.kpiPeriod===kpiPeriod));
   const acts=kpiActivitiesIn(kpiPeriod,kpiOwner), prev=kpiActivitiesIn(kpiPeriod,kpiOwner,-1);
+  _kpiActsCache=acts;
+  const tf=document.getElementById('kpiTypeFilter');
+  if(tf){
+    const types=state.kpiTypes?.length?state.kpiTypes:[...KPI_TYPES];
+    const opts='<option value="All">ทุกประเภท</option>'+types.map(t=>`<option value="${esc(t)}">${esc(t)}</option>`).join('');
+    if(tf.dataset.built!==String(types.length)){tf.innerHTML=opts;tf.dataset.built=String(types.length);}
+    tf.value=types.includes(kpiTypeFilter)||kpiTypeFilter==='All'?kpiTypeFilter:'All';
+  }
   const results=KPI_CATALOG.map(k=>({k,cur:k.fromProjects?winRateKpi(kpiOwner):k.calc(acts),pr:k.fromProjects?null:k.calc(prev),target:kpiTarget(k.id)}));
   const scored=results.filter(r=>!r.cur.na);
   const ach=scored.length?Math.round(scored.reduce((s,r)=>s+Math.min(r.cur.v/(r.target||1),1),0)/scored.length*100):0;
@@ -4712,7 +4858,7 @@ function renderKpi(){
   const sm=document.getElementById('kpiSummary');
   if(sm) sm.innerHTML=[
     metric('KPI Achievement',ach+'%',`เฉลี่ยเทียบเป้า ${scored.length} ตัวชี้วัด`),
-    metric('Activities',acts.length,kpiPeriod==='quarter'?'ไตรมาสนี้':'เดือนนี้','var(--text)'),
+    metric('Activities',acts.length,{month:'เดือนนี้',quarter:'ไตรมาสนี้',year:'ปีนี้',all:'ทั้งหมด'}[kpiPeriod]||'เดือนนี้','var(--text)'),
     metric('On-time Docs',otDocs.na?'—':otDocs.v+'%','เอกสารส่งทันกำหนด','var(--text)'),
     metric('Win Rate',wr.na?'—':wr.v+'%','งานที่ BD สนับสนุน','var(--text)')
   ].join('');
@@ -5703,6 +5849,8 @@ function bindAppEvents(){
   on('trainEventForm','onsubmit',saveTrainEvent);
   document.querySelectorAll('.kpi-period').forEach(b=>b.onclick=()=>{kpiPeriod=b.dataset.kpiPeriod;renderKpi()});
   on('kpiTargetBtn','onclick',()=>{kpiEditTargets=!kpiEditTargets;renderKpi()});
+  on('kpiSearch','oninput',function(){kpiSearch=this.value;renderKpiActivities(_kpiActsCache);});
+  on('kpiTypeFilter','onchange',function(){kpiTypeFilter=this.value;renderKpiActivities(_kpiActsCache);});
   on('brandFormToggle','onclick',()=>openBrandForm());
   on('sizeFormToggle','onclick',()=>openSizeForm());
   on('projectStatusFormToggle','onclick',()=>openProjectStatusForm());
